@@ -2663,13 +2663,12 @@ app.post('/api/:iid/message', async (req, res) => {
 
     const chatId = `91${req.body.phone}@c.us`;
     const isValidapikey = await checkAPIKey(apikey);
-    let requestBody;
-    const message = req.body.message;
-    requestBody = {
-        "phone": req.body.phone,
-        "Message": message,
-        "Document/Image": uploadedFile.name
-    }
+    let requestBody = {};
+    // requestBody = {
+    //     "phone": req.body.phone,
+    //     "Message": message,
+    //     "Document/Image": uploadedFile.name
+    // }
     try {
         if (isValidapikey) {
             tableData({
@@ -2681,7 +2680,10 @@ app.post('/api/:iid/message', async (req, res) => {
                 if (result.status_code == 404) return res.status(401).send({ "status_code": "401", "Message": "Invalid Instance ID" });
                 if (result.length > 1) return res.status(409).send(status.duplicateRecord());
                 if (obj[iid] && req.body.phone) {
+                    requestBody.phone = req.body.phone;
                     if (req.body.type === 'message') {
+                        const message = req.body.message;
+                        requestBody["Message"] = message;
                         if (message && chatId) {
                             obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
                                 var msgid = crypto.randomBytes(8).toString("hex");
@@ -2709,6 +2711,7 @@ app.post('/api/:iid/message', async (req, res) => {
                         createfolder(`image_data/${apikey}/${iid}`);
                         if (req.files && Object.keys(req.files).length !== 0) {
                             const uploadedFile = req.files.image;
+                            requestBody["Document/Image"] = uploadedFile.name;
                             const uploadPath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
 
                             uploadedFile.mv(uploadPath, async function (err) {
@@ -2760,9 +2763,11 @@ app.post('/api/:iid/message', async (req, res) => {
                     }
                 }
                 else {
-                    console.log("apikey:", apikey);
-                    console.log("iid:", iid);
-                    console.log("requestBody:", requestBody);
+                    requestBody = {
+                        "phone": "",
+                        "Message": "",
+                        "Document/Image": ""
+                    }
                     logAPI("/message", apikey, iid, requestBody, "E");
                     res.status(404).send({ "status_code": "404", "Message": "Error in sending message / Inactive instance" });
                 }
@@ -2840,9 +2845,9 @@ app.post('/api/:iid/email', async (req, res) => {
                 };
                 const attachments = (req.files) ? Array.isArray(req.files.attachments) ? req.files.attachments : [req.files.attachments] : [];
                 requestBody = {
-                    "To": to,
-                    "Subject": subject,
-                    "body": body,
+                    "To": to || "",
+                    "Subject": subject || "",
+                    "body": body || "",
                 }
                 getAttachmentObject(attachments, apikey, iid)
                     .then(({ fileobj, attachments_size }) => {
@@ -2955,6 +2960,31 @@ app.post('/api/:iid/:fld', async (req, res) => {
         res.send({ "status_code": "401", "Message": "Invalid API KEY" });
     }
 });
+
+//log DISPLAY
+app.get("/user/api/log/:iid", (req, res) => {
+    apikey = req.headers.apikey;
+    const isValidapikey = checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            let iid = req.params.iid;
+            console.log("apikey23:", apikey);
+            console.log("iid23:", iid);
+            conn.query("select * from log where apikey='" + apikey + "'and instance_id='" + iid + "'",//
+                function (err, ret) {
+                    if (err || ret.length < 0) return res.send(status.nodatafound());
+                    res.send(ret);
+                }
+            )
+        }
+    } catch {
+        res.status(404).send({
+            "Error Code": "404",
+            "Message": "Apikey is Invalid"
+        });
+    }
+});
+
 
 // Docs : DELETE Testing API
 app.delete('/api/:iid/:fld', async (req, res) => {
@@ -4024,6 +4054,7 @@ app.post("/api/setpasscode", async (req, res) => {
     }
 });
 
+//log INSERT
 function logAPI(api, apikey, iid, requestBody, type) {
     const logid = `log-${crypto.randomBytes(6).toString("hex")}`;
     const jsonpayload = JSON.stringify(requestBody);
@@ -4037,7 +4068,6 @@ function logAPI(api, apikey, iid, requestBody, type) {
             }
         });
 }
-
 
 
 app.use((req, res) => {
