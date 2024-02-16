@@ -19,6 +19,7 @@ const status = require("./assets/js/status");
 const jwt = require("jsonwebtoken");
 const cron = require('node-cron');
 const path = require('path');
+const cors = require('console');
 
 const fs = require("fs");
 const cloudinary = require('cloudinary').v2;
@@ -87,6 +88,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(['/docs/assets', '/instance/assets', '/assets'], express.static("assets"));
 app.use("/", router);
+app.use(cors());
 
 app.use(sessions({
     resave: false,

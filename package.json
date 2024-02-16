@@ -21,6 +21,7 @@
     "body-parser": "^1.20.2",
     "cloudinary": "^1.36.4",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "country-list-with-dial-code-and-flag": "^3.0.2",
     "crypto": "^1.0.1",
     "csvtojson": "^2.0.10",
