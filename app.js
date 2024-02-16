@@ -106,11 +106,20 @@ passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 
+// const browser = puppeteer.launch({
+//     executablePath: '/usr/bin/google-chrome-stable',
+// });
+
 const port = process.env.PORT || 8081;
 class clients {
     client;
     constructor() {
-        this.client = new Client();
+        this.client = new Client({
+      puppeteer: {
+        args: ["--no-sandbox"], // Add the --no-sandbox flag here
+      },
+    });
+        // this.client = new Client();
         this.client.initialize();
     }
 
@@ -481,11 +490,7 @@ app.post("/file", async (req, res) => {
 app.get("/qr/:iid", async (req, res) => {
     let iid = req.params.iid;
     try {
-        obj[iid] = new clients({
-            puppeteer: {
-                executablePath: '/usr/bin/google-chrome-stable',
-            }
-        });
+        obj[iid] = new clients();
         const qrData = await obj[iid].generateqr();
         if (qrData.length < 0) {
             console.log("No qr");
