@@ -481,7 +481,11 @@ app.post("/file", async (req, res) => {
 app.get("/qr/:iid", async (req, res) => {
     let iid = req.params.iid;
     try {
-        obj[iid] = new clients();
+        obj[iid] = new clients({
+            puppeteer: {
+                executablePath: '/usr/bin/google-chrome-stable',
+            }
+        });
         const qrData = await obj[iid].generateqr();
         if (qrData.length < 0) {
             console.log("No qr");

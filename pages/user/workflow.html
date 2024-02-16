@@ -56,7 +56,7 @@
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
 
@@ -65,7 +65,7 @@
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
                         </div>
@@ -82,7 +82,7 @@
                     </div>
 
                     <div class="d-flex align-items-center">
-                        
+
 
                         <div class="ms-1 header-item">
                             <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
@@ -147,7 +147,7 @@
                         <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                     </span>
                     <span class="logo-lg">
-                        <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                        <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                     </span>
                 </a>
                 <!-- Light Logo-->
@@ -156,7 +156,7 @@
                         <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                     </span>
                     <span class="logo-lg">
-                        <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                        <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                     </span>
                 </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
@@ -175,7 +175,7 @@
             </div>
             <!-- Left Sidebar End -->
             <!-- Vertical Overlay-->
-         <!-- <div class="vertical-overlay"></div> -->
+            <!-- <div class="vertical-overlay"></div> -->
         </div>
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -395,7 +395,7 @@
 
             $(document).ready(function () {
                 chkLogin();
-                
+
                 const iid = document.URL.split("/")[4];
 
                 $.ajax({
@@ -498,7 +498,8 @@
                 }
                 displayWorkflow({
                     table: "workflow",
-                    paramstr: `instance_id ='${iid}' and apikey = '${getCookie('apikey')}' group by workflow_id --`
+                    paramstr: `instance_id ='${iid}' and apikey = '${getCookie('apikey')}'--`
+                    // paramstr: `instance_id ='${iid}' and apikey = '${getCookie('apikey')}' group by workflow_id --`
                 });
 
                 $(".required").on('focusout', function () {
