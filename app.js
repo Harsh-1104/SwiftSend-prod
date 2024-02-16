@@ -106,9 +106,9 @@ passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 
-const browser = puppeteer.launch({
-    executablePath: '/usr/bin/google-chrome-stable',
-});
+// const browser = puppeteer.launch({
+//     executablePath: '/usr/bin/google-chrome-stable',
+// });
 
 const port = process.env.PORT || 8081;
 class clients {
