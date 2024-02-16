@@ -106,20 +106,15 @@ passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 
-// const browser = puppeteer.launch({
-//     executablePath: '/usr/bin/google-chrome-stable',
-// });
+const browser = puppeteer.launch({
+    executablePath: '/usr/bin/google-chrome-stable',
+});
 
 const port = process.env.PORT || 8081;
 class clients {
     client;
     constructor() {
-        this.client = new Client({
-      puppeteer: {
-        args: ["--no-sandbox"], // Add the --no-sandbox flag here
-      },
-    });
-        // this.client = new Client();
+        this.client = new Client();
         this.client.initialize();
     }
 
