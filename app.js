@@ -19,7 +19,7 @@ const status = require("./assets/js/status");
 const jwt = require("jsonwebtoken");
 const cron = require('node-cron');
 const path = require('path');
-const cors = require('console');
+const cors = require('cors');
 
 const fs = require("fs");
 const cloudinary = require('cloudinary').v2;
