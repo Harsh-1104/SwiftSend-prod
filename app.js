@@ -106,7 +106,7 @@ passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
 });
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8081;
 class clients {
     client;
     constructor() {
