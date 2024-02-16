@@ -223,6 +223,7 @@ $(document).ready(function () {
     });
 
     switch (page[3]) {
+        case 'logs':
         case 'dashboard':
         case 'instance':
         case 'customtemplate':
@@ -323,6 +324,7 @@ $(document).ready(function () {
     if (page[3] === 'instance') {
         if (page[5]) {
             switch (page[5].split('?')[0]) {
+                case 'logs':
                 case 'bulkmessage':
                 case 'bulkmail':
                 case 'contact-list':

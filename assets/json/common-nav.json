@@ -38,6 +38,11 @@
                 "page": "Workflow",
                 "link": "workflow",
                 "icon": "mdi mdi-arrow-decision"
+            },
+            {
+                "page": "Log Details",
+                "link": "logs",
+                "icon": "ri-list-check-2"
             }
         ]
     },

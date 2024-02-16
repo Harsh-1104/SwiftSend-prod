@@ -179,4 +179,10 @@ router.get("/supportScan", (req, res) => {
 
 /*----------------------------------------------------*/
 
+/*--------------------[ Only API ]--------------------*/
+
+// router.get("/logs", (req, res) => {
+//     res.sendFile(`${path}/user/log.html`);
+// });
+
 module.exports = router;

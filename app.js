@@ -2963,14 +2963,23 @@ app.post('/api/:iid/:fld', async (req, res) => {
 
 //log DISPLAY
 app.get("/user/api/log/:iid", (req, res) => {
-    apikey = req.headers.apikey;
+    apikey = req.headers.apikey || req.cookies.apikey;
     const isValidapikey = checkAPIKey(apikey);
     try {
         if (isValidapikey) {
             let iid = req.params.iid;
-            console.log("apikey23:", apikey);
-            console.log("iid23:", iid);
-            conn.query("select * from log where apikey='" + apikey + "'and instance_id='" + iid + "'",//
+
+            var query = `select * from log where apikey='${apikey}'and instance_id='${iid}'`;
+
+            if (req.query.type != "null") {
+                query += ` AND type = '${req.query.type}'`;
+            }
+
+            if (req.query.api != "null") {
+                query += ` AND api = '/${req.query.api}'`;
+            }
+
+            conn.query(query,
                 function (err, ret) {
                     if (err || ret.length < 0) return res.send(status.nodatafound());
                     res.send(ret);
