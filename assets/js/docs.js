@@ -1,9 +1,13 @@
 $(document).ready(function () {
+    const DomainName = "http://13.235.78.130:8081";
+    // const DomainName = "http://localhost:8081";
+
+    console.log("Domain Name", DomainName);
     $(document).on("click", ".copy", function () {
         var param = $(this).attr("id").substring(5);
         copy_api(param);
     });
-    
+
     if (getCookie('apikey')) {
         sessionStorage.setItem('apikey', getCookie('apikey'));
     }
@@ -13,7 +17,7 @@ $(document).ready(function () {
 
     let iid = ($('#iid').val() == "" || $('#iid').val() == "") ? `{{ instance_id }}` : $('#iid').val();
 
-    $('#apiurl').text(`https://swiftsend.click/api/${iid}/${document.URL.split('/')[4]}`);
+    $('#apiurl').text(`${DomainName}/api/${iid}/${document.URL.split('/')[4]}`);
 
     $(document).on('click', '#save', function () {
         nullfield_validation('iid');
@@ -24,7 +28,7 @@ $(document).ready(function () {
 
             iid = $('#iid').val();
 
-            $('#apiurl').text(`https://swiftsend.click/api/${iid}/${document.URL.split('/')[4]}`);
+            $('#apiurl').text(`${DomainName}/api/${iid}/${document.URL.split('/')[4]}`);
             $('#iid, #apikey').removeClass('form-control-success form-control-danger');
         }
         $.ajax({
@@ -73,7 +77,7 @@ $(document).ready(function () {
 
         iid = `{{ instance_id }}`;
 
-        $('#apiurl').text(`https://swiftsend.click/api/${iid}/${document.URL.split('/')[4]}`);
+        $('#apiurl').text(`${DomainName}/api/${iid}/${document.URL.split('/')[4]}`);
         $('#iid, #apikey').removeClass('form-control-success form-control-danger');
     })
 

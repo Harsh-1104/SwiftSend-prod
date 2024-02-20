@@ -28,7 +28,7 @@ const crypto = require("crypto");
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const { Client, MessageMedia, NoAuth, Status } = require("whatsapp-web.js");
-
+const DomainName = require('./assets/js/url');
 let obj = [], apikey, userProfile;
 
 // const conn = mysql.createConnection({
@@ -37,6 +37,7 @@ let obj = [], apikey, userProfile;
 //     password: process.env.DB_PASSWORD,
 //     database: process.env.DB_NAME,
 // });
+
 
 const conn = mysql.createConnection({
     host: '164.52.208.110',
@@ -373,8 +374,8 @@ passport.use(new GoogleStrategy(
     {
         clientID: "552657255780-ud1996049ike2guu982i3ms5ver5gbsf.apps.googleusercontent.com",
         clientSecret: "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",
-        callbackURL: `http://localhost:8081/auth/google/callback`,
-        //callbackURL: `${process.env.DOMAIN}/auth/google/callback`,
+        // callbackURL: `http://localhost:8081/auth/google/callback`,
+        callbackURL: `${DomainName}/auth/google/callback`,
     }, function (accessToken, refreshToken, profile, done) {
         userProfile = profile;
         return done(null, userProfile);
@@ -2077,12 +2078,10 @@ app.post("/adduser", (req, res) => {
                                     err_sqlMessage: err.sqlMessage
                                 };
                                 return res.send(errobj);
-                                //return res.send(status.internalservererror());
                             }
-                            const dataobj = status.created();
+                            const dataobj = status.ok();
                             dataobj.data = { apikey: id };
                             return res.send(dataobj);
-                            //return res.send(status.ok());
                         });
                 });
             });
@@ -2977,14 +2976,15 @@ app.get("/user/api/log/:iid", (req, res) => {
 
             var query = `select * from log where apikey='${apikey}'and instance_id='${iid}'`;
 
-            if (req.query.type != "null") {
+            if (req.query.type && req.query.type != "null") {
                 query += ` AND type = '${req.query.type}'`;
             }
 
-            if (req.query.api != "null") {
+            if (req.query.api && req.query.api != "null") {
                 query += ` AND api = '/${req.query.api}'`;
             }
 
+            console.log("query", query);
             conn.query(query,
                 function (err, ret) {
                     if (err || ret.length < 0) return res.send(status.nodatafound());

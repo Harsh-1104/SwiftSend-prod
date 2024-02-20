@@ -617,6 +617,7 @@
                                     "city": $("#city").val()
                                 },
                                 success: function (val) {
+                                    console.log("val : ", val);
                                     if (val.status_code == 200) {
                                         swal(
                                             {
