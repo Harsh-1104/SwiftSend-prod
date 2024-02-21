@@ -89,13 +89,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(['/docs/assets', '/instance/assets', '/assets'], express.static("assets"));
 app.use("/", router);
-app.use(cors({
-    origin: 'https://localhost:7220', // Replace with your ASP.NET application's origin 
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204,
-}));
-// app.use(cors());
+app.use(cors());
 
 app.use(sessions({
     resave: false,
