@@ -117,10 +117,10 @@ class clients {
     constructor() {
         // this.client = new Client();
         this.client = new Client({
-      puppeteer: {
-        args: ["--no-sandbox"], // Add the --no-sandbox flag here
-      },
-    });
+            puppeteer: {
+                args: ["--no-sandbox"], // Add the --no-sandbox flag here
+            },
+        });
         this.client.initialize();
     }
 
@@ -497,7 +497,7 @@ app.get("/qr/:iid", async (req, res) => {
             console.log("No qr");
         }
         else {
-            console.log(qrData);
+            // console.log(qrData);
             res.send(qrData);
         }
     } catch (error) {
@@ -1871,7 +1871,7 @@ app.post("/addinstance", async (req, res) => {
             if (result.status_code == 404) {
                 conn.query(`INSERT INTO instance values('${id}','${name}','${apikey}','${token}',CURRENT_DATE,0)`,
                     function (error, result) {
-                        console.log('result:', result);
+                        // console.log('result:', result);
                         if (error) return res.send(status.internalservererror());
                         const dataobj = status.created();
                         dataobj.data = { instance_id: id };
@@ -2705,9 +2705,9 @@ app.post('/api/:iid/message', async (req, res) => {
                                         res.status(200).send({ "status_code": "200", "Message": `Message sent to ${req.body.phone}` });
                                     });
                             }).catch((error) => {
-                                console.log("apikey:", apikey);
-                                console.log("iid:", iid);
-                                console.log("requestBody:", requestBody);
+                                // console.log("apikey:", apikey);
+                                // console.log("iid:", iid);
+                                // console.log("requestBody:", requestBody);
                                 logAPI("/message", apikey, iid, requestBody, "E");
                                 return res.status(404).send({ "status_code": "404", "Message": `Error in sending message / Inactive instance , ${error}` });
                             })
@@ -2989,7 +2989,6 @@ app.get("/user/api/log/:iid", (req, res) => {
                 query += ` AND api = '/${req.query.api}'`;
             }
 
-            console.log("query", query);
             conn.query(query,
                 function (err, ret) {
                     if (err || ret.length < 0) return res.send(status.nodatafound());
