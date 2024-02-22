@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const DomainName = "http://13.201.21.200:8081";
+    const DomainName = "http://15.206.84.235:8081";
     // const DomainName = "http://localhost:8081";
 
     console.log("Domain Name", DomainName);

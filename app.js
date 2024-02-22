@@ -2995,6 +2995,8 @@ app.get("/user/api/log/:iid", (req, res) => {
                 query += ` AND api = '/${req.query.api}'`;
             }
 
+            query += `ORDER BY logtime DESC`;
+
             conn.query(query,
                 function (err, ret) {
                     if (err || ret.length < 0) return res.send(status.nodatafound());

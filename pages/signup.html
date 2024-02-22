@@ -191,8 +191,8 @@
                                             <select id="country" name="country" class="form-control required"
                                                 data-type="name">
                                                 <option selected disabled value=""> Select Country </option>
-                                                <option value="India"> India </option>
-                                                <option value="Russia">Russia </option>
+                                                <!-- <option value="India"> India </option>
+                                                <option value="Russia">Russia </option> -->
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -204,8 +204,8 @@
                                             <select id="state" name="state" class="form-control required"
                                                 data-type="name">
                                                 <option selected disabled value=""> Select State </option>
-                                                <option value="Maharastra"> Maharastra </option>
-                                                <option value="Gujarat"> Gujarat </option>
+                                                <!-- <option value="Maharastra"> Maharastra </option>
+                                                <option value="Gujarat"> Gujarat </option> -->
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -215,8 +215,8 @@
                                             </label>
                                             <select id="city" name="city" class='form-control'>
                                                 <option selected disabled value=""> Select City </option>
-                                                <option value="surat"> surat </option>
-                                                <option value="surat"> mumbai </option>
+                                                <!-- <option value="surat"> surat </option>
+                                                <option value="surat"> mumbai </option> -->
                                             </select>
                                         </div>
                                         <div class="d-flex align-items-start gap-3 mt-4">
@@ -381,71 +381,71 @@
             //-------------------------------SELECT CASCADING-------------------------//
             let selectedCountry = (selectedRegion = selectedCity = "");
             let globalcountry;
-            // // This is a demo API key for testing purposes. You should rather request your API key (free) from http://battuta.medunes.net/
-            // var BATTUTA_KEY = "00000000000000000000000000000000";
-            // // Populate country select box from battuta API
-            // url =
-            //     "https://battuta.medunes.net/api/country/all/?key=" +
-            //     BATTUTA_KEY +
-            //     "&callback=?";
+            // This is a demo API key for testing purposes. You should rather request your API key (free) from http://battuta.medunes.net/
+            var BATTUTA_KEY = "00000000000000000000000000000000";
+            // Populate country select box from battuta API
+            url =
+                "http://battuta.medunes.net/api/country/all/?key=" +
+                BATTUTA_KEY +
+                "&callback=?";
 
-            // // EXTRACT JSON DATA.
-            // $.getJSON(url, function (data) {
-            //     $.each(data, function (index, value) {
-            //         // APPEND OR INSERT DATA TO SELECT ELEMENT.
-            //         $("#country").append(
-            //             '<option id="' + value.name + '" value="' + value.code + '">' + value.name + "</option>"
-            //         );
-            //     });
+            // EXTRACT JSON DATA.
+            $.getJSON(url, function (data) {
+                $.each(data, function (index, value) {
+                    // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                    $("#country").append(
+                        '<option id="' + value.name + '" value="' + value.code + '">' + value.name + "</option>"
+                    );
+                });
 
 
-            // });
-            // $("#country").change(function () {
-            //     selectedCountry = this.options[this.selectedIndex].text;
-            //     globalcountry = this.options[this.selectedIndex].text;
+            });
+            $("#country").change(function () {
+                selectedCountry = this.options[this.selectedIndex].text;
+                globalcountry = this.options[this.selectedIndex].text;
 
-            //     countryCode = $("#country").val();
-            //     url = `https://battuta.medunes.net/api/region/${countryCode}/all/?key=${BATTUTA_KEY}&callback=?`;
-            //     $.getJSON(url, function (data) {
-            //         $("#state option").remove();
-            //         $('#state').append('<option selected disabled value=""> Select State </option>');
-            //         $.each(data, function (index, value) {
-            //             // APPEND OR INSERT DATA TO SELECT ELEMENT.
-            //             $("#state").append(`<option value="${value.region}">${value.region}</option>`);
-            //         });
-            //     });
-            // });
-            // // Region selected --> updated city list
-            // $("#state").on("change", function () {
-            //     selectedRegion = this.options[this.selectedIndex].text;
-            //     // Populate country select box from battuta API
-            //     countryCode = $("#country").val();
-            //     state = $("#state").val();
-            //     url =
-            //         "https://battuta.medunes.net/api/city/" +
-            //         countryCode +
-            //         "/search/?region=" +
-            //         state +
-            //         "&key=" +
-            //         BATTUTA_KEY +
-            //         "&callback=?";
-            //     $.getJSON(url, function (data) {
-            //         console.log(data);
-            //         $("#city option").remove();
-            //         $('#city').append('<option selected disabled value=""> Select City </option>');
-            //         $.each(data, function (index, value) {
-            //             // APPEND OR INSERT DATA TO SELECT ELEMENT.
-            //             $("#city").append(
-            //                 '<option value="' + value.city + '">' + value.city + "</option>"
-            //             );
-            //         });
-            //     });
-            // });
-            // // city selected --> update location string
-            // $("#city").on("change", function () {
-            //     selectedCity = this.options[this.selectedIndex].text;
-            //     $("#location").html(`Locatation: Country: ${selectedCountry}, Region: ${selectedRegion}, City: ${selectedCity}`);
-            // });
+                countryCode = $("#country").val();
+                url = `http://battuta.medunes.net/api/region/${countryCode}/all/?key=${BATTUTA_KEY}&callback=?`;
+                $.getJSON(url, function (data) {
+                    $("#state option").remove();
+                    $('#state').append('<option selected disabled value=""> Select State </option>');
+                    $.each(data, function (index, value) {
+                        // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                        $("#state").append(`<option value="${value.region}">${value.region}</option>`);
+                    });
+                });
+            });
+            // Region selected --> updated city list
+            $("#state").on("change", function () {
+                selectedRegion = this.options[this.selectedIndex].text;
+                // Populate country select box from battuta API
+                countryCode = $("#country").val();
+                state = $("#state").val();
+                url =
+                    "http://battuta.medunes.net/api/city/" +
+                    countryCode +
+                    "/search/?region=" +
+                    state +
+                    "&key=" +
+                    BATTUTA_KEY +
+                    "&callback=?";
+                $.getJSON(url, function (data) {
+                    console.log(data);
+                    $("#city option").remove();
+                    $('#city').append('<option selected disabled value=""> Select City </option>');
+                    $.each(data, function (index, value) {
+                        // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                        $("#city").append(
+                            '<option value="' + value.city + '">' + value.city + "</option>"
+                        );
+                    });
+                });
+            });
+            // city selected --> update location string
+            $("#city").on("change", function () {
+                selectedCity = this.options[this.selectedIndex].text;
+                $("#location").html(`Locatation: Country: ${selectedCountry}, Region: ${selectedRegion}, City: ${selectedCity}`);
+            });
 
 
             // $('#email-verify-next-btn').prop("disabled", true);
