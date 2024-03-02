@@ -38,7 +38,6 @@ let obj = [], apikey, userProfile;
 //     database: process.env.DB_NAME,
 // });
 
-
 const conn = mysql.createConnection({
     host: '164.52.208.110',
     user: 'qitsolution_tempuser',
@@ -63,14 +62,6 @@ conn.connect((err) => {
     console.log('Connected to the database');
 })
 
-let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: "sakshiiit232@gmail.com",
-        pass: "pzpjmrggsmvmdmym",
-    },
-});
-
 cloudinary.config({
     cloud_name: "do6cd8c3p",
     api_key: "589267637882559",
@@ -90,12 +81,6 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(['/docs/assets', '/instance/assets', '/assets'], express.static("assets"));
 app.use("/", router);
 app.use(cors());
-
-// app.use(function (req, res, next) {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//     next();
-// });
 
 app.use(sessions({
     resave: false,
@@ -117,7 +102,8 @@ passport.deserializeUser(function (obj, cb) {
 //     executablePath: '/usr/bin/google-chrome-stable',
 // });
 
-const port = process.env.PORT || 8081;
+const port = (process.argv[2]) ? process.argv[2] : 8081;
+// const port = process.env.PORT || 80;
 class clients {
     client;
     constructor() {
@@ -252,6 +238,7 @@ function createfolder(foldername) {
 
 function deleteFolder(folderPath) {
     try {
+        console.log("ABC", fs.existsSync(`${__dirname}/assets/upload/${folderPath}`));
         if (fs.existsSync(`${__dirname}/assets/upload/${folderPath}`)) {
             fs.readdirSync(`${__dirname}/assets/upload/${folderPath}`).forEach((file) => {
                 const currentPath = path.join(`${__dirname}/assets/upload/${folderPath}`, file);
@@ -282,9 +269,8 @@ const tableData = (data, callback) => {
         // console.log(sql);
         conn.query(sql,
             (err, result) => {
-                // console.log(err);
-                // console.log(data.table,result);
-                if (err) return callback(status.internalservererror());
+                if (err) return callback(Object.assign(status.internalservererror(), { error: err }));
+                // if (err) return callback(status.internalservererror());
                 if (result.length == 0) return callback(status.nodatafound());
                 return callback(result);
             });
@@ -498,19 +484,33 @@ app.get("/qr/:iid", async (req, res) => {
     let iid = req.params.iid;
     try {
         obj[iid] = new clients();
+
         const qrData = await obj[iid].generateqr();
+
         if (qrData.length < 0) {
             console.log("No qr");
         }
         else {
-            // console.log(qrData);
-            res.send(qrData);
+            if (fs.existsSync(`${__dirname}/.wwebjs_cache`)) {
+                fs.readdirSync(`${__dirname}/.wwebjs_cache`).forEach((file) => {
+                    const currentPath = path.join(`${__dirname}/.wwebjs_cache/`, file);
+
+                    fs.unlinkSync(currentPath);
+                });
+                fs.rmdirSync(`${__dirname}/.wwebjs_cache`);
+            }
+            console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} : ${qrData}`);
+            return res.send(qrData);
         }
     } catch (error) {
         console.log(error);
         res.send(error);
     }
 });
+
+const delay = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 // Bulkmessage : Authentication Client API
 app.get("/authenticated/:iid", async function (req, res) {
@@ -520,6 +520,8 @@ app.get("/authenticated/:iid", async function (req, res) {
     try {
         if (isValidapikey) {
             let iid = req.params.iid;
+
+            await delay(10000);
 
             await obj[iid].client.on("authenticated", (session) => {
 
@@ -546,6 +548,7 @@ app.get("/adminbotauthenticated/:iid", async function (req, res) {
     try {
         if (isValidapikey) {
             let iid = req.params.iid;
+
             obj[iid].client.on("authenticated", (session) => {
                 conn.query(`update admin set isActive = 1 where apikey = '${iid}'`,
                     (err, result) => {
@@ -555,7 +558,6 @@ app.get("/adminbotauthenticated/:iid", async function (req, res) {
                     });
             });
         }
-
     }
     catch (e) {
         //console.log(e);
@@ -1877,16 +1879,22 @@ app.post("/addinstance", async (req, res) => {
             if (result.status_code == 404) {
                 conn.query(`INSERT INTO instance values('${id}','${name}','${apikey}','${token}',CURRENT_DATE,0)`,
                     function (error, result) {
-                        // console.log('result:', result);
-                        if (error) return res.send(status.internalservererror());
-                        const dataobj = status.created();
-                        dataobj.data = { instance_id: id };
-                        return res.send(dataobj);
-                        //return res.send(status.created());
+                        if (error) return res.send(Object.assign(status.internalservererror(), { error: { detail: `Internal Server Error | Try again after some time` } }));
+
+                        return res.send(Object.assign(status.created(), {
+                            data: {
+                                detail: `Instance Created Successfully`,
+                                "Instance ID": id
+                            }
+                        }));
                     });
             }
             else {
-                res.send(status.duplicateRecord());
+                return res.send(Object.assign(status.duplicateRecord(), {
+                    error: {
+                        detail: `Instance with this name already exist`,
+                    }
+                }));
             }
         })
     }
@@ -1909,7 +1917,11 @@ app.post("/addinstance", async (req, res) => {
                             create(instanceid, instance_name, apikey, token);
                         }
                         else {
-                            res.send(status.forbidden());
+                            return res.send(Object.assign(status.forbidden(), {
+                                error: {
+                                    detail: `Instance can't be created. Free instance can only be created once.`
+                                }
+                            }));
                         }
                     })
                 }
@@ -1941,20 +1953,40 @@ app.post("/addinstance", async (req, res) => {
                                 paramstr: true,
                                 apikey: apikey
                             }, (result) => {
-                                if (result.length >= total_instance) return res.send(status.forbidden());
+                                if (result.length >= total_instance) {
+                                    return res.send(Object.assign(status.forbidden(), {
+                                        error: {
+                                            detail: `Max instance purchase limit exceeded. Upgrade plan..`
+                                        }
+                                    }));
+                                }
                                 create(instanceid, instance_name, apikey, token);
                             })
                         }
                         else {
-                            res.send(status.forbidden());
+                            return res.send(Object.assign(status.forbidden(), {
+                                error: {
+                                    detail: `Plan expired. Reactivate / Purchase new one`
+                                }
+                            }));
                         }
                     })
                 }
             });
-        } else res.send(status.unauthorized());
+        }
+        else {
+            return res.send(Object.assign(status.unauthorized(), {
+                error: {
+                    detail: `Invalid API Key`
+                }
+            }));
+        }
     } catch (error) {
-        console.log(error);
-        res.send(status.unauthorized(), error);
+        return res.send(Object.assign(status.unauthorized(), {
+            error: {
+                detail: error
+            }
+        }));
     }
 });
 
@@ -2069,35 +2101,32 @@ app.post("/adduser", (req, res) => {
     if (name && phone && email && password && country && state && name != undefined && phone != undefined && email != undefined && password != undefined && country != undefined && state != undefined) {
         conn.query("SELECT * FROM users WHERE email='" + email + "'",
             function (err, result) {
-                if (err) {
-                    //console.log("err 1 :", err);
-                    const errobj = status.internalservererror();
-                    errobj.data = { error: err };
-                    return res.send(errobj);
-                    //return res.send(status.internalservererror());
-                }
-                if (result.length > 0) return res.send(status.duplicateRecord());
+                if (err) return res.send(Object.assign(status.internalservererror(), { error: { detail: `Internal Server Error | Try again after some time` } }));
+
+                if (result.length > 0) return res.send(Object.assign(status.duplicateRecord(), { error: { detail: `User with this Email Already exists` } }));
+
                 bcrypt.hash(password, 10, (err, hash) => {
-                    if (err) return res.send("err in bcrypt");
+                    if (err) return res.send(Object.assign(status.badRequest(), { error: { detail: `Error in Signup` } }));
+
                     conn.query(`INSERT INTO users (apikey,uname,email,password,phone,phoneverify,country,state,city,registrationDate,image) VALUES(?,?,?,?,?,?,?,?,?,?,?)`, [id, name, email, hash, phone, false, country, state, city, new Date(), null],
                         function (err, result) {
                             res.clearCookie("everify");
-                            if (err || result.affectedRows == 0) {
-                                const errobj = status.internalservererror();
-                                errobj.data = {
-                                    err_code: err.code,
-                                    err_sqlMessage: err.sqlMessage
-                                };
-                                return res.send(errobj);
-                            }
-                            const dataobj = status.ok();
-                            dataobj.data = { apikey: id };
-                            return res.send(dataobj);
+                            if (err || result.affectedRows == 0) return res.send(Object.assign(status.internalservererror(), { error: { detail: `Internal Server Error | Try again after some time` } }));
+                            return res.send(Object.assign(status.ok(), {
+                                data: {
+                                    detail: `User created Successfully with ${email} Email`,
+                                    apikey: id
+                                }
+                            }));
                         });
                 });
             });
     } else {
-        res.send(status.badRequest());
+        return res.send(Object.assign(status.badRequest(), {
+            error: {
+                detail: `Invalid / Missing Parameter`
+            }
+        }));
     }
 });
 
@@ -2107,7 +2136,7 @@ app.post("/signin", (req, res) => {
     const password = req.body.password;
     const rememberme = req.body.rememberme;
 
-    if (email && password && email != undefined && password != undefined) {
+    if (email && password && email != undefined && password != undefined && req.body.type && req.body.type != undefined) {
 
         tableData({
             table: req.body.type,
@@ -2115,32 +2144,26 @@ app.post("/signin", (req, res) => {
             apikey: apikey,
         }, (result) => {
             if (result.status_code == 500) {
-                const errobj = status.internalservererror();
-                errobj.data = {
-                    err_code: err.code,
-                    err_sqlMessage: err.sqlMessage
-                };
-                return res.send(errobj);
-                //return res.send(status.internalservererror());
+                return res.send(Object.assign(status.internalservererror(), {
+                    error: {
+                        detail: `Internal Server Error | Try again after some time`
+                    }
+                }));
             }
 
             if (result.status_code == 404) {
-                const errobj = status.unauthorized();
-                errobj.data = {
-                    err_code: err.code,
-                    err_sqlMessage: err.sqlMessage
-                };
-                return res.send(errobj);
-                //return res.send(status.unauthorized());
+                return res.send(Object.assign(status.unauthorized(), {
+                    error: {
+                        detail: `Invalid Email`
+                    }
+                }));
             }
             if (result.length > 1) {
-                const errobj = status.duplicateRecord();
-                errobj.data = {
-                    err_code: err.code,
-                    err_sqlMessage: err.sqlMessage
-                };
-                return res.send(errobj);
-                //return res.send(status.duplicateRecord());
+                return res.send(Object.assign(status.duplicateRecord(), {
+                    error: {
+                        detail: `Multiple Email found`
+                    }
+                }));
             }
             bcrypt.compare(password, result[0].password, (err, match) => {
                 if (match) {
@@ -2148,30 +2171,28 @@ app.post("/signin", (req, res) => {
                     if (rememberme == "true") {
                         res.cookie("email", email, { maxAge: 1000 * 60 * 60 * 24 * 15 });
                     }
-                    const dataobj = status.ok();
-                    dataobj.data = { apikey: result[0].apikey };
-                    return res.send(dataobj);
-                    //res.send(status.ok());
+                    return res.send(Object.assign(status.ok(), {
+                        data: {
+                            detail: `Login Successful`,
+                            apikey: result[0].apikey
+                        }
+                    }));
                 } else {
-                    const errobj = status.unauthorized();
-                    errobj.data = {
-                        err_code: err.code,
-                        err_sqlMessage: err.sqlMessage
-                    };
-                    return res.send(errobj);
-                    //return res.send(status.unauthorized());
+                    return res.send(Object.assign(status.unauthorized(), {
+                        error: {
+                            detail: `Invalid Password`
+                        }
+                    }));
                 }
             });
         })
     }
     else {
-        const errobj = status.badRequest();
-        errobj.data = {
-            err_code: err.code,
-            err_sqlMessage: err.sqlMessage
-        };
-        return res.send(errobj);
-        //return res.send(status.badRequest());
+        return res.send(Object.assign(status.badRequest(), {
+            error: {
+                detail: `Invalid / Missing Parameter`
+            }
+        }));
     }
 });
 
@@ -2680,11 +2701,7 @@ app.post('/api/:iid/message', async (req, res) => {
     const chatId = `91${req.body.phone}@c.us`;
     const isValidapikey = await checkAPIKey(apikey);
     let requestBody = {};
-    // requestBody = {
-    //     "phone": req.body.phone,
-    //     "Message": message,
-    //     "Document/Image": uploadedFile.name
-    // }
+
     try {
         if (isValidapikey) {
             tableData({
@@ -2711,9 +2728,6 @@ app.post('/api/:iid/message', async (req, res) => {
                                         res.status(200).send({ "status_code": "200", "Message": `Message sent to ${req.body.phone}` });
                                     });
                             }).catch((error) => {
-                                // console.log("apikey:", apikey);
-                                // console.log("iid:", iid);
-                                // console.log("requestBody:", requestBody);
                                 logAPI("/message", apikey, iid, requestBody, "E");
                                 return res.status(404).send({ "status_code": "404", "Message": `Error in sending message / Inactive instance , ${error}` });
                             })
@@ -3011,7 +3025,6 @@ app.get("/user/api/log/:iid", (req, res) => {
         });
     }
 });
-
 
 // Docs : DELETE Testing API
 app.delete('/api/:iid/:fld', async (req, res) => {
