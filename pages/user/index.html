@@ -218,14 +218,29 @@
 							</ol> -->
 							<h3 class="text-center">Application stats</h3>
 						</div>
+
 						<div class="page-title-right d-flex align-items-center">
 							<button class="btn btn-soft-danger waves-effect waves-light fs-15" id="mic"
 								data-bs-toggle="modal" data-bs-target="#voice_input">
 								<i class="mdi mdi-microphone"></i>
 							</button>
 						</div>
+
 					</div>
 					<!-- <div class="card mb-2" id="msgform"> -->
+					<div class="col-lg-4">
+						<div class="mt-3 d-flex align-items-center gap-3">
+							<input type="text" id="time_period" class=" col-lg-6 form-control mr-3"
+								data-provider="flatpickr" data-date-format="Y-m-d" data-range-date="true"
+								placeholder="select from-date and to-date">
+							<button class="btn btn-md btn-soft-primary" id="Filter"><a
+									class="fa fa-search fs-20 text-dark"></a></button>
+							<button class="col-lg-4 btn btn-soft-danger" type="button" id="clrfilter">
+								<i class="ri-close-line align-bottom"></i> Clear Filter
+							</button>
+						</div>
+					</div>
+					<br><br>
 					<ul class="nav nav-tabs-custom justify-content-center nav-primary bg-none fs-15 mb-2"
 						role="tablist">
 						<li class="nav-item" role="presentation">
@@ -245,6 +260,8 @@
 							</a>
 						</li>
 					</ul>
+
+					<br><br>
 					<div class="tab-content text-muted">
 						<div class="tab-pane active show" id="whatsappcount" role="tabpanel">
 							<div class="record" id="record"></div>
@@ -348,6 +365,7 @@
 	<script src="/assets/libs/node-waves/waves.min.js"></script>
 	<script src="/assets/libs/feather-icons/feather.min.js"></script>
 	<script src="/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+	<script src="/assets/js/plugins.js"></script>
 
 	<!-- apexcharts -->
 	<script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
@@ -615,6 +633,225 @@
 				})
 			}
 			email_summary();
+
+			function message_filter() {
+				const timePeriodValue = $("#time_period").val();
+				const timePeriodArray = timePeriodValue.split('to');
+				const startDate = timePeriodArray[0].trim();
+				const endDate = timePeriodArray[1].trim();
+				$.ajax({
+					url: "/message_filter",
+					method: "POST",
+					data: {
+						startdate: startDate,
+						enddate: endDate
+					},
+					success: function (val) {
+						let output = ``;
+						let obj = {};
+						switch (val.status_code) {
+							case '500': {
+								InternalServerError();
+								break;
+							}
+							case '404': {
+								output += `<div class="text-center">
+                                            <h5 class="p-3">
+												No Message sent from any instance / No Instance created
+                                            </h5>
+                                            <a class="btn btn-soft-success" href="/instance">
+                                                Create Instance
+                                            </a>
+                                        </div>`;
+								break;
+							}
+
+							default: {
+								output += `<div class="row">`;
+
+								for (let i = 0; i < val.length; i++) {
+									var countmsgarray = new Array();
+									countmsgarray.push(val[i].single_message_count);
+									countmsgarray.push(val[i].single_document_count);
+									countmsgarray.push(val[i].bulk_message_template_count);
+									countmsgarray.push(val[i].bulk_message_custom_count);
+									countmsgarray.push(val[i].bulk_message_channel_count);
+									obj[i] = countmsgarray;
+									const total =
+										val[i].single_message_count +
+										val[i].single_document_count +
+										val[i].bulk_message_template_count +
+										val[i].bulk_message_custom_count +
+										val[i].bulk_message_channel_count;
+									output += `<div class="col-lg-4 col-md-6 col-sm-12">
+													<div class="card card-animate">
+														<div class="card-header">
+															<div class="fw-medium text-primary fs-18">${val[i].i_name}</div>
+														</div>
+														<div id="id_${val[i].iid}" class="card-body">
+															<div class="p-0 text-dark fs-15">
+																<div id="message_chart_${i}" class="apex-charts" dir="ltr"></div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-primary align-middle"></i>
+																		Single Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].single_message_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-danger align-middle"></i>	
+																		Document Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].single_document_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-warning align-middle"></i>	
+																		Template Bulk Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].bulk_message_template_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-info align-middle"></i>	
+																		Custom Bulk Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].bulk_message_custom_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-success align-middle"></i>	
+																		Channel Bulk Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].bulk_message_channel_count}</span>
+																</div>
+																<hr />
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">Total</span>
+																	<span class="text-primary fw-semibold">${total}</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>`;
+								}
+								output += `</div>`;
+							}
+						}
+						$('#record').html(output);
+						for (let i = 0; i < Object.keys(obj).length; i++) {
+							displayPieChart(obj[i], `message_chart_${i}`, "whatsapp");
+						}
+					}
+				})
+			}
+
+			function email_filter() {
+				const timePeriodValue = $("#time_period").val();
+				const timePeriodArray = timePeriodValue.split('to');
+				const startDate = timePeriodArray[0].trim();
+				const endDate = timePeriodArray[1].trim();
+				$.ajax({
+					url: "/email_filter",
+					method: "POST",
+					data: {
+						startdate: startDate,
+						enddate: endDate
+					},
+					success: function (val) {
+						let output = ``;
+						let obj = {};
+						switch (val.status_code) {
+							case '500': {
+								InternalServerError();
+								break;
+							}
+							case '404': {
+								output += `<div class="text-center">
+                                            <h5 class="p-3">
+                                                No Email sent from any instance / No Instance created
+                                            </h5>
+                                            <a class="btn btn-soft-success" href="/instance">
+                                                Create Instance
+                                            </a>
+                                        </div>`;
+								break;
+							}
+
+							default: {
+								output += `<div class="row">`;
+
+								for (let i = 0; i < val.length; i++) {
+									var countmsgarray = new Array();
+									countmsgarray.push(val[i].bulk_mail_template_count);
+									countmsgarray.push(val[i].bulk_mail_custom_count);
+									countmsgarray.push(val[i].bulk_mail_channel_count);
+									obj[i] = countmsgarray;
+									const total =
+										val[i].bulk_mail_template_count +
+										val[i].bulk_mail_custom_count +
+										val[i].bulk_mail_channel_count;
+									output += `<div class="col-lg-4 col-md-6 col-sm-12">
+													<div class="card card-animate">
+														<div class="card-header">
+															<h2 class="fw-medium text-primary">${val[i].i_name}</h2>
+														</div>
+														<div id="id_${val[i].iid}" class="card-body">
+															<div class="p-0 text-dark fs-15">
+																<div id="email_chart_${i}" class="apex-charts" dir="ltr"></div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-primary align-middle"></i>
+																		Template Bulk Mail
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].bulk_mail_template_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-danger align-middle"></i>
+																		Custom Bulk Mail
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].bulk_mail_custom_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-warning align-middle"></i>
+																		Channel Bulk Mail
+																	</span>
+																	<span class="text-primary fw-semibold">${val[i].bulk_mail_channel_count}</span>
+																</div>
+																<hr />
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">Total</span>
+																	<span class="text-primary fw-semibold">${total}</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>`;
+								}
+								output += `</div>`;
+							}
+						}
+						$('#recordmail').html(output);
+						for (let i = 0; i < Object.keys(obj).length; i++) {
+							displayPieChart(obj[i], `email_chart_${i}`, "email");
+						}
+					}
+				})
+			}
+
+			$(document).on("click", "#Filter", function () {
+				message_filter();
+				email_filter();
+			})
+
+			$(document).on('click', '#clrfilter', function () {
+				$("#time_period").val("")
+				message_summary();
+				email_summary();
+			});
 
 			function record() {
 				var object1 = "";
