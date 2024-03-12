@@ -323,15 +323,18 @@
                             <div class="col-lg-9 col-md-6 col-sm-12 p-3 fs-5">
                                 <div class="d-flex align-items-center h-100">
                                     <ul>
-                                        <li>Open WhatsApp on your phone</li>
-                                        <li>Tap Menu or settings and select Linked Devices</li>
+                                        <li>Open WhatsApp on your phone.</li>
+                                        <li>Tap Menu or settings and select Linked Devices.</li>
                                         <li>
-                                            Point your phone to this screen to capture the code
+                                            Point your phone to this screen to capture the code.
                                         </li>
                                         <li class="text-primary">
                                             A QR code is valid only for 10 seconds. Message sending
                                             will be available right after authorization.<br />
                                             Click Scan QR to regenerate QR code.
+                                        </li>
+                                        <li class="text-primary">
+                                            Wait 2-3 Minutes for Authentication Successfully Message.
                                         </li>
                                     </ul>
                                 </div>
@@ -594,13 +597,24 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <label>Contact Data</label>
-                                        <div class="card" data-simplebar data-simplebar-auto-hide="false"
+                                        <div class="row align-items-center">
+                                            <div class="col-lg-6">
+                                                <label>Contact Data</label>
+                                            </div>
+                                            <div class="col-lg-6 text-end">
+                                                <button id="gsheet_refresh" class="btn btn-sm btn-soft-primary d-none">
+                                                    <span class="mx-1">
+                                                        <i class="fa-solid fa-refresh"></i>
+                                                    </span>
+                                                    <span> Refresh </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card mt-3" data-simplebar data-simplebar-auto-hide="false"
                                             style="height: 450px;">
                                             <div class="card-body" id="sheet_data">
-                                                <h5 class="d-flex justify-content-center text-muted text-center p-5">
-                                                    Preview of the data will show here after you select the
-                                                    Google Sheet
+                                                <h5 class="text-muted text-center p-5">
+                                                    Preview of the data will show here after you select the Google sheet
                                                 </h5>
                                             </div>
                                         </div>
@@ -723,13 +737,25 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <label>Contact Data</label>
-                                        <div class="card" data-simplebar data-simplebar-auto-hide="false"
+                                        <div class="row align-items-center">
+                                            <div class="col-lg-6">
+                                                <label>Contact Data</label>
+                                            </div>
+                                            <div class="col-lg-6 text-end">
+                                                <button id="localfile_refresh"
+                                                    class="btn btn-sm btn-soft-primary d-none">
+                                                    <span class="mx-1">
+                                                        <i class="fa-solid fa-refresh"></i>
+                                                    </span>
+                                                    <span> Refresh </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card mt-3" data-simplebar data-simplebar-auto-hide="false"
                                             style="height: 450px;">
                                             <div class="card-body" id="localfile_data">
-                                                <h5 class="d-flex justify-content-center text-muted text-center p-5">
-                                                    Preview of the data will show here after you select the
-                                                    CSV File
+                                                <h5 class="text-muted text-center p-5">
+                                                    Preview of the data will show here after you select csv file
                                                 </h5>
                                             </div>
                                         </div>
@@ -839,19 +865,30 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-lg-6">
-                                        <label>Contact Data</label>
-                                        <div class="card" data-simplebar data-simplebar-auto-hide="false"
+                                        <div class="row align-items-center">
+                                            <div class="col-lg-6">
+                                                <label>Contact Data</label>
+                                            </div>
+                                            <div class="col-lg-6 text-end">
+                                                <button id="contact_refresh" class="btn btn-sm btn-soft-primary d-none">
+                                                    <span class="mx-1">
+                                                        <i class="fa-solid fa-refresh"></i>
+                                                    </span>
+                                                    <span> Refresh </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card mt-3" data-simplebar data-simplebar-auto-hide="false"
                                             style="height: 450px;">
                                             <div class="card-body" id="contact_data">
-                                                <h5 class="d-flex justify-content-center text-muted text-center p-5">
-                                                    Preview of the data will show here after you select the
-                                                    channel
+                                                <h5 class="text-muted text-center p-5">
+                                                    Preview of the data will show here after you select the channel
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1156,8 +1193,10 @@
                         //display_in_out();
                     }
                 }
+
                 $(document).ready(function () {
                     chkLogin();
+
 
                     function handleAuthClick() {
                         tokenClient.callback = async (resp) => {
@@ -2007,32 +2046,28 @@
                         }
                     });
 
-                    $(document).on("change", "#sheetname", function () {
-                        nullfield_validation('spreedsheet');
-                        if (objFlag.flag_spreedsheet == 0) {
-                            var ssid = $("#spreedsheet").val();
-                            var sheetindex = $("#sheetname").val();
-
-                            $.ajax({
-                                url: "/sheetdata",
-                                method: "POST",
-                                data: {
-                                    ssid: ssid,
-                                    sheetindex: sheetindex,
-                                },
-                                beforeSend: function () {
-                                    $("#sheet_data")
-                                        .html(`<div class="text-center py-3">
+                    $("#gsheet_refresh").addClass('d-none');
+                    function gsheetdata(ssid, sheetindex) {
+                        $.ajax({
+                            url: "/sheetdata",
+                            method: "POST",
+                            data: {
+                                ssid: ssid,
+                                sheetindex: sheetindex,
+                            },
+                            beforeSend: function () {
+                                $("#sheet_data")
+                                    .html(`<div class="text-center py-3">
                                                     <div class="spinner-border text-primary" role="status">
                                                         <span class="sr-only">Loading...</span>
                                                     </div>
                                                     <h5 class="mt-2">Fetching Data</h5>
                                                 </div>`);
-                                },
-                                success: function (val) {
-                                    if (val.status_code == 404) {
-                                        $('#sheet_data')
-                                            .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                            },
+                            success: function (val) {
+                                if (val.status_code == 404) {
+                                    $('#sheet_data')
+                                        .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
                                                 <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
                                                     trigger="loop" colors="primary:#f06548"
                                                     state="morph-intro-cross" style="width:70px;height:70px">
@@ -2041,46 +2076,47 @@
                                             <p class="fs-15 text-center text-muted">
                                                 There is no Record in this Google Sheet
                                             </p>`);
+                                }
+                                else {
+                                    $("#gsheet_refresh").removeClass('d-none');
+                                    clientarr = [];
+                                    clientobj = val.colnames[0];
+                                    clientvalue = val.values;
+
+                                    if (clientobj.includes("name") && clientobj.includes("phone") && clientobj.includes("email")) {
+                                        localStorage.setItem("colnames", val.colnames);
+                                        let result = {};
+                                        for (let i = 0; i < clientvalue.length; i++) {
+                                            clientobj.forEach((key, j) => {
+                                                result[key] = clientvalue[i][j];
+                                            });
+                                            clientarr.push(result);
+                                            result = {};
+                                            if (i >= 199) break;
+                                        }
+
+                                        var data = '<table class="table align-middle"><thead class="table-light"><tr>';
+
+                                        for (let i = 0; i < val.colnames[0].length; i++) {
+                                            data += `<th>${val.colnames[0][i]}</th>`;
+                                        }
+
+                                        data += '</tr></thead><tbody class="list form-check-all">';
+
+                                        for (let i = 0; i < val.values.length; i++) {
+                                            data += `<tr>`;
+                                            for (let j = 0; j < val.colnames[0].length; j++) {
+                                                data += `<td class="${val.colnames[0][j]}">${val.values[i][j]}</td>`;
+                                            }
+                                            data += `</tr>`;
+                                            if (i >= 199) break;
+                                        }
+                                        data += `</tbody></table>`;
+                                        $('#sheet_data').html(data);
                                     }
                                     else {
-                                        clientarr = [];
-                                        clientobj = val.colnames[0];
-                                        clientvalue = val.values;
-
-                                        if (clientobj.includes("name") && clientobj.includes("phone") && clientobj.includes("email")) {
-                                            localStorage.setItem("colnames", val.colnames);
-                                            let result = {};
-                                            for (let i = 0; i < clientvalue.length; i++) {
-                                                clientobj.forEach((key, j) => {
-                                                    result[key] = clientvalue[i][j];
-                                                });
-                                                clientarr.push(result);
-                                                result = {};
-                                                if (i >= 199) break;
-                                            }
-
-                                            var data = '<table class="table align-middle"><thead class="table-light"><tr>';
-
-                                            for (let i = 0; i < val.colnames[0].length; i++) {
-                                                data += `<th>${val.colnames[0][i]}</th>`;
-                                            }
-
-                                            data += '</tr></thead><tbody class="list form-check-all">';
-
-                                            for (let i = 0; i < val.values.length; i++) {
-                                                data += `<tr>`;
-                                                for (let j = 0; j < val.colnames[0].length; j++) {
-                                                    data += `<td class="${val.colnames[0][j]}">${val.values[i][j]}</td>`;
-                                                }
-                                                data += `</tr>`;
-                                                if (i >= 199) break;
-                                            }
-                                            data += `</tbody></table>`;
-                                            $('#sheet_data').html(data);
-                                        }
-                                        else {
-                                            $('#sheet_data')
-                                                .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                                        $('#sheet_data')
+                                            .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
                                                 <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
                                                     trigger="loop" colors="primary:#f06548"
                                                     state="morph-intro-cross" style="width:70px;height:70px">
@@ -2089,12 +2125,32 @@
                                             <p class="fs-15 text-center text-muted">
                                                 There is no such column like name, email, phone in this Google Sheet
                                             </p>`);
-                                        }
                                     }
                                 }
-                            });
+                            }
+                        });
+                    }
+
+                    $(document).on("change", "#sheetname", function () {
+                        nullfield_validation('spreedsheet');
+                        if (objFlag.flag_spreedsheet == 0) {
+                            var ssid = $("#spreedsheet").val();
+                            var sheetindex = $("#sheetname").val();
+                            gsheetdata(ssid, sheetindex);
+
                         }
                     });
+
+                    $('#gsheet_refresh').click(function () {
+                        nullfield_validation('spreedsheet');
+                        if (objFlag.flag_spreedsheet == 0) {
+                            var ssid = $("#spreedsheet").val();
+                            var sheetindex = $("#sheetname").val();
+                            gsheetdata(ssid, sheetindex);
+
+                        }
+                    });
+
 
                     // googlesheet template message btn event
                     $(document).on("click", "#gsheetmsgtype_template_send", function () {
@@ -2423,6 +2479,83 @@
                         }
                     })
 
+                    $("#localfile_refresh").addClass('d-none');
+                    function localfiledata(frmdata) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/file",
+                            data: frmdata,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                                $("#localfile_data").html(`<div class="text-center py-3">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                        <h5 class="mt-2">Fetching Data</h5>
+                                                    </div>`);
+                            },
+                            success: function (val) {
+                                if (val.status_code == 406) {
+                                    $('#after_connect_div_localfile').addClass('d-none');
+                                    swal({
+                                        title: "No File selected",
+                                        html: `Only <span class="text-danger">CSV</span> File allowed.`,
+                                        type: 'error',
+                                        timer: 2500,
+                                        showConfirmButton: false,
+                                    }).then(() => {
+                                        $('#datafile').val('').addClass('form-control-danger');
+                                    })
+                                }
+                                else {
+                                    $("#localfile_refresh").removeClass('d-none');
+                                    colnames = Object.keys(val.json[0]);
+
+                                    if (colnames.includes("name") && colnames.includes("phone") && colnames.includes("email")) {
+                                        $('#after_connect_div_localfile').removeClass('d-none');
+                                        var data = `<table class="table align-middle"><thead class="table-light"><tr>`;
+
+                                        for (let i = 0; i < colnames.length; i++) {
+                                            data += `<th>${colnames[i]}</th>`;
+                                        }
+                                        data += `</tr></thead><tbody class="list form-check-all">`;
+
+                                        localStorage.setItem("clientobj", val.json);
+                                        for (let i = 0; i < val.json.length; i++) {
+                                            colvalues = Object.values(val.json[i]);
+                                            clientobj = val.json;
+
+                                            let y = localStorage.getItem("clientobj");
+                                            data += `<tr>`;
+                                            for (let j = 0; j < colnames.length; j++) {
+                                                data += `<td class="name">${colvalues[j]}</td>`;
+                                            }
+                                            data += `</tr>`;
+                                            if (i >= 199) break;
+                                        }
+                                        localStorage.setItem("colnames", colnames);
+                                        data += `</tbody></table>`;
+
+                                        $('#localfile_data').html(data);
+                                    } else {
+                                        $('#localfile_data')
+                                            .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                                                <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
+                                                    trigger="loop" colors="primary:#f06548"
+                                                    state="morph-intro-cross" style="width:70px;height:70px">
+                                                </lord-icon>
+                                            </div>
+                                            <p class="fs-15 text-center text-muted">
+                                                There is no such column like name, email, phone in this CSV File
+                                            </p>`);
+                                        $('#datafile').addClass('form-control-danger');
+                                    }
+                                }
+                            }
+                        });
+                    }
+
                     // load data from local file event  
                     $("#datafile").on("change", function () {
                         $('#datafile').removeClass('form-control-success form-control-danger');
@@ -2433,78 +2566,33 @@
 
                             let frmdata = new FormData();
                             frmdata.append("csvfile", filedata);
-                            $.ajax({
-                                type: "POST",
-                                url: "/file",
-                                data: frmdata,
-                                contentType: false,
-                                processData: false,
-                                beforeSend: function () {
-                                    $("#localfile_data").html(`<div class="text-center py-3">
-                                                        <div class="spinner-border text-primary" role="status">
-                                                            <span class="sr-only">Loading...</span>
-                                                        </div>
-                                                        <h5 class="mt-2">Fetching Data</h5>
-                                                    </div>`);
-                                },
-                                success: function (val) {
-                                    if (val.status_code == 406) {
-                                        $('#after_connect_div_localfile').addClass('d-none');
-                                        swal({
-                                            title: "No File selected",
-                                            html: `Only <span class="text-danger">CSV</span> File allowed.`,
-                                            type: 'error',
-                                            timer: 2500,
-                                            showConfirmButton: false,
-                                        }).then(() => {
-                                            $('#datafile').val('').addClass('form-control-danger');
-                                        })
-                                    }
-                                    else {
-                                        colnames = Object.keys(val.json[0]);
 
-                                        if (colnames.includes("name") && colnames.includes("phone") && colnames.includes("email")) {
-                                            $('#after_connect_div_localfile').removeClass('d-none');
-                                            var data = `<table class="table align-middle"><thead class="table-light"><tr>`;
+                            localfiledata(frmdata);
+                        }
+                        else {
+                            $('#after_connect_div_localfile').addClass('d-none');
+                            swal({
+                                title: "Select Different File",
+                                html: `Only <span class="text-danger">CSV</span> File allowed.`,
+                                type: 'error',
+                                timer: 2000,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                $('#datafile').val('').addClass('form-control-danger');
+                            })
+                        }
+                    });
 
-                                            for (let i = 0; i < colnames.length; i++) {
-                                                data += `<th>${colnames[i]}</th>`;
-                                            }
-                                            data += `</tr></thead><tbody class="list form-check-all">`;
+                    $('#localfile_refresh').click(function () {
+                        const filedata = document.getElementById("datafile").files[0];
 
-                                            localStorage.setItem("clientobj", val.json);
-                                            for (let i = 0; i < val.json.length; i++) {
-                                                colvalues = Object.values(val.json[i]);
-                                                clientobj = val.json;
+                        if (filedata && filedata.type == 'text/csv') {
+                            $('#datafile').addClass('form-control-success');
 
-                                                let y = localStorage.getItem("clientobj");
-                                                data += `<tr>`;
-                                                for (let j = 0; j < colnames.length; j++) {
-                                                    data += `<td class="name">${colvalues[j]}</td>`;
-                                                }
-                                                data += `</tr>`;
-                                                if (i >= 199) break;
-                                            }
-                                            localStorage.setItem("colnames", colnames);
-                                            data += `</tbody></table>`;
+                            let frmdata = new FormData();
+                            frmdata.append("csvfile", filedata);
 
-                                            $('#localfile_data').html(data);
-                                        } else {
-                                            $('#localfile_data')
-                                                .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
-                                                <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
-                                                    trigger="loop" colors="primary:#f06548"
-                                                    state="morph-intro-cross" style="width:70px;height:70px">
-                                                </lord-icon>
-                                            </div>
-                                            <p class="fs-15 text-center text-muted">
-                                                There is no such column like name, email, phone in this CSV File
-                                            </p>`);
-                                            $('#datafile').addClass('form-control-danger');
-                                        }
-                                    }
-                                }
-                            });
+                            localfiledata(frmdata);
                         }
                         else {
                             $('#after_connect_div_localfile').addClass('d-none');
@@ -2903,12 +2991,8 @@
                     });
 
                     //channel wise contact data
-                    let contacts = new Array();
-                    let ch_data = new Array();
-                    $(document).on("change", "#channel_list", function () {
-                        contacts = [];
-                        const channel_id = $("#channel_list").val();
-
+                    $("#contact_refresh").addClass('d-none');
+                    function channelcontactdata(channel_id, contacts) {
                         $.ajax({
                             url: "/get-channel-contact",
                             method: "POST",
@@ -2918,7 +3002,6 @@
                             },
                             success: function (val) {
                                 ch_data = val;
-                                console.log(ch_data)
                                 switch (val.status_code) {
                                     case '401': {
                                         InvalidUser();
@@ -2944,6 +3027,7 @@
                                     }
 
                                     default: {
+                                        $("#contact_refresh").removeClass('d-none');
                                         let output = `<table class= "table align-middle">
                                                 <thead class="table-light">
                                                     <tr>
@@ -2969,8 +3053,21 @@
                                 }
                             }
                         });
+                    }
+                    let contacts = new Array();
+                    let ch_data = new Array();
+                    $(document).on("change", "#channel_list", function () {
+                        contacts = [];
+                        const channel_id = $("#channel_list").val();
+
+                        channelcontactdata(channel_id, contacts);
                     });
 
+                    $('#contact_refresh').click(function () {
+                        contacts = [];
+                        const channel_id = $("#channel_list").val();
+                        channelcontactdata(channel_id, contacts);
+                    });
 
                     //template display for channel
                     function channelgetTemplateMessage(str) {

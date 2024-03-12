@@ -2247,6 +2247,35 @@ app.get('/message_summary', async (req, res) => {
     }
 })
 
+app.post('/message_filter', async (req, res) => {
+    apikey = req.cookies.apikey;
+    let start_date = req.body.startdate;
+    let end_date = req.body.enddate;
+
+    console.log("Start date:", start_date);
+    console.log("End date:", end_date);
+    const isValidapikey = await checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            conn.query(`SELECT m.instance_id AS iid, i.i_name AS i_name, 
+            COUNT(CASE WHEN m.msg_type = 'Single Message' THEN 1 END) AS single_message_count, 
+            COUNT(CASE WHEN m.msg_type like '%Document%' THEN 1 END) AS single_document_count, 
+            COUNT(CASE WHEN m.msg_type = 'Bulk Message Template' THEN 1 END) AS bulk_message_template_count,
+            COUNT(CASE WHEN m.msg_type = 'Bulk Message Custom' THEN 1 END) AS bulk_message_custom_count, 
+            COUNT(CASE WHEN m.msg_type = 'Bulk Message Channel' THEN 1 END) AS bulk_message_channel_count
+            FROM message m JOIN instance i ON m.instance_id = i.instance_id AND m.time BETWEEN '${start_date}' AND '${end_date}' GROUP BY m.apikey, m.instance_id, i.i_name having apikey = '${apikey}'`, function (err, result) {
+                if (err) return res.send(status.internalservererror());
+                if (result.length <= 0) return res.send(status.nodatafound());
+                res.send(result);
+            })
+        } else res.send(status.unauthorized());
+    }
+    catch (e) {
+        console.log(e);
+        res.send(status.unauthorized());
+    }
+})
+
 app.get('/message_summary_admin', async (req, res) => {
     conn.query(`SELECT COUNT(CASE WHEN m.msg_type = 'Single Message' THEN 1 END) AS single_message_count, 
             COUNT(CASE WHEN m.msg_type like '%Document%' THEN 1 END) AS single_document_count, 
@@ -2271,6 +2300,30 @@ app.get('/email_summary', async (req, res) => {
             COUNT(CASE WHEN m.email_type = 'Bulk Mail Custom' THEN 1 END) AS bulk_mail_custom_count, 
             COUNT(CASE WHEN m.email_type = 'Bulk Mail Channel' THEN 1 END) AS bulk_mail_channel_count
             FROM email m JOIN instance i ON m.instance_id = i.instance_id GROUP BY m.apikey, m.instance_id, i.i_name having apikey = '${apikey}'`, function (err, result) {
+                if (err) return res.send(status.internalservererror());
+                if (result.length <= 0) return res.send(status.nodatafound());
+                res.send(result);
+            })
+        } else res.send(status.unauthorized());
+    }
+    catch (e) {
+        console.log(e);
+        res.send(status.unauthorized());
+    }
+})
+
+app.post('/email_filter', async (req, res) => {
+    apikey = req.cookies.apikey;
+    let start_date = req.body.startdate;
+    let end_date = req.body.enddate;
+    const isValidapikey = await checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            conn.query(`SELECT m.instance_id AS iid, i.i_name AS i_name, 
+            COUNT(CASE WHEN m.email_type = 'Bulk Mail Template' THEN 1 END) AS bulk_mail_template_count,
+            COUNT(CASE WHEN m.email_type = 'Bulk Mail Custom' THEN 1 END) AS bulk_mail_custom_count, 
+            COUNT(CASE WHEN m.email_type = 'Bulk Mail Channel' THEN 1 END) AS bulk_mail_channel_count
+            FROM email m JOIN instance i ON m.instance_id = i.instance_id AND m.timestamp BETWEEN '${start_date}' AND '${end_date}' GROUP BY m.apikey, m.instance_id, i.i_name having apikey = '${apikey}'`, function (err, result) {
                 if (err) return res.send(status.internalservererror());
                 if (result.length <= 0) return res.send(status.nodatafound());
                 res.send(result);
