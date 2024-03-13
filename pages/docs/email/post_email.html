@@ -692,6 +692,28 @@
                                         ? $('#apikey').focus().addClass('form-control-danger')
                                         : $('#iid').focus().addClass('form-control-danger');
                                 }
+                            },
+                            error: (err) => {
+                                error = err.responseJSON;
+                                $(`#requesttab, a.nav-link[href="#requesttab"], 
+                                        #responsetab,a.nav-link[href="#responsetab"]`).removeClass('active');
+                                $('#responsetab, a.nav-link[href="#responsetab"]').addClass('active');
+
+                                $('#response').addClass('text-primary');
+                                const pre = document.getElementById('response');
+                                pre.textContent = JSON.stringify(error, null, 2);
+                                hljs.highlightBlock(pre);
+
+                                if (error.status_code == 401) {
+                                    (error.error.detail.includes("API-KEY"))
+                                        ? $('#apikey').focus().addClass('form-control-danger')
+                                        : $('#iid').focus().addClass('form-control-danger');
+                                }
+
+                                $('#test')
+                                    .addClass('btn-primary')
+                                    .removeClass('btn-warning btn-success')
+                                    .html(`<i class="ri-send-plane-fill align-middle me-2"></i> Test`);
                             }
                         });
                     }

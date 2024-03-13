@@ -195,7 +195,7 @@
             </div>
             <!-- Left Sidebar End -->
             <!-- Vertical Overlay-->
-         <!-- <div class="vertical-overlay"></div> -->
+            <!-- <div class="vertical-overlay"></div> -->
         </div>
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -217,14 +217,33 @@
                         </div>
                     </div>
                     <div class="row justify-content-between mb-3">
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="search-box">
                                 <input type="text" class="form-control search" id="searchContact"
                                     placeholder="Search contact ..." />
                                 <i class="ri-search-line search-icon"></i>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end col-8">
+                        <div class="d-flex justify-content-start align-items-center col-3">
+                            <div class="d-inline">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-type" name="filter-type" type="checkbox"
+                                        id="all" value="all" checked>
+                                    <label class="form-check-label" for="all">All</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-type" name="filter-type" type="checkbox"
+                                        id="active" value="message">
+                                    <label class="form-check-label" for="active">Active</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-type" name="filter-type" type="checkbox"
+                                        id="disable" value="email">
+                                    <label class="form-check-label" for="disable">Disable</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end col-6">
                             <button type="button" class="btn btn-soft-danger waves-effect waves-light fs-15 me-2"
                                 id="mic" data-bs-toggle="modal" data-bs-target="#voice_input">
                                 <i class="mdi mdi-microphone"></i>
@@ -261,11 +280,12 @@
                     <div class="card">
                         <h3 class="card-header text-center">Contact List</h3>
                         <div class="card-body">
-                            <div class="table-responsive table-card mb-1" id="table-fixed-header">
-                                <table class="table align-middle table-nowrap" id="customerTable">
+                            <div class="table-responsive table-card mb-1" id="table-fixed-header" data-simplebar
+                                data-simplebar-auto-hide="false" style="max-height: 48vh;">
+                                <table class="table align-middle table-nowrap mb-0 table-hover" id="customerTable">
                                     <thead class="table-light">
                                         <tr>
-                                            <th scope="col" style="width: 50px">
+                                            <th scope="col" style="width: 1rem">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="select_all"
                                                         value="option" />
@@ -274,6 +294,8 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
+                                            <th>Status</th>
+                                            <th>Groups</th>
                                             <th style="width: 150px">Action</th>
                                         </tr>
                                     </thead>
@@ -468,7 +490,7 @@
     </button>
     <!--end back-to-top-->
 
-    
+
     <!--preloader-->
     <div id="preloader">
         <div id="status">
@@ -546,7 +568,7 @@
     <script src="/assets/js/chatbot.js"></script>
     <script src="/assets/js/voiceRecognition.js"></script>
     <script src="/assets/js/validate.js"></script>
-    
+
     <script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/libs/simplebar/simplebar.min.js"></script>
     <script src="/assets/libs/node-waves/waves.min.js"></script>
@@ -647,6 +669,7 @@
 
         $(document).ready(() => {
             chkLogin();
+            var datasource = null;
 
             $.ajax({
                 url: "/user",
@@ -727,6 +750,76 @@
                 document.getElementById("spreedsheet").innerHTML = output;
             }
 
+            function filterResult(val) {
+                if (val.length > 0) {
+                    let data = ``;
+                    $('#contact-list').addClass('d-none');
+                    $('.noresult').addClass('d-none');
+                    $('#contact-list').removeClass('d-none');
+                    for (var i in val) {
+                        data += `
+                                <tr ${val[i].disable == 1 ? `class="opacity-50"` : ''}>
+                                    <th scope="row">
+                                        <div class="form-check">
+                                            <input class="form-check-input contact-select" type="checkbox" name="contact-select"
+                                                value="${val[i].contact_id}" id="check${val[i].contact_id}" />
+                                        </div>
+                                    </th>
+                                    <td class="customer_name w-25 text-truncate" style="max-width: 120px;">${val[i].name}</td>
+                                    <td class="customer_phone w-25 text-truncate" style="max-width: 120px;">${val[i].email}</td>
+                                    <td class="customer_email w-10">${val[i].phone}</td>
+                                    <td class="customer_email w-10">
+                                        <div class="form-check form-switch" data-id="${val[i].contact_id}">
+                                            <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].contact_id}" ${val[i].disable == 0 ? `checked=""` : ''}  />
+                                            ${val[i].disable == 0 ? `<label class="form-check-label" for="${val[i].contact_id}">Active</label>` : `<label class="form-check-label" for="${val[i].contact_id}">Disable</label>`}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group dropend">
+                                            <span class="ri-group-2-fill fs-2 text-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                                            <div class="dropdown-menu" data-simplebar-auto-hide="false" max-height: 150px>
+                                                <a class="dropdown-item" href="#">Group 1 </a>
+                                                <a class="dropdown-item" href="#">Group 2 </a>
+                                                <a class="dropdown-item" href="#">Group 3 </a>
+                                                <a class="dropdown-item" href="#">Group 1 </a>
+                                                <a class="dropdown-item" href="#">Group 2 </a>
+                                                <a class="dropdown-item" href="#">Group 3 </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <div class="edit">
+                                                <button class="btn btn-sm btn-success edit-item-btn fs-12"
+                                                    data-bs-toggle="modal" data-bs-target="#showModal" 
+                                                    data-id="${val[i].contact_id}" data-name="${val[i].name}" 
+                                                    data-phone="${val[i].phone}" data-email="${val[i].email}">
+                                                    <i class="mdi mdi-lead-pencil align-bottom me-lg-2"></i>
+                                                    <span class="d-none d-lg-inline-block">Edit</span>
+                                                </button>
+                                            </div>
+                                            <div class="remove">
+                                                <button class="btn btn-sm btn-soft-danger remove-item-btn fs-12" 
+                                                    data-id="${val[i].contact_id}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Delete">
+                                                        <i class="mdi mdi-trash-can align-bottom me-lg-2"></i>
+                                                        <span class="d-none d-lg-inline-block">Remove</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                    }
+                    $("#contact-list").html(data);
+                }
+                else {
+                    $('#contact-list').addClass('d-none');
+                    $('.noresult').addClass('d-none');
+                    $('.noresult').removeClass('d-none');
+                    $('#select_all').addClass('d-none');
+                }
+            }
+
             function displayContact(obj) {
                 $.ajax({
                     url: "/getData",
@@ -756,45 +849,12 @@
 
                             default: {
                                 let data = "";
+                                datasource = val;
                                 $('#contact-list').addClass('d-none');
                                 $('.noresult').addClass('d-none');
                                 $('#select_all').removeClass('d-none');
                                 $('#contact-list').removeClass('d-none');
-                                for (var i in val) {
-                                    data += `
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="form-check">
-                                                <input class="form-check-input contact-select" type="checkbox" name="contact-select"
-                                                    value="${val[i].contact_id}" id="check${val[i].contact_id}" />
-                                            </div>
-                                        </th>
-                                        <td class="customer_name w-25">${val[i].name}</td>
-                                        <td class="customer_phone w-25">${val[i].email}</td>
-                                        <td class="customer_email w-25">${val[i].phone}</td>
-                                        <td>
-                                            <div class="d-flex gap-2">
-                                                <div class="edit">
-                                                    <button class="btn btn-sm btn-success edit-item-btn fs-12"
-                                                        data-bs-toggle="modal" data-bs-target="#showModal" 
-                                                        data-id="${val[i].contact_id}" data-name="${val[i].name}" 
-                                                        data-phone="${val[i].phone}" data-email="${val[i].email}">
-                                                        <i class="mdi mdi-lead-pencil align-bottom me-lg-2"></i>
-                                                        <span class="d-none d-lg-inline-block">Edit</span>
-                                                    </button>
-                                                </div>
-                                                <div class="remove">
-                                                    <button class="btn btn-sm btn-soft-danger remove-item-btn fs-12" 
-                                                        data-id="${val[i].contact_id}">
-                                                            <i class="mdi mdi-trash-can align-bottom me-lg-2"></i>
-                                                            <span class="d-none d-lg-inline-block">Remove</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>`;
-                                }
-                                $("#contact-list").html(data);
+                                filterResult(val);
                             }
                         }
                     }
@@ -1012,19 +1072,36 @@
             });
 
             $(document).on("input", "#searchContact", function () {
-                let val = $('#searchContact').val().trim();
 
-                if (val == null || val == "") {
-                    displayContact({
-                        table: "contact",
-                        paramstr: `instance_id = '${iid}'`,
+                let val = $('#searchContact').val().trim();
+                let checkboxes = document.querySelectorAll(`input[name="filter-type"]:checked`);
+                Array.prototype.forEach.call(checkboxes, function (el) {
+                    $(`input[name="filter-type"]`).prop("checked", false);
+                    $(`input[name="filter-type"][id="all"]`).prop("checked", true);
+                });
+
+                function search(query) {
+                    query = query.toLowerCase();
+                    return datasource.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
+                        }
+                        return false;
                     });
                 }
+
+                let Searchresult = search($('#searchContact').val().trim());
+
+                if (val == null || val == "") {
+                    filterResult(datasource)
+                }
                 else {
-                    displayContact({
-                        table: "contact",
-                        paramstr: `(name LIKE '%${val}%' OR email LIKE '%${val}%' OR phone LIKE '%${val}%') and instance_id = '${iid}'`,
-                    });
+                    filterResult(Searchresult)
                 }
             })
 
@@ -1484,7 +1561,121 @@
                 })
             })
 
+            $(document).on('click', ".switch-active", function () {
+                const cid = $(this).attr('id');
+                let cval = ($(`#${cid}:checked`).length === 0) ? 1 : 0;
+                console.log(cval);
 
+                function updateStatus(cid, cval) {
+                    $.ajax({
+                        url: "/updateData",
+                        method: "PUT",
+                        data: {
+                            "table": "contact",
+                            "paramstr": `disable = '${cval}'`,
+                            "condition": `contact_id = '${cid}'`
+                        },
+                        success: function (val) {
+                            switch (val.status_code) {
+                                case '400':
+                                case '401': {
+                                    InvalidUser();
+                                    break;
+                                }
+
+                                case '404':
+                                case '500': {
+                                    InternalServerError();
+                                    break;
+                                }
+
+                                case '200': {
+                                    displayContact({
+                                        table: "contact",
+                                        paramstr: `instance_id = '${iid}'`,
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (!cval) {
+                    updateStatus(cid, cval)
+                }
+                else {
+                    swal({
+                        title: 'Are you sure?',
+                        text: "You can't send message / mail to this contact ..!!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it',
+                        cancelButtonText: 'No, cancel',
+                        confirmButtonClass: 'btn btn-success mx-2',
+                        cancelButtonClass: 'btn btn-outline-danger mx-2',
+                        buttonsStyling: false
+                    }).then(function (result) {
+                        if (result.value) {
+                            updateStatus(cid, cval)
+                        }
+                        else {
+                            if ($(`#${cid}`).length == 1) {
+                                $(`#${cid}`).prop('checked', true);
+                            } else {
+                                $(`#${cid}`).prop('checked', false);
+                            }
+                        }
+                    })
+                }
+            })
+
+            $(document).on('click', '.filter-type', function () {
+                let checkboxes = document.querySelectorAll(`input[name="filter-type"]:checked`), values = [];
+                let id = $(this).attr('id');
+                $('#searchContact').val('')
+
+                Array.prototype.forEach.call(checkboxes, function (el) {
+                    $(`input[name="filter-type"]`).prop("checked", false);
+                    $(`input[name="filter-type"][id="${id}"]`).prop("checked", true);
+                });
+
+                if (checkboxes.length === 0) {
+                    $(`input[name="filter-type"][id="all"]`).prop("checked", true);
+                    id = "all";
+                }
+
+                function search(query) {
+                    let x = null;
+
+                    if (query === "active") {
+                        x = 0;
+                    }
+                    else if (query === "disable") {
+                        x = 1;
+                    }
+                    else {
+                        x = null;
+                    }
+                    query = query.toLowerCase();
+                    return datasource.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj['disable'] == x) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+
+                if (id == "all") {
+                    filterResult(datasource)
+                }
+                else {
+                    let Searchresult = search(id);
+                    filterResult(Searchresult)
+                }
+            })
         });
     </script>
 

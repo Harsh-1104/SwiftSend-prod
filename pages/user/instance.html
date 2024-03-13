@@ -54,8 +54,8 @@
                                     <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
-                            
-                            
+
+
                             <a href="/" class="logo logo-light">
                                 <span class="logo-sm">
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
@@ -189,7 +189,7 @@
         </div>
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
-       <!--  <div class="vertical-overlay"></div>-->
+        <!--  <div class="vertical-overlay"></div>-->
 
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -626,27 +626,46 @@
                             $('#instance_data').removeClass('d-none');
                             data += `<thead class="table-light">
                                         <tr>
-                                            <th class="w-30">INSTANCE ID</th>
-                                            <th class="w-30">NAME</th>
-                                            <th class="w-30">CREATE DATE</th>
-                                            <th class="w-10"></th>
+                                            <th class="col w-20">INSTANCE ID</th>
+                                            <th class="col w-20">NAME</th>
+                                            <th class="col w-20">CREATE DATE</th>
+                                            <th class="col w-20">Status</th>
+                                            <th class="col w-10">Operation</th>
                                         </tr>
                                     </thead>
                                     <tbody class="list form-check-all">`;
 
                             const date = new Date().toLocaleDateString();
+                            // <button type="button" class="btn btn-sm btn-primary btn-label waves-effect right waves-light manage" id="${r.instance_id}">
+                            //     <i class="mdi mdi-spin mdi-cog-outline label-icon align-middle fs-16 ms-2"></i>
+                            //     Manage
+                            // </button>
                             for (let r of val) {
                                 var cdate = new Date(r.create_date).toLocaleDateString();
-                                data += `<tr>
+                                data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : ''}>
                                         <td class="instance_id">${r.instance_id}</td>
                                         <td class="instance_name">${r.i_name}</td>
                                         <td class="date">${cdate}</td>
-                                        <td>
-                                            <div class="d-flex justify-content-end me-3">
-                                                <div class="edit">
-                                                    <button type="button" class="btn btn-sm btn-primary btn-label waves-effect right waves-light manage" id="${r.instance_id}">
-                                                        <i class="mdi mdi-spin mdi-cog-outline label-icon align-middle fs-16 ms-2"></i>
-                                                        Manage
+                                        <td class="status">
+                                            ${r.disabled == 0 ?
+                                        `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` :
+                                        `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`
+                                    }
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="d-flex justify-content-end gap-3">
+                                                <button type="button" class="btn btn-sm btn-primary manage" id="${r.instance_id}" 
+                                                ${r.disabled == 1 ? `disabled="true"` : ''}>
+                                                    Manage
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-light" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ${r.disabled == 1 ? `disabled="true"` : ''}>
+                                                    <i class="fa-solid fa-ellipsis-vertical fs-6"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end" style="width: 100px;">
+                                                    <button class="dropdown-item deleteChannel fs-14" data-id="${r.instance_id}">
+                                                        <span class="text-end text-primary">
+                                                            <i class="mdi mdi-lead-pencil me-2"></i>Edit
+                                                        </span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -663,7 +682,6 @@
                 "table": "instance",
                 "paramstr": true
             });
-
 
             $(".required").on('focusout', function () {
                 onfocusout_validation($(this).attr('id'));

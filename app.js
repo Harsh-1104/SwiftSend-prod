@@ -238,7 +238,6 @@ function createfolder(foldername) {
 
 function deleteFolder(folderPath) {
     try {
-        console.log("ABC", fs.existsSync(`${__dirname}/assets/upload/${folderPath}`));
         if (fs.existsSync(`${__dirname}/assets/upload/${folderPath}`)) {
             fs.readdirSync(`${__dirname}/assets/upload/${folderPath}`).forEach((file) => {
                 const currentPath = path.join(`${__dirname}/assets/upload/${folderPath}`, file);
@@ -372,7 +371,7 @@ passport.use(new GoogleStrategy(
         clientID: "552657255780-ud1996049ike2guu982i3ms5ver5gbsf.apps.googleusercontent.com",
         clientSecret: "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",
         // callbackURL: `http://localhost:8081/auth/google/callback`,
-        callbackURL: `${DomainName}/auth/google/callback`,
+        callbackURL: `${(process.argv[2]) ? DomainName : `http://localhost:8081`}/auth/google/callback`,
     }, function (accessToken, refreshToken, profile, done) {
         userProfile = profile;
         return done(null, userProfile);
@@ -499,7 +498,7 @@ app.get("/qr/:iid", async (req, res) => {
                 });
                 fs.rmdirSync(`${__dirname}/.wwebjs_cache`);
             }
-            console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} : ${qrData}`);
+            // console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} : ${qrData}`);
             return res.send(qrData);
         }
     } catch (error) {
@@ -1815,7 +1814,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
     try {
         if (isValidapikey) {
             var clientarr = req.body.clients;
-            var query = `insert into contact values`;
+            var query = `insert into contact (contact_id,apikey,name,email,phone,instance_id)values`;
             for (var i in clientarr) {
                 let id = crypto.randomBytes(8).toString("hex");
                 if (i != clientarr.length - 1) {
@@ -1877,7 +1876,7 @@ app.post("/addinstance", async (req, res) => {
             apikey: apikey,
         }, (result) => {
             if (result.status_code == 404) {
-                conn.query(`INSERT INTO instance values('${id}','${name}','${apikey}','${token}',CURRENT_DATE,0)`,
+                conn.query(`INSERT INTO instance(instance_id,i_name,apikey,token,create_date,isActive) values('${id}','${name}','${apikey}','${token}',CURRENT_DATE,0)`,
                     function (error, result) {
                         if (error) return res.send(Object.assign(status.internalservererror(), { error: { detail: `Internal Server Error | Try again after some time` } }));
 
@@ -2610,6 +2609,7 @@ app.put("/updateData", (req, res) => {
         }
         else {
             let sql = `UPDATE ${req.body.table} SET ${req.body.paramstr} WHERE ${req.body.condition}`;
+            console.log(sql);
             conn.query(sql,
                 (err, result) => {
                     if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
@@ -2710,7 +2710,16 @@ app.post('/api/:iid/message', async (req, res) => {
                 apikey: apikey
             }, (result) => {
                 if (result.status_code == 500) return res.status(500).send(status.internalservererror());
-                if (result.status_code == 404) return res.status(401).send({ "status_code": "401", "Message": "Invalid Instance ID" });
+                if (result.status_code == 404) {
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: { detail: `Invalid Instance ID` }
+                    }));
+                }
+                if (result[0].disabled && result[0].disabled == '1') {
+                    return res.status(403).send(Object.assign(status.forbidden(), {
+                        error: { detail: `Instance Blocked` }
+                    }));
+                }
                 if (result.length > 1) return res.status(409).send(status.duplicateRecord());
                 if (obj[iid] && req.body.phone) {
                     requestBody.phone = req.body.phone;
@@ -2725,21 +2734,43 @@ app.post('/api/:iid/message', async (req, res) => {
                                     function (err, result) {
                                         if (err || result.affectedRows < 1) return res.status(500).send(status.internalservererror());
                                         logAPI("/message", apikey, iid, requestBody, "S");
-                                        res.status(200).send({ "status_code": "200", "Message": `Message sent to ${req.body.phone}` });
+                                        return res.status(200).send(Object.assign(status.ok(), {
+                                            data: {
+                                                detail: `Message sent to ${req.body.phone}`
+                                            }
+                                        }));
                                     });
                             }).catch((error) => {
                                 logAPI("/message", apikey, iid, requestBody, "E");
-                                return res.status(404).send({ "status_code": "404", "Message": `Error in sending message / Inactive instance , ${error}` });
+                                return res.status(401).send(Object.assign(status.unauthorized(), {
+                                    error: {
+                                        detail: "Error in sending message / Inactive instance"
+                                    }
+                                }));
                             })
                         }
                         else {
                             logAPI("/message", apikey, iid, requestBody, "E");
-                            return res.status(404).send({ "status_code": "404", "Message": `Receiver number or message is not defined in body` });
+                            return res.status(404).send(Object.assign(status.badRequest(), {
+                                error: {
+                                    detail: "Receiver number or message is not defined in body"
+                                }
+                            }));
                         }
                     }
                     else if (req.body.type === 'document') {
                         createfolder(`image_data/${apikey}/${iid}`);
-                        if (req.files && Object.keys(req.files).length !== 0) {
+                        if (req.files.image && !Array.isArray(req.files.image)) {
+                            if (req.files.image.size > 10000000) {
+                                logAPI("/message", apikey, iid, requestBody, "E");
+
+                                return res.status(406).send(Object.assign(status.notAccepted(), {
+                                    error: {
+                                        detail: `File Size are to large. Only Upto 10 MB are allowed.`
+                                    }
+                                }));
+                            }
+
                             const uploadedFile = req.files.image;
                             requestBody["Document/Image"] = uploadedFile.name;
                             const uploadPath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
@@ -2762,7 +2793,11 @@ app.post('/api/:iid/message', async (req, res) => {
                                                     return res.status(500).send(status.internalservererror());
                                                 }
                                                 logAPI("/message", apikey, iid, requestBody, "S");
-                                                return res.send(status.ok());
+                                                return res.status(200).send(Object.assign(status.ok(), {
+                                                    data: {
+                                                        detail: `Document sent to ${req.body.phone}`
+                                                    }
+                                                }));
                                             });
                                     }).catch((err) => {
                                         console.log(`error in storing Document on cloudinary ::::::: <${err}>`);
@@ -2775,21 +2810,43 @@ app.post('/api/:iid/message', async (req, res) => {
                                                 }
                                                 else {
                                                     logAPI("/message", apikey, iid, requestBody, "S");
-                                                    return res.send(status.ok());
+                                                    return res.status(200).send(Object.assign(status.ok(), {
+                                                        data: {
+                                                            detail: `Document sent to ${req.body.phone}`
+                                                        }
+                                                    }));
                                                 }
                                             })
+                                    }).finally(() => {
+                                        deleteFolder(`/image_data/${apikey}/${iid}`);
                                     });
                                 }).catch((error) => {
                                     console.error(`error in sending Document ::::::: <${error}>`);
                                     logAPI("/message", apikey, iid, requestBody, "E");
-                                    return res.status(404).send({ "status_code": "404", "Message": "Error in sending Doucment / Inactive instance" });
-                                });
+                                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                                        error: {
+                                            detail: "Error in sending Doucment / Inactive instance"
+                                        }
+                                    }));
+                                })
                             });
+                        }
+                        else {
+                            logAPI("/message", apikey, iid, requestBody, "E");
+                            return res.status(406).send(Object.assign(status.notAccepted(), {
+                                error: {
+                                    detail: "This API accepts only one file at a time. Please send only one file."
+                                }
+                            }));
                         }
                     }
                     else {
                         logAPI("/message", apikey, iid, requestBody, "E");
-                        return res.status(404).send({ "status_code": "404", "Message": "Missing information in body (type* -> missing)" });
+                        return res.status(404).send(Object.assign(status.badRequest(), {
+                            error: {
+                                detail: "Missing information in body (type* -> missing)"
+                            }
+                        }));
                     }
                 }
                 else {
@@ -2799,18 +2856,31 @@ app.post('/api/:iid/message', async (req, res) => {
                         "Document/Image": ""
                     }
                     logAPI("/message", apikey, iid, requestBody, "E");
-                    res.status(404).send({ "status_code": "404", "Message": "Error in sending message / Inactive instance" });
+
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: {
+                            detail: "Error in sending message / Inactive instance"
+                        }
+                    }));
                 }
             });
         } else {
             logAPI("/message", apikey, iid, requestBody, "E");
-            res.status(401).send({ "status_code": "401", "Message": "Invalid API KEY" });
+            return res.status(401).send(Object.assign(status.unauthorized(), {
+                error: {
+                    detail: "Invalid API-KEY."
+                }
+            }));
         }
     }
     catch (e) {
         console.log(e);
         logAPI("/message", apikey, iid, requestBody, "E");
-        res.status(401).send({ "status_code": "401", "Message": "Invalid API KEY" });
+        return res.status(401).send(Object.assign(status.expectationFailed(), {
+            error: {
+                detail: "Invalid API-KEY | Issue in API"
+            }
+        }));
     }
 });
 
@@ -2861,8 +2931,20 @@ app.post('/api/:iid/email', async (req, res) => {
                 paramstr: `instance_id = '${iid}'`,
                 apikey: apikey
             }, async (result) => {
+                console.log("result : ", result);
+                console.log("AAA : ", result[0].disabled);
                 if (result.status_code == 500) return res.status(500).send(status.internalservererror());
-                if (result.status_code == 404 || result.length > 1) return res.status(401).send({ "status_code": "401", "Message": "Invalid Instance ID" });
+                if (result.status_code == 404 || result.length > 1) {
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: { detail: `Invalid Instance ID` }
+                    }));
+                }
+                if (result[0].disabled && result[0].disabled == '1') {
+                    return res.status(403).send(Object.assign(status.forbidden(), {
+                        error: { detail: `Instance Blocked` }
+                    }));
+                }
+
 
                 const to = req.body.to;
                 const subject = req.body.subject;
@@ -2884,34 +2966,54 @@ app.post('/api/:iid/email', async (req, res) => {
                         if (attachments_size <= 10000000) {
                             sendEmail(sender, { to: to, bcc: "" }, subject, body, fileobj).then(() => {
                                 logAPI("/email", apikey, iid, requestBody, "S");
-                                return res.send({ "status_code": "200", "Message": "Email Sent" });
+                                return res.status(200).send(Object.assign(status.ok(), {
+                                    data: {
+                                        detail: `Email Sent to ${to}`
+                                    }
+                                }));
                             }).catch((error) => {
                                 logAPI("/email", apikey, iid, requestBody, "E");
-                                return res.status(404).send({ "status_code": "1013", "Message": `Error in sending Email <${error}> / insufficient data in body object.` });
+                                return res.status(404).send(Object.assign(status.notAccepted(), {
+                                    error: {
+                                        detail: `Error in sending Email / insufficient data in body object.`,
+                                        errorData: error
+                                    }
+                                }));
                             }).finally(() => {
                                 deleteFolder(`/image_data/${apikey}/${iid}`);
                             })
                         }
                         else {
-                            console.log("Total file size exceeds the limit (10 MB)");
                             logAPI("/email", apikey, iid, requestBody, "E");
-                            return res.status(401).send({ code: "401", message: "Total file size exceeds the limit (10 MB)" });
+                            return res.status(406).send(Object.assign(status.notAccepted(), {
+                                error: {
+                                    detail: `Total file size exceeds the limit (10 MB)`
+                                }
+                            }));
                         }
                     })
                     .catch((error) => {
-                        console.log(error)
+                        console.log(error);
                     });
             });
 
         } else {
             logAPI("/email", apikey, iid, requestBody, "E");
-            res.status(401).send({ "status_code": "401", "Message": "Invalid API KEY" });
+            return res.status(401).send(Object.assign(status.unauthorized(), {
+                error: {
+                    detail: "Invalid API-KEY."
+                }
+            }));
         }
     }
     catch (e) {
         console.log(e);
         logAPI("/email", apikey, iid, requestBody, "E");
-        res.status(401).send({ "status_code": "401", "Message": "Invalid API KEY" });
+        return res.status(401).send(Object.assign(status.expectationFailed(), {
+            error: {
+                detail: "Invalid API-KEY | Issue in API"
+            }
+        }));
     }
 });
 
@@ -2928,7 +3030,11 @@ app.get('/api/:iid/:fld', async (req, res) => {
                 apikey: apikey
             }, (result) => {
                 if (result.status_code == 500) return res.status(500).send(status.internalservererror());
-                if (result.status_code == 404) return res.status(401).send({ "status_code": "401", "Message": "Invalid Instance ID" });
+                if (result.status_code == 404) {
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: { detail: `Invalid Instance ID` }
+                    }));
+                }
                 if (result.length > 1) return res.status(409).send(status.duplicateRecord());
                 tableData({
                     table: `${req.params.fld}`,
@@ -2940,11 +3046,22 @@ app.get('/api/:iid/:fld', async (req, res) => {
                     res.send(result);
                 });
             });
-        } else res.status(401).send({ "status_code": "401", "Message": "Invalid API KEY" });
+        }
+        else {
+            return res.status(401).send(Object.assign(status.unauthorized(), {
+                error: {
+                    detail: "Invalid API-KEY."
+                }
+            }));
+        }
     }
     catch (e) {
         console.log(e);
-        res.status(401).send({ "status_code": "401", "Message": "Invalid API KEY" });
+        return res.status(401).send(Object.assign(status.expectationFailed(), {
+            error: {
+                detail: "Invalid API-KEY | Issue in API"
+            }
+        }));
     }
 });
 
@@ -2962,7 +3079,11 @@ app.post('/api/:iid/:fld', async (req, res) => {
                 apikey: apikey
             }, (result) => {
                 if (result.status_code == 500) return res.send(status.internalservererror());
-                if (result.status_code == 404) return res.send({ "status_code": "401", "Message": "Invalid Instance ID" });
+                if (result.status_code == 404) {
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: { detail: `Invalid Instance ID` }
+                    }));
+                }
                 if (result.length > 1) return res.send(status.duplicateRecord());
                 let ID = crypto.randomBytes(8).toString("hex");
 
@@ -2983,11 +3104,22 @@ app.post('/api/:iid/:fld', async (req, res) => {
                     res.send(status.created());
                 });
             });
-        } else res.send({ "status_code": "401", "Message": "Invalid API KEY" });
+        }
+        else {
+            return res.status(401).send(Object.assign(status.unauthorized(), {
+                error: {
+                    detail: "Invalid API-KEY."
+                }
+            }));
+        }
     }
     catch (e) {
         console.log(e);
-        res.send({ "status_code": "401", "Message": "Invalid API KEY" });
+        return res.status(401).send(Object.assign(status.expectationFailed(), {
+            error: {
+                detail: "Invalid API-KEY | Issue in API"
+            }
+        }));
     }
 });
 
@@ -3040,21 +3172,40 @@ app.delete('/api/:iid/:fld', async (req, res) => {
                 apikey: apikey
             }, (result) => {
                 if (result.status_code == 500) return res.send(status.internalservererror());
-                if (result.status_code == 404) return res.send({ "status_code": "401", "Message": "Invalid Instance ID" });
+                if (result.status_code == 404) {
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: { detail: `Invalid Instance ID` }
+                    }));
+                }
                 if (result.length > 1) return res.send(status.duplicateRecord());
 
                 let query = `delete from ${req.params.fld} where ${Object.keys(req.body)[0]} = ${Object.values(req.body)[0]}`;
                 conn.query(query, (err, result) => {
                     if (err) return res.send(status.internalservererror());
                     if (result.affectedRows <= 0) return res.send({ "status_code": "404", "Message": "Invalid Contact ID" });
-                    res.send(status.ok());
+                    return res.status(200).send(Object.assign(status.ok(), {
+                        error: {
+                            detail: "Item Deleted Successfully."
+                        }
+                    }));
                 });
             });
-        } else res.send({ "status_code": "401", "Message": "Invalid API KEY" });
+        }
+        else {
+            return res.status(401).send(Object.assign(status.unauthorized(), {
+                error: {
+                    detail: "Invalid API-KEY."
+                }
+            }));
+        }
     }
     catch (e) {
         console.log(e);
-        res.send({ "status_code": "401", "Message": "Invalid API KEY" });
+        return res.status(401).send(Object.assign(status.expectationFailed(), {
+            error: {
+                detail: "Invalid API-KEY | Issue in API"
+            }
+        }));
     }
 });
 
