@@ -174,7 +174,7 @@
             </div>
             <!-- Left Sidebar End -->
             <!-- Vertical Overlay-->
-         <!-- <div class="vertical-overlay"></div> -->
+            <!-- <div class="vertical-overlay"></div> -->
         </div>
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -203,10 +203,10 @@
                                 </span>
                                 <input type="text" class="form-control required w-50" id="iid"
                                     placeholder="Enter Instance ID" data-type="message" autocomplete="off" />
-                                    <button class="input-group-text copy" type="button" id="copy_iid" data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Copy Instance ID">
-                                        <i class="fa-regular fa-copy align-middle fs-5"></i>
-                                    </button>
+                                <button class="input-group-text copy" type="button" id="copy_iid"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Instance ID">
+                                    <i class="fa-regular fa-copy align-middle fs-5"></i>
+                                </button>
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text bg-soft-primary text-primary fw-medium">
@@ -214,8 +214,8 @@
                                 </span>
                                 <input type="text" class="form-control required w-50" id="apikey"
                                     placeholder="Enter API KEY" data-type="message" autocomplete="off" />
-                                <button class="input-group-text copy" type="button" id="copy_apikey" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Copy APIKEY">
+                                <button class="input-group-text copy" type="button" id="copy_apikey"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Copy APIKEY">
                                     <i class="fa-regular fa-copy align-middle fs-5"></i>
                                 </button>
                             </div>
@@ -307,12 +307,14 @@
                                                 </div>
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="accordionFillExample4">
-                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#accordion_header" aria-expanded="false" aria-controls="accordion_param">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target="#accordion_header"
+                                                            aria-expanded="false" aria-controls="accordion_param">
                                                             Headers
                                                         </button>
                                                     </h2>
-                                                    <div id="accordion_header" class="accordion-collapse collapse" aria-labelledby="accordionFillExample2"
+                                                    <div id="accordion_header" class="accordion-collapse collapse"
+                                                        aria-labelledby="accordionFillExample2"
                                                         data-bs-parent="#accordionFill">
                                                         <div class="accordion-body">
                                                             <table class="table table-bordered">
@@ -358,7 +360,8 @@
                                                                             (Required)
                                                                         </span>
                                                                     </th>
-                                                                    <td style="width: 70%;">Document you want to send</td>
+                                                                    <td style="width: 70%;">Document you want to send
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th style="width: 40%;">
@@ -367,7 +370,8 @@
                                                                             (Required)
                                                                         </span>
                                                                     </th>
-                                                                    <td style="width: 70%;" class="text-primary">document</td>
+                                                                    <td style="width: 70%;" class="text-primary">
+                                                                        document</td>
                                                                 </tr>
                                                             </table>
                                                         </div>
@@ -388,7 +392,8 @@
                                                         <div class="accordion-body">
                                                             <table class="table">
                                                                 <tr>
-                                                                    <th class="text-success text-center" style="width: 20%;">
+                                                                    <th class="text-success text-center"
+                                                                        style="width: 20%;">
                                                                         200
                                                                     </th>
                                                                     <td style="width: 80%;">
@@ -396,7 +401,8 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th class="text-danger text-center" style="width: 20%;">
+                                                                    <th class="text-danger text-center"
+                                                                        style="width: 20%;">
                                                                         401
                                                                     </th>
                                                                     <td style="width: 80%;">
@@ -404,7 +410,8 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th class="text-danger text-center" style="width: 20%;">
+                                                                    <th class="text-danger text-center"
+                                                                        style="width: 20%;">
                                                                         500
                                                                     </th>
                                                                     <td style="width: 80%;">
@@ -412,7 +419,8 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th class="text-danger text-center" style="width: 20%;">
+                                                                    <th class="text-danger text-center"
+                                                                        style="width: 20%;">
                                                                         1013
                                                                     </th>
                                                                     <td style="width: 80%;">
@@ -569,7 +577,7 @@
                             break;
                         }
 
-                        case '401': 
+                        case '401':
                         case '404': {
                             data = ` - `;
                             break;
@@ -606,10 +614,14 @@
 
                         let formData = new FormData();
                         formData.append("iid", iid);
-                        formData.append("image", document.getElementById('document_file').files[0]);
                         formData.append("phone", $('#phone').val().trim());
                         formData.append("type", 'document');
-                        
+
+                        const imageFiles = document.getElementById('document_file').files;
+                        for (let i = 0; i < imageFiles.length; i++) {
+                            formData.append("image", imageFiles[i]);
+                        }
+
                         $.ajax({
                             url: `/api/${iid}/message`,
                             method: `POST`,
@@ -649,6 +661,28 @@
 
                                 if (val.status_code == 401) {
                                     (val.Message.includes("API KEY"))
+                                        ? $('#apikey').focus().addClass('form-control-danger')
+                                        : $('#iid').focus().addClass('form-control-danger');
+                                }
+
+                                $('#test')
+                                    .removeClass('btn-warning btn-success')
+                                    .addClass('btn-primary')
+                                    .html(`<i class="ri-send-plane-fill align-middle me-2"></i>Test`);
+                            },
+                            error: (err) => {
+                                error = err.responseJSON;
+                                $(`#requesttab, a.nav-link[href="#requesttab"], 
+                                        #responsetab,a.nav-link[href="#responsetab"]`).removeClass('active');
+                                $('#responsetab, a.nav-link[href="#responsetab"]').addClass('active');
+
+                                $('#response').addClass('text-primary');
+                                const pre = document.getElementById('response');
+                                pre.textContent = JSON.stringify(error, null, 2);
+                                hljs.highlightBlock(pre);
+
+                                if (error.status_code == 401) {
+                                    (error.error.detail.includes("API-KEY"))
                                         ? $('#apikey').focus().addClass('form-control-danger')
                                         : $('#iid').focus().addClass('form-control-danger');
                                 }

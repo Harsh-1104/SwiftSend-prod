@@ -323,6 +323,31 @@ $(document).ready(function () {
 
     if (page[3] === 'instance') {
         if (page[5]) {
+            $.ajax({
+                url: "/getData",
+                method: "POST",
+                data: {
+                    obj: {
+                        "table": "instance",
+                        "paramstr": `instance_id = '${page[4]}'`
+                    }
+                },
+                success: function (val) {
+                    if (val[0] && val[0].disabled == 1) {
+
+                        swal({
+                            title: "Instance blocked",
+                            text: "Contact admin regarding reactivation.",
+                            type: 'error',
+                            timer: 4000,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.href = "/instance";
+                        });
+                    }
+                }
+            })
+
             switch (page[5].split('?')[0]) {
                 case 'logs':
                 case 'bulkmessage':
