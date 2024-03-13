@@ -432,6 +432,7 @@
 
             function channelContactDisplay(channel_id) {
                 $.ajax({
+                    // url: "/get-channel-contact",
                     url: "/get-channel-contact",
                     method: "POST",
                     data: {
@@ -463,13 +464,16 @@
                                 break;
                             }
 
+                            //  <p class="born timestamp text-muted mb-0" style="word-break: break-word;">
+                            //         <i class="ri-mail-fill text-primary me-2"></i>${val[i].email}
+                            //     </p>
                             default: {
                                 for (var i in val) {
                                     data += `
                                         <li class="list-group-item" data-id="1">
-                                            <div class="d-flex">
+                                            <div ${val[i].disable == 1 ? `class="d-flex opacity-50"` : 'class="d-flex"'}>
                                                 <div class="flex-shrink-0 d-flex align-items-center">
-                                                    <i class="bx bxs-user fs-1 text-primary"></i>
+                                                    <i class="bx bxs-user fs-4 text-primary"></i>
                                                 </div>
                                                 <div class="vr mx-2"></div>
                                                 <div class="flex-grow-1 mx-2">
@@ -478,9 +482,6 @@
                                                     </h5>
                                                     <p class="born timestamp text-muted mb-0">
                                                         <i class="ri-phone-fill text-primary me-2"></i>${val[i].phone}
-                                                    </p>
-                                                    <p class="born timestamp text-muted mb-0" style="word-break: break-word;">
-                                                        <i class="ri-mail-fill text-primary me-2"></i>${val[i].email}
                                                     </p>
                                                 </div>
                                                 <div class="flex-shrink-0 d-flex align-items-center me-2 delete_contact d-none" data-channel_id = "${channel_id}" data-contact_id="${val[i].contact_id}">
@@ -562,7 +563,7 @@
                                                             </button>
                                                         </div>
                                                         <div data-simplebar data-simplebar-auto-hide="false" 
-                                                            style="height: 210px;" class="mx-n3">
+                                                            style="height: 40vh;" class="mx-n3">
                                                             <ul class="list list-group list-group-flush mb-3"
                                                                 id="channel${val[i].channel_id}">
                                                             </ul>

@@ -1342,7 +1342,6 @@ async function sendMessageToTeams(webhookUrl, message) {
         // console.log('Message sent to Microsoft Teams successfully');
         // console.log('Response:', response.data);
         return true;
-
     } catch (error) {
         console.error('Error sending message to Microsoft Teams:', error.message);
         return false;
@@ -1768,7 +1767,29 @@ app.post("/get-channel-contact", async (req, res) => {
     try {
         if (isValidapikey) {
             const channel_id = req.body.channel_id;
-            conn.query(`SELECT cc.channel_id,c.contact_id,c.name,ch.channelName,c.phone,c.email FROM contact_channel cc, contact c, channel ch WHERE cc.channel_id = ch.channel_id AND cc.contact_id = c.contact_id and cc.apikey = '${apikey}' AND cc.channel_id = '${channel_id}' AND cc.instance_id = '${req.body.iid}' order by c.name asc`,
+            conn.query(`SELECT cc.channel_id,c.contact_id,c.name,ch.channelName,c.phone,c.email,c.disable FROM contact_channel cc, contact c, channel ch WHERE cc.channel_id = ch.channel_id AND cc.contact_id = c.contact_id and cc.apikey = '${apikey}' AND cc.channel_id = '${channel_id}' AND cc.instance_id = '${req.body.iid}' order by c.name asc`,
+                (err, result) => {
+                    if (err) return res.send(status.internalservererror());
+                    if (result.length == 0) return res.send(status.nodatafound());
+                    res.send(result);
+                });
+        } else res.send(status.unauthorized());
+    }
+    catch (e) {
+        console.log(e);
+        res.send(status.unauthorized());
+    }
+});
+
+// Channel : get contact of particular channel
+app.post("/get-channel-active-contact", async (req, res) => {
+    apikey = req.cookies.apikey;
+
+    const isValidapikey = await checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            const channel_id = req.body.channel_id;
+            conn.query(`SELECT cc.channel_id,c.contact_id,c.name,ch.channelName,c.phone,c.email,c.disable FROM contact_channel cc, contact c, channel ch WHERE cc.channel_id = ch.channel_id AND cc.contact_id = c.contact_id and cc.apikey = '${apikey}' AND cc.channel_id = '${channel_id}' AND cc.instance_id = '${req.body.iid}'  AND c.disable = 0 order by c.name asc`,
                 (err, result) => {
                     if (err) return res.send(status.internalservererror());
                     if (result.length == 0) return res.send(status.nodatafound());
@@ -2251,8 +2272,6 @@ app.post('/message_filter', async (req, res) => {
     let start_date = req.body.startdate;
     let end_date = req.body.enddate;
 
-    console.log("Start date:", start_date);
-    console.log("End date:", end_date);
     const isValidapikey = await checkAPIKey(apikey);
     try {
         if (isValidapikey) {
@@ -2662,7 +2681,6 @@ app.put("/updateData", (req, res) => {
         }
         else {
             let sql = `UPDATE ${req.body.table} SET ${req.body.paramstr} WHERE ${req.body.condition}`;
-            console.log(sql);
             conn.query(sql,
                 (err, result) => {
                     if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
@@ -2795,7 +2813,7 @@ app.post('/api/:iid/message', async (req, res) => {
                                     });
                             }).catch((error) => {
                                 logAPI("/message", apikey, iid, requestBody, "E");
-                                return res.status(401).send(Object.assign(status.unauthorized(), {
+                                return res.status(403).send(Object.assign(status.forbidden(), {
                                     error: {
                                         detail: "Error in sending message / Inactive instance"
                                     }
@@ -2876,7 +2894,7 @@ app.post('/api/:iid/message', async (req, res) => {
                                 }).catch((error) => {
                                     console.error(`error in sending Document ::::::: <${error}>`);
                                     logAPI("/message", apikey, iid, requestBody, "E");
-                                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                                    return res.status(403).send(Object.assign(status.forbidden(), {
                                         error: {
                                             detail: "Error in sending Doucment / Inactive instance"
                                         }
@@ -2910,7 +2928,7 @@ app.post('/api/:iid/message', async (req, res) => {
                     }
                     logAPI("/message", apikey, iid, requestBody, "E");
 
-                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                    return res.status(403).send(Object.assign(status.forbidden(), {
                         error: {
                             detail: "Error in sending message / Inactive instance"
                         }
@@ -4319,7 +4337,8 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
+    console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`);
     console.log(`Your server is up and running on : ${port}`);
-    console.log(`http://localhost:${port}/signin`);
-    console.log(`https://swiftsend.click`);
+    // console.log(`http://localhost:${port}/signin`);
+    // console.log(`https://swiftsend.click`);
 });
