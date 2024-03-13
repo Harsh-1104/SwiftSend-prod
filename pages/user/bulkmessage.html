@@ -333,11 +333,9 @@
                                             Point your phone to this screen to capture the code.
                                         </li>
                                         <li class="text-primary">
-                                            After You scan the QR it will take time to connect so wait till the success
-                                            message and do not close the tab.
-                                        </li>
-                                        <li class="text-primary">
-                                            Wait 2-3 Minutes for Authentication Successfully Message.
+                                            After scanning the QR code, Wait for a while | Don't close the tab until you
+                                            receive the
+                                            success message.
                                         </li>
                                     </ul>
                                 </div>
@@ -2997,7 +2995,8 @@
                     $("#contact_refresh").addClass('d-none');
                     function channelcontactdata(channel_id, contacts) {
                         $.ajax({
-                            url: "/get-channel-contact",
+                            // url: "/get-channel-contact",
+                            url: "/get-channel-active-contact",
                             method: "POST",
                             data: {
                                 "channel_id": channel_id,
@@ -3022,7 +3021,7 @@
                                                     trigger="loop" colors="primary:#f06548"
                                                     state="morph-intro-cross" style="width:70px;height:70px">
                                                 </lord-icon>
-                                                <h5 class="mt-2">No Contact in this channel</h5>
+                                                <h5 class="mt-2">No Active Contact in this channel</h5>
                                             </div>
                                         </div>`;
                                         $("#contact_data").html(data);

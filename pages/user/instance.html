@@ -252,14 +252,25 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table-card">
-                                <table class="table align-middle table-nowrap" id="instance_data"></table>
+                                <table class="table align-middle table-nowrap">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col w-20">INSTANCE ID</th>
+                                            <th class="col w-20">NAME</th>
+                                            <th class="col w-20">CREATE DATE</th>
+                                            <th class="col w-20">Status</th>
+                                            <th class="col w-10">Operation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list form-check-all" id="instance_data"></tbody>
+                                </table>
                                 <div class="noresult d-none py-5">
                                     <div class="text-center">
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                             colors="primary:#212529,secondary:#405189"
                                             style="width: 75px; height: 75px">
                                         </lord-icon>
-                                        <h5 class="mt-2">Sorry! No Result Found</h5>
+                                        <h5 class="mt-2">No Instance Found</h5>
                                     </div>
                                 </div>
                             </div>
@@ -378,12 +389,79 @@
     <script>
         $(document).ready(function () {
             chkLogin();
+            var datasource = null;
+
+            function filterResult(val) {
+                $('#instance_data').addClass('d-none');
+                $('.noresult').addClass('d-none');
+                if (val.length > 0) {
+                    let data = ``;
+                    $('#instance_data').removeClass('d-none');
+
+                    for (let r of val) {
+                        var cdate = new Date(r.create_date).toLocaleDateString();
+                        data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : ''}>
+                                    <td class="instance_id">${r.instance_id}</td>
+                                    <td class="instance_name">${r.i_name}</td>
+                                    <td class="date">${cdate}</td>
+                                    <td class="status">
+                                        ${r.disabled == 0 ?
+                                `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` :
+                                `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`
+                            }
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-3">
+                                            <button type="button" class="btn btn-sm btn-primary manage" id="${r.instance_id}" 
+                                            ${r.disabled == 1 ? `disabled="true"` : ''}>
+                                                Manage
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ${r.disabled == 1 ? `disabled="true"` : ''}>
+                                                <i class="fa-solid fa-ellipsis-vertical fs-6"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" style="width: 100px;">
+                                                <button class="dropdown-item deleteChannel fs-14" data-id="${r.instance_id}">
+                                                    <span class="text-end text-primary">
+                                                        <i class="mdi mdi-lead-pencil me-2"></i>Edit
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                    }
+                    $("#instance_data").html(data);
+                }
+                else {
+                    $('.noresult').removeClass('d-none');
+                }
+            }
 
             $(document).on('input', '#searchInstance', () => {
-                instance_data({
-                    "table": "instance",
-                    "paramstr": `(i_name like '%${$('#searchInstance').val()}%')`
-                });
+
+                function search(query) {
+                    query = query.toLowerCase();
+                    return datasource.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+
+                let Searchresult = search($('#searchInstance').val().trim());
+
+                if ($('#searchInstance').val().trim() == null || $('#searchInstance').val().trim() == "") {
+                    filterResult(datasource)
+                }
+                else {
+                    filterResult(Searchresult)
+                }
             })
 
             function display_ribbon_days() {
@@ -448,10 +526,7 @@
                                                     confirmButtonClass: 'btn btn-primary mx-2',
                                                     buttonsStyling: false
                                                 })
-                                                instance_data({
-                                                    "table": "instance",
-                                                    "paramstr": true
-                                                });
+                                                instance_data();
                                                 break;
                                             }
 
@@ -611,77 +686,23 @@
             }
             display_ribbon_days();
 
-            function instance_data(obj) {
+            function instance_data() {
                 $.ajax({
                     url: "/getData",
                     method: "POST",
-                    data: { obj: obj },
+                    data: {
+                        obj: {
+                            "table": "instance",
+                            "paramstr": true
+                        }
+                    },
                     success: function (val) {
-                        $('#instance_data, .noresult').addClass('d-none');
-                        let data = ``;
-                        if (val.status_code == 404) {
-                            $('.noresult').removeClass('d-none');
-                        }
-                        else {
-                            $('#instance_data').removeClass('d-none');
-                            data += `<thead class="table-light">
-                                        <tr>
-                                            <th class="col w-20">INSTANCE ID</th>
-                                            <th class="col w-20">NAME</th>
-                                            <th class="col w-20">CREATE DATE</th>
-                                            <th class="col w-20">Status</th>
-                                            <th class="col w-10">Operation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="list form-check-all">`;
-
-                            const date = new Date().toLocaleDateString();
-                            // <button type="button" class="btn btn-sm btn-primary btn-label waves-effect right waves-light manage" id="${r.instance_id}">
-                            //     <i class="mdi mdi-spin mdi-cog-outline label-icon align-middle fs-16 ms-2"></i>
-                            //     Manage
-                            // </button>
-                            for (let r of val) {
-                                var cdate = new Date(r.create_date).toLocaleDateString();
-                                data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : ''}>
-                                        <td class="instance_id">${r.instance_id}</td>
-                                        <td class="instance_name">${r.i_name}</td>
-                                        <td class="date">${cdate}</td>
-                                        <td class="status">
-                                            ${r.disabled == 0 ?
-                                        `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` :
-                                        `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`
-                                    }
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="d-flex justify-content-end gap-3">
-                                                <button type="button" class="btn btn-sm btn-primary manage" id="${r.instance_id}" 
-                                                ${r.disabled == 1 ? `disabled="true"` : ''}>
-                                                    Manage
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-light" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ${r.disabled == 1 ? `disabled="true"` : ''}>
-                                                    <i class="fa-solid fa-ellipsis-vertical fs-6"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-end" style="width: 100px;">
-                                                    <button class="dropdown-item deleteChannel fs-14" data-id="${r.instance_id}">
-                                                        <span class="text-end text-primary">
-                                                            <i class="mdi mdi-lead-pencil me-2"></i>Edit
-                                                        </span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>`;
-                            }
-                        }
-                        data += `</tbody>`;
-                        document.getElementById("instance_data").innerHTML = data;
+                        datasource = val;
+                        filterResult(val);
                     }
                 })
             }
-            instance_data({
-                "table": "instance",
-                "paramstr": true
-            });
+            instance_data();
 
             $(".required").on('focusout', function () {
                 onfocusout_validation($(this).attr('id'));
@@ -721,10 +742,7 @@
                                     }).then(function () {
                                         $('#instance_name').val("");
                                         $('#instance_name').removeClass('form-control-danger form-control-success')
-                                        instance_data({
-                                            "table": "instance",
-                                            "paramstr": true
-                                        });
+                                        instance_data();
                                     })
                                     break;
                                 }
