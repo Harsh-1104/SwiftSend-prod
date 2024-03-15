@@ -1117,145 +1117,56 @@ app.post("/sendmsgchannel", async function (req, res) {
 app.post('/schedule', async (req, res) => {
     apikey = req.cookies.apikey;
 
-    const sender = {
-        "hostname": 'smtp.gmail.com',
-        "port": '465',
-        "email": 'dashboardcrm.2022@gmail.com',
-        "passcode": 'ofesjzhktjomxdqv'
-    };
+    conn.query(`select * from company`,
+        async function (err, result) {
+            if (err || result.length <= 0) return res.send(status.internalservererror());
+            if (result.length > 0) {
+                const sender = {
+                    "hostname": 'smtp.gmail.com',
+                    "port": '465',
+                    "email": 'dashboardcrm.2022@gmail.com',
+                    "passcode": 'ofesjzhktjomxdqv'
+                };
+                const isValidapikey = await checkAPIKey(apikey);
+                try {
+                    if (isValidapikey) {
+                        const iid = req.body.iid;
+                        const token = req.body.token;
+                        const time = req.body.time;
+                        const schedule_id = `sh_${crypto.randomBytes(6).toString("hex")}`;
+                        const to = await findData(apikey, 'email');
+                        const subject = `Regarding your Schedule Message on SwiftSend`;
 
-    const isValidapikey = await checkAPIKey(apikey);
-    try {
-        if (isValidapikey) {
-            const iid = req.body.iid;
-            const token = req.body.token;
-            const time = req.body.time;
-            const schedule_id = `sh_${crypto.randomBytes(6).toString("hex")}`;
-            const to = await findData(apikey, 'email');
-            const subject = `Regarding your Schedule Message on SwiftSend`;
+                        conn.query(`select * from instance where instance_id = '${iid}' and apikey = '${apikey}' and token = '${token}'`,
+                            async function (err, result) {
+                                if (err || result.length <= 0) return res.send(status.forbidden());
+                                try {
+                                    switch (req.body.type) {
+                                        case 'message': {
+                                            let message = req.body.message, contacts = req.body.contacts_list;
+                                            let data = {
+                                                "api": "/sendmsg",
+                                                "body": message,
+                                                "contacts": contacts
+                                            };
 
-            conn.query(`select * from instance where instance_id = '${iid}' and apikey = '${apikey}' and token = '${token}'`,
-                async function (err, result) {
-                    if (err || result.length <= 0) return res.send(status.forbidden());
-                    try {
-                        switch (req.body.type) {
-                            case 'message': {
-                                let message = req.body.message, contacts = req.body.contacts_list;
-                                let data = {
-                                    "api": "/sendmsg",
-                                    "body": message,
-                                    "contacts": contacts
-                                };
+                                            const task = cron.schedule(time, () => {
+                                                if (obj[iid]) {
+                                                    for (let i = 0; i < contacts.length; i++) {
+                                                        const chatId = `91${contacts[i]}@c.us`;
 
-                                const task = cron.schedule(time, () => {
-                                    if (obj[iid]) {
-                                        for (let i = 0; i < contacts.length; i++) {
-                                            const chatId = `91${contacts[i]}@c.us`;
+                                                        obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
+                                                            let msgid = crypto.randomBytes(8).toString("hex");
 
-                                            obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
-                                                let msgid = crypto.randomBytes(8).toString("hex");
-
-                                                conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
-                                                    [msgid, message, 'Schedule Single Message', chatId, iid, apikey, token, new Date()],
-                                                    function (err, result) {
-                                                        if (err || result.affectedRows < 1) return status.internalservererror();
-                                                        if (i === contacts.length - 1) {
-                                                            conn.query(`update schedule set status = ? where schedule_id = ?`, [`DONE`, schedule_id],
-                                                                async function (err, result) {
-                                                                    if (err || result.affectedRows < 1) return console.log(status.internalservererror());
-                                                                    let body = "Your scheduled task has completed without any error.";
-                                                                    sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                                                                        return console.log("Email Sent Scuuessfully");
-                                                                    }).catch((error) => {
-                                                                        return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                                                                    })
-                                                                });
-                                                        }
-                                                    });
-                                            }).catch((error) => {
-                                                console.log(`error in Sending schedule Message ::::::: <${error}>`);
-                                                conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
-                                                    async function (err, result) {
-                                                        if (err || result.affectedRows < 1) return console.log(status.internalservererror());
-                                                        let body = `Your scheduled task has not completed due to : ${error}`;
-                                                        sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                                                            return console.log("Email Sent Scuuessfully");
-                                                        }).catch((error) => {
-                                                            return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                                                        })
-                                                    });
-                                            })
-                                        }
-                                    }
-                                    else {
-                                        console.log("no iid found");
-                                        conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
-                                            function (err, result) {
-                                                if (err || result.affectedRows < 1) return console.log(status.internalservererror());
-                                                let body = `Your scheduled task has not completed due to : disconnected instance.`;
-                                                sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                                                    return console.log("Email Sent Scuuessfully");
-                                                }).catch((error) => {
-                                                    return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                                                })
-                                            });
-                                    }
-
-                                }, { scheduled: true, timezone: 'Asia/Kolkata' });
-                                task.start();
-                                conn.query(`insert into schedule values(?,?,?,?,?,?)`, [schedule_id, JSON.stringify(data), time, `PENDING`, apikey, iid],
-                                    function (err, result) {
-                                        if (err || result.affectedRows < 1) return res.send(status.internalservererror());
-                                        return res.send(status.ok());
-                                    });
-                                break;
-                            }
-
-                            case 'document': {
-                                createfolder(`image_data/${apikey}/${iid}`);
-                                let contacts = null;
-                                if (typeof (req.body.contacts_list) === 'object') {
-                                    contacts = req.body.contacts_list;
-                                }
-                                else if (typeof (req.body.contacts_list) === 'string') {
-                                    contacts = req.body.contacts_list.split(',');
-                                }
-
-                                if (req.files && Object.keys(req.files).length !== 0) {
-                                    const uploadedFile = req.files.image;
-                                    const uploadPath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-
-                                    uploadedFile.mv(uploadPath, async function (err) {
-                                        if (err) res.send(status.badRequest());
-                                        let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-                                        const media = MessageMedia.fromFilePath(filepath);
-                                        let data = {
-                                            "api": "/sendmsg",
-                                            "body": media,
-                                            "contacts": contacts
-                                        };
-                                        const task = cron.schedule(time, async () => {
-                                            let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-                                            const caption = req.body.caption;
-
-                                            if (obj[iid]) {
-                                                for (let i = 0; i < contacts.length; i++) {
-                                                    const chatId = `91${contacts[i]}@c.us`;
-                                                    await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
-                                                        var msgid = crypto.randomBytes(8).toString("hex");
-
-                                                        cloudinary.uploader.upload(filepath, { folder: 'M3' }).then((data) => {
                                                             conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
-                                                                [msgid, data.secure_url, req.files.image.mimetype, chatId, iid, apikey, token, new Date()],
+                                                                [msgid, message, 'Schedule Single Message', chatId, iid, apikey, token, new Date()],
                                                                 function (err, result) {
-                                                                    if (err || result.affectedRows < 1) return res.send(status.internalservererror());
+                                                                    if (err || result.affectedRows < 1) return status.internalservererror();
                                                                     if (i === contacts.length - 1) {
                                                                         conn.query(`update schedule set status = ? where schedule_id = ?`, [`DONE`, schedule_id],
                                                                             async function (err, result) {
                                                                                 if (err || result.affectedRows < 1) return console.log(status.internalservererror());
-
                                                                                 let body = "Your scheduled task has completed without any error.";
-
                                                                                 sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
                                                                                     return console.log("Email Sent Scuuessfully");
                                                                                 }).catch((error) => {
@@ -1264,75 +1175,170 @@ app.post('/schedule', async (req, res) => {
                                                                             });
                                                                     }
                                                                 });
-                                                        }).catch((err) => {
-                                                            console.log(`error in storing Document on cloudnary ::::::: <${err}>`);
-                                                            conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
-                                                                [msgid, uploadedFile.name, req.files.image.mimetype, chatId, iid, apikey, token, new Date()],
-                                                                function (err, result) {
-                                                                    if (err || result.affectedRows < 1) return res.send(status.internalservererror());
-                                                                    if (i === contacts.length - 1) {
-                                                                        let body = "Your scheduled task has completed without any error.";
-
-                                                                        sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                                                                            console.log("Email Sent Scuuessfully");
-                                                                        }).catch((error) => {
-                                                                            console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                                                                        })
-                                                                    }
-                                                                });
-                                                        });
-                                                    }).catch((error) => {
-                                                        console.error(`error in sending Document ::::::: <${error}>`);
-                                                        conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
-                                                            function (err, result) {
-                                                                if (err || result.affectedRows < 1) return console.log(status.internalservererror());
-                                                                let body = `Your scheduled task has not completed due to : ${error}`;
-                                                                sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                                                                    return console.log("Email Sent Scuuessfully");
-                                                                }).catch((error) => {
-                                                                    return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                                                                })
-                                                            });
-                                                    });
-                                                }
-                                            }
-                                            else {
-                                                console.log("no iid found");
-                                                conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
-                                                    function (err, result) {
-                                                        if (err || result.affectedRows < 1) return console.log(status.internalservererror());
-                                                        let body = `Your scheduled task has not completed due to : disconnected instance.`;
-                                                        sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                                                            return console.log("Email Sent Scuuessfully");
                                                         }).catch((error) => {
-                                                            return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                            console.log(`error in Sending schedule Message ::::::: <${error}>`);
+                                                            conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
+                                                                async function (err, result) {
+                                                                    if (err || result.affectedRows < 1) return console.log(status.internalservererror());
+                                                                    let body = `Your scheduled task has not completed due to : ${error}`;
+                                                                    sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                                                                        return console.log("Email Sent Scuuessfully");
+                                                                    }).catch((error) => {
+                                                                        return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                                    })
+                                                                });
                                                         })
-                                                    });
+                                                    }
+                                                }
+                                                else {
+                                                    console.log("no iid found");
+                                                    conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
+                                                        function (err, result) {
+                                                            if (err || result.affectedRows < 1) return console.log(status.internalservererror());
+                                                            let body = `Your scheduled task has not completed due to : disconnected instance.`;
+                                                            sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                                                                return console.log("Email Sent Scuuessfully");
+                                                            }).catch((error) => {
+                                                                return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                            })
+                                                        });
+                                                }
+
+                                            }, { scheduled: true, timezone: 'Asia/Kolkata' });
+                                            task.start();
+                                            conn.query(`insert into schedule values(?,?,?,?,?,?)`, [schedule_id, JSON.stringify(data), time, `PENDING`, apikey, iid],
+                                                function (err, result) {
+                                                    if (err || result.affectedRows < 1) return res.send(status.internalservererror());
+                                                    return res.send(status.ok());
+                                                });
+                                            break;
+                                        }
+
+                                        case 'document': {
+                                            createfolder(`image_data/${apikey}/${iid}`);
+                                            let contacts = null;
+                                            if (typeof (req.body.contacts_list) === 'object') {
+                                                contacts = req.body.contacts_list;
+                                            }
+                                            else if (typeof (req.body.contacts_list) === 'string') {
+                                                contacts = req.body.contacts_list.split(',');
                                             }
 
-                                        }, { scheduled: false, timezone: 'Asia/Kolkata' });
-                                        task.start();
-                                        conn.query(`insert into schedule values(?,?,?,?,?,?)`, [schedule_id, JSON.stringify(data), time, `PENDING`, apikey, iid],
-                                            function (err, result) {
-                                                if (err || result.affectedRows < 1) return res.send(status.internalservererror());
-                                                return res.send(status.ok());
-                                            });
-                                    });
+                                            if (req.files && Object.keys(req.files).length !== 0) {
+                                                const uploadedFile = req.files.image;
+                                                const uploadPath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
+
+                                                uploadedFile.mv(uploadPath, async function (err) {
+                                                    if (err) res.send(status.badRequest());
+                                                    let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
+                                                    const media = MessageMedia.fromFilePath(filepath);
+                                                    let data = {
+                                                        "api": "/sendmsg",
+                                                        "body": media,
+                                                        "contacts": contacts
+                                                    };
+                                                    const task = cron.schedule(time, async () => {
+                                                        let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
+                                                        const caption = req.body.caption;
+
+                                                        if (obj[iid]) {
+                                                            for (let i = 0; i < contacts.length; i++) {
+                                                                const chatId = `91${contacts[i]}@c.us`;
+                                                                await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
+                                                                    var msgid = crypto.randomBytes(8).toString("hex");
+
+                                                                    cloudinary.uploader.upload(filepath, { folder: 'M3' }).then((data) => {
+                                                                        conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
+                                                                            [msgid, data.secure_url, req.files.image.mimetype, chatId, iid, apikey, token, new Date()],
+                                                                            function (err, result) {
+                                                                                if (err || result.affectedRows < 1) return res.send(status.internalservererror());
+                                                                                if (i === contacts.length - 1) {
+                                                                                    conn.query(`update schedule set status = ? where schedule_id = ?`, [`DONE`, schedule_id],
+                                                                                        async function (err, result) {
+                                                                                            if (err || result.affectedRows < 1) return console.log(status.internalservererror());
+
+                                                                                            let body = "Your scheduled task has completed without any error.";
+
+                                                                                            sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                                                                                                return console.log("Email Sent Scuuessfully");
+                                                                                            }).catch((error) => {
+                                                                                                return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                                                            })
+                                                                                        });
+                                                                                }
+                                                                            });
+                                                                    }).catch((err) => {
+                                                                        console.log(`error in storing Document on cloudnary ::::::: <${err}>`);
+                                                                        conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
+                                                                            [msgid, uploadedFile.name, req.files.image.mimetype, chatId, iid, apikey, token, new Date()],
+                                                                            function (err, result) {
+                                                                                if (err || result.affectedRows < 1) return res.send(status.internalservererror());
+                                                                                if (i === contacts.length - 1) {
+                                                                                    let body = "Your scheduled task has completed without any error.";
+
+                                                                                    sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                                                                                        console.log("Email Sent Scuuessfully");
+                                                                                    }).catch((error) => {
+                                                                                        console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                                                    })
+                                                                                }
+                                                                            });
+                                                                    });
+                                                                }).catch((error) => {
+                                                                    console.error(`error in sending Document ::::::: <${error}>`);
+                                                                    conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
+                                                                        function (err, result) {
+                                                                            if (err || result.affectedRows < 1) return console.log(status.internalservererror());
+                                                                            let body = `Your scheduled task has not completed due to : ${error}`;
+                                                                            sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                                                                                return console.log("Email Sent Scuuessfully");
+                                                                            }).catch((error) => {
+                                                                                return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                                            })
+                                                                        });
+                                                                });
+                                                            }
+                                                        }
+                                                        else {
+                                                            console.log("no iid found");
+                                                            conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
+                                                                function (err, result) {
+                                                                    if (err || result.affectedRows < 1) return console.log(status.internalservererror());
+                                                                    let body = `Your scheduled task has not completed due to : disconnected instance.`;
+                                                                    sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                                                                        return console.log("Email Sent Scuuessfully");
+                                                                    }).catch((error) => {
+                                                                        return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                                    })
+                                                                });
+                                                        }
+
+                                                    }, { scheduled: false, timezone: 'Asia/Kolkata' });
+                                                    task.start();
+                                                    conn.query(`insert into schedule values(?,?,?,?,?,?)`, [schedule_id, JSON.stringify(data), time, `PENDING`, apikey, iid],
+                                                        function (err, result) {
+                                                            if (err || result.affectedRows < 1) return res.send(status.internalservererror());
+                                                            return res.send(status.ok());
+                                                        });
+                                                });
+                                            }
+                                            break;
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.log(`Failed to schedule message: ${error}`);
+                                    return res.send(status.expectationFailed());
                                 }
-                                break;
-                            }
-                        }
-                    } catch (error) {
-                        console.log(`Failed to schedule message: ${error}`);
-                        return res.send(status.expectationFailed());
-                    }
-                });
-        } else return res.send(status.unauthorized());
-    }
-    catch (e) {
-        console.log(e);
-        res.send(status.unauthorized());
-    }
+                            });
+                    } else return res.send(status.unauthorized());
+                }
+                catch (e) {
+                    console.log(e);
+                    res.send(status.unauthorized());
+                }
+            }
+        })
+
 });
 
 async function sendMessageToTeams(webhookUrl, message) {
@@ -2053,18 +2059,24 @@ app.post("/sendEmailVerification", (req, res) => {
         const subject = `Verification Email From SwiftSend | Communication Service`;
         const body = `<div class="u-row-container" style="padding: 0px;background-color: transparent"><div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;"><div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;"><div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"><div style="height: 100%;width: 100% !important;"><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"><div style="line-height: 140%; text-align: left; word-wrap: break-word;"><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">OTP to Verify your Email : </span><span style="font-size: 22px; color: #405189;">${otp}</span></p></div></td></tr></tbody></table>`
 
-        const sender = {
-            "hostname": 'smtp.gmail.com',
-            "port": '465',
-            "email": 'dashboardcrm.2022@gmail.com',
-            "passcode": 'ofesjzhktjomxdqv'
-        };
+        conn.query(`select * from company`,
+            function (err, result) {
+                if (err || result.length <= 0) return res.send(status.internalservererror());
+                if (result.length > 0) {
+                    const sender = {
+                        "hostname": `${result[0].hostname}`,
+                        "port": `${result[0].portnumber}`,
+                        "email": `${result[0].c_email}`,
+                        "passcode": `${result[0].passcode}`
+                    };
+                    sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                        return res.send(status.ok());
 
-        sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-            return res.send(status.ok());
-        }).catch((error) => {
-            return res.send(status.badRequest());
-        })
+                    }).catch((error) => {
+                        return res.send(status.badRequest());
+                    })
+                }
+            })
     }
     else {
         return res.send(status.notAccepted());
@@ -3231,18 +3243,24 @@ app.post("/resetpasswordmail", async (req, res) => {
                 }
             }
             if (!flag) return res.send(status.nodatafound());
-            const sender = {
-                "hostname": 'smtp.gmail.com',
-                "port": '465',
-                "email": 'dashboardcrm.2022@gmail.com',
-                "passcode": 'ofesjzhktjomxdqv'
-            };
-            sendEmail(sender, { to: email, bcc: "" }, subject, body).then(() => {
-                return res.send(status.ok());
-            }).catch((error) => {
-                console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                return res.send(status.badRequest());
-            })
+            conn.query(`select * from company`,
+                function (err, result) {
+                    if (err || result.length <= 0) return res.send(status.internalservererror());
+                    if (result.length > 0) {
+                        const sender = {
+                            "hostname": `${result[0].hostname}`,
+                            "port": `${result[0].portnumber}`,
+                            "email": `${result[0].c_email}`,
+                            "passcode": `${result[0].passcode}`
+                        };
+                        sendEmail(sender, { to: email, bcc: "" }, subject, body).then(() => {
+                            return res.send(status.ok());
+                        }).catch((error) => {
+                            console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                            return res.send(status.badRequest());
+                        })
+                    }
+                })
         });
     }
 });
@@ -3390,8 +3408,28 @@ app.post("/adminSearchRecord", async (req, res) => {
 
 app.post("/addRecord", function (req, res) {
     let table = req.body.table;
-
-    if (table == "plans") {
+    if (table == "company") {
+        const id = crypto.randomBytes(8).toString("hex");
+        console.log(id);
+        console.log("c_name:", req.body.c_name);
+        console.log("c_email:", req.body.c_email);
+        console.log("host:", req.body.hostname);
+        console.log("portnumber:", req.body.portnumber);
+        console.log("passcode:", req.body.passcode);
+        conn.query(
+            `insert into company(company_id,c_name,c_email,hostname,portnumber,passcode) values('${id}','${req.body.c_name}','${req.body.c_email}','${req.body.hostname}',${req.body.portnumber},'${req.body.passcode}')`,
+            (err, result) => {
+                console.log("Result:", result);
+                if (err) return res.send(status.internalservererror());
+                if (result.affectedRows == 1) {
+                    res.send(status.ok());
+                } else {
+                    res.send(status.internalservererror());
+                }
+            }
+        );
+    }
+    else if (table == "plans") {
         conn.query(
             `insert into plans(pname,price,durationMonth,totalInstance,totalMessage,discount,plan_type) values('${req.body.pname}',${req.body.price},${req.body.duration},${req.body.instances},${req.body.messages},${req.body.discount},'${req.body.type}')`,
             (err, result) => {
@@ -3602,12 +3640,47 @@ app.get("/usersubscription", (req, res) => {
         })
 })
 
+//attachment handle function support-ticket
+async function getSupportTicketAttachmentObj(attachments, apikey) {
+    return new Promise((resolve, reject) => {
+        try {
+            let fileobj = new Array(), attachments_size = 0;
+            createfolder(`support-ticket_doc_data/${apikey}`);
+            Promise.all(
+                attachments.map((value, key) => {
+                    attachments_size += attachments[key].size;
+                    const uploadPath = `${__dirname}/assets/upload/support-ticket_doc_data/${apikey}/${attachments[key].name}`;
+
+                    return new Promise((resolveMv, rejectMv) => {
+                        attachments[key].mv(uploadPath, function (err) {
+                            if (err) {
+                                rejectMv(err);
+                            }
+                            else {
+                                fileobj.push({ path: uploadPath });
+                                resolveMv();
+                            }
+                        });
+                    });
+                })
+            ).then(() => {
+                resolve({ fileobj, attachments_size });
+            }).catch((error) => {
+                reject(error);
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 app.post("/addticket", async (req, res) => {
     let apikey = req.cookies.apikey;
 
     const isValidapikey = await checkAPIKey(apikey);
     try {
         if (isValidapikey) {
+            const iid = req.body.iid;
             const generateUniqueId = () => {
                 const prefix = "ST-";
                 const maxLength = 7 - prefix.length;
@@ -3621,7 +3694,9 @@ app.post("/addticket", async (req, res) => {
             let subject = req.body.subject;
             let t_type = req.body.t_type;
             let description = req.body.description;
+            let attachments = (req.files) ? Array.isArray(req.files.attachments) ? req.files.attachments : [req.files.attachments] : [];
 
+            console.log("attach:", attachments);
             let agents = new Array();
             let Account_Management = new Array();
             let Technical_Support = new Array();
@@ -3657,62 +3732,82 @@ app.post("/addticket", async (req, res) => {
                 const agentsInCategory = categories[t_type];
                 const assignedAgent = agentsInCategory[Math.floor(Math.random() * agentsInCategory.length)];
 
+                getSupportTicketAttachmentObj(attachments, apikey)
+                    .then(({ fileobj, attachments_size }) => {
 
-                conn.query(`INSERT INTO support_ticket VALUES(?,?,?,?,?,?,?,?,?,?)`,
-                    [t_id, `email`, email, subject, t_type, description, `open`, new Date(), apikey, assignedAgent],
-                    async (err, resp) => {
-                        if (err) return res.send(status.internalservererror());
-                        //mail to support person for support ticket assigning
-                        const sender = {
-                            "hostname": 'smtp.gmail.com',
-                            "port": '465',
-                            "email": 'dashboardcrm.2022@gmail.com',
-                            "passcode": 'ofesjzhktjomxdqv'
-                        };
+                        conn.query(`INSERT INTO support_ticket VALUES(?,?,?,?,?,?,?,?,?,?,?)`,
+                            [t_id, `email`, email, subject, t_type, description, '', `open`, new Date(), apikey, assignedAgent],
+                            async (err, resp) => {
+                                if (err) return res.send(status.internalservererror());
+                                //mail to support person for support ticket assigning
+                                conn.query(`select * from company`,
+                                    function (err, result) {
+                                        if (err || result.length <= 0) return res.send(status.internalservererror());
+                                        if (result.length > 0) {
 
-                        const agent_body = `<body style="background-color: #f4f4f4;">
+                                            const sender = {
+                                                "hostname": `${result[0].hostname}`,
+                                                "port": `${result[0].portnumber}`,
+                                                "email": `${result[0].c_email}`,
+                                                "passcode": `${result[0].passcode}`
+                                            };
+
+                                            const agent_body = `<body style="background-color: #f4f4f4;">
                                             <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                                                <p style="color: #555; font-size: 16px; line-height: 1.5;">Dear ${assignedAgent},</p>
-                                                <p style="color: #555; font-size: 14px; line-height: 1.5;">A new ticket has been assigned to you. Here are the details:</p>
-                                                <ul style="margin: 10px 0; padding: 0; list-style: none;">
-                                                    <li style="margin-bottom: 5px;">
-                                                        <strong style="color: #333;">Ticket ID : ${t_id}</strong> 
-                                                    </li>
-                                                </ul>
-                                                <p style="color: #555; font-size: 14px; line-height: 1.5;">Please login to  review the ticket and take necessary action accordingly.</p>
-                                                <p style="color: #555; font-size: 14px; line-height: 1.5;">Thank you for your attention.</p>
-                                                <p style="margin-top: 20px; font-size: 16px; color: #777;">Sincerely,<br>
-                                                <b>SwiftSend</b>
+                                            <p style="color: #555; font-size: 16px; line-height: 1.5;">Dear ${assignedAgent},</p>
+                                            <p style="color: #555; font-size: 14px; line-height: 1.5;">A new ticket has been assigned to you. Here are the details:</p>
+                                            <ul style="margin: 10px 0; padding: 0; list-style: none;">
+                                            <li style="margin-bottom: 5px;">
+                                            <strong style="color: #333;">Ticket ID : ${t_id}</strong> 
+                                            </li>
+                                            </ul>
+                                            <p style="color: #555; font-size: 14px; line-height: 1.5;">Please login to  review the ticket and take necessary action accordingly.</p>
+                                            <p style="color: #555; font-size: 14px; line-height: 1.5;">Thank you for your attention.</p>
+                                            <p style="margin-top: 20px; font-size: 16px; color: #777;">Sincerely,<br>
+                                            <b>SwiftSend</b>
                                             </div>
-                                        </body>`;
-
-                        const user_body = `<body>
-                                                <p>Dear Customer,</p>
-                                                <p>Thank you for reaching out to us. We have received your ticket and it is currently being reviewed by our support team. Here are the details:</p>
-                                                <ul style="margin: 10px 0; padding: 0; list-style: none;">
-                                                    <li style="margin-bottom: 5px;">
-                                                        <strong style="color: #333;">Ticket ID : ${t_id}</strong> 
-                                                    </li>
-                                                </ul>
-                                                <p>We understand the importance of your inquiry and will make every effort to provide you with a timely response. Please note that our support team may require additional information or clarification to assist you further. We kindly request your patience during this process.</p>
-                                                <p>Thank you for choosing our services. We appreciate your patience and look forward to resolving your issue.</p>
-                                                <p>Sincerely,</p>
-                                                <b>SwiftSend Support Team</b>
                                             </body>`;
 
-                        sendEmail(sender, { to: assignedAgent, bcc: "" }, `New Ticket assigned`, agent_body).then(() => {
-                            sendEmail(sender, { to: email, bcc: "" }, `Ticket Acknowledgement | SwiftSend`, user_body).then(() => {
-                                return res.send(status.ok());
-                            }).catch((error) => {
-                                console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                                return res.send(status.badRequest());
+                                            const user_body = `<body>
+                                            <p>Dear Customer,</p>
+                                            <p>Thank you for reaching out to us. We have received your ticket and it is currently being reviewed by our support team. Here are the details:</p>
+                                            <ul style="margin: 10px 0; padding: 0; list-style: none;">
+                                            <li style="margin-bottom: 5px;">
+                                            <strong style="color: #333;">Ticket ID : ${t_id}</strong> 
+                                            </li>
+                                            </ul>
+                                            <p>We understand the importance of your inquiry and will make every effort to provide you with a timely response. Please note that our support team may require additional information or clarification to assist you further. We kindly request your patience during this process.</p>
+                                            <p>Thank you for choosing our services. We appreciate your patience and look forward to resolving your issue.</p>
+                                            <p>Sincerely,</p>
+                                            <b>SwiftSend Support Team</b>
+                                            </body>`;
+
+                                            if (attachments_size <= 10000000) {
+                                                sendEmail(sender, { to: assignedAgent, bcc: "" }, `New Ticket assigned`, agent_body, fileobj).then(() => {
+                                                    sendEmail(sender, { to: email, bcc: "" }, `Ticket Acknowledgement | SwiftSend`, user_body).then(() => {
+                                                        return res.send(status.ok());
+                                                    }).catch((error) => {
+                                                        console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                        return res.send(status.badRequest());
+                                                    })
+                                                }).catch((error) => {
+                                                    console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                    return res.send(status.badRequest());
+                                                }).finally(() => {
+                                                    deleteFolder(`/support-ticket_doc_data/${apikey}`);
+                                                })
+                                            }
+                                            else {
+                                                console.log("Total file size exceeds the limit (10 MB)");
+                                                logAPI("/email", apikey, iid, requestBody, "E");
+                                                return res.status(401).send({ code: "401", message: "Total file size exceeds the limit (10 MB)" });
+                                            }
+                                        }
+                                    })
                             })
-                        }).catch((error) => {
-                            console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                            return res.send(status.badRequest());
-                        })
-                    });
+                    })
             })
+
         } else res.send(status.unauthorized());
     } catch (e) {
         //console.log(e);
@@ -3746,56 +3841,63 @@ app.post("/AgentReplyToTicket", async (req, res) => {
     let response = req.body.response;
     const chatId = `91${contact}@c.us`;
 
-    const sender = {
-        "hostname": 'smtp.gmail.com',
-        "port": '465',
-        "email": 'dashboardcrm.2022@gmail.com',
-        "passcode": 'ofesjzhktjomxdqv'
-    };
+    conn.query(`select * from company`,
+        async function (err, result) {
+            if (err || result.length <= 0) return res.send(status.internalservererror());
+            if (result.length > 0) {
 
-    const to = req.body.email;
-    const subject = `Reply of your Ticket ${id}`;
-    const body = `<div>
+                const sender = {
+                    "hostname": `${result[0].hostname}`,
+                    "port": `${result[0].portnumber}`,
+                    "email": `${result[0].c_email}`,
+                    "passcode": `${result[0].passcode}`
+                };
+
+                const to = req.body.email;
+                const subject = `Reply of your Ticket ${id}`;
+                const body = `<div>
                     <b>Hello ${uname}</b><br>
                     Your Query : #${id} ${subject}<br>
                     ${description}<br>
                     Answer: <b>${response}</b>
                 </div>`;
 
-    switch (category) {
-        case 'whatsapp': {
-            await obj[agent_id].send_whatsapp_message(chatId, `Hello ${uname}\n\nFor query #${id} \n\nWe have considered your query and send response on your email: ${to}\n\nPlease check your email or login to SwiftSend to view the reply`);
-            sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                conn.query(`INSERT INTO ticket_reply VALUES (?,?,?,?,?,?)`,
-                    [indexno, identity, id, response, new Date(), agent_id], (err, result) => {
-                        if (err) return res.send(status.internalservererror());
-                        conn.query(`update support_ticket set status='inprogress' where ticket_id='${id}'`, (err2, result2) => {
-                            if (err2 || result2.affectedRows <= 0) return res.send(status.internalservererror());
-                            res.send(status.ok());
-                        });
-                    });
-            }).catch((error) => {
-                return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-            })
-            break;
-        }
+                switch (category) {
+                    case 'whatsapp': {
+                        await obj[agent_id].send_whatsapp_message(chatId, `Hello ${uname}\n\nFor query #${id} \n\nWe have considered your query and send response on your email: ${to}\n\nPlease check your email or login to SwiftSend to view the reply`);
+                        sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                            conn.query(`INSERT INTO ticket_reply VALUES (?,?,?,?,?,?)`,
+                                [indexno, identity, id, response, new Date(), agent_id], (err, result) => {
+                                    if (err) return res.send(status.internalservererror());
+                                    conn.query(`update support_ticket set status='inprogress' where ticket_id='${id}'`, (err2, result2) => {
+                                        if (err2 || result2.affectedRows <= 0) return res.send(status.internalservererror());
+                                        res.send(status.ok());
+                                    });
+                                });
+                        }).catch((error) => {
+                            return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                        })
+                        break;
+                    }
 
-        case 'email': {
-            sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
-                conn.query(`INSERT INTO ticket_reply VALUES (?,?,?,?,?,?)`,
-                    [indexno, identity, id, response, new Date(), agent_id], (err, result) => {
-                        if (err) return res.send(status.internalservererror());
-                        conn.query(`update support_ticket set status='inprogress' where ticket_id='${id}'`, (err2, result2) => {
-                            if (err2 || result2.affectedRows <= 0) return res.send(status.internalservererror());
-                            res.send(status.ok());
-                        });
-                    });
-            }).catch((error) => {
-                return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-            })
-            break;
-        }
-    }
+                    case 'email': {
+                        sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
+                            conn.query(`INSERT INTO ticket_reply VALUES (?,?,?,?,?,?)`,
+                                [indexno, identity, id, response, new Date(), agent_id], (err, result) => {
+                                    if (err) return res.send(status.internalservererror());
+                                    conn.query(`update support_ticket set status='inprogress' where ticket_id='${id}'`, (err2, result2) => {
+                                        if (err2 || result2.affectedRows <= 0) return res.send(status.internalservererror());
+                                        res.send(status.ok());
+                                    });
+                                });
+                        }).catch((error) => {
+                            return console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                        })
+                        break;
+                    }
+                }
+            }
+        })
 });
 
 app.post("/ClientReplyToTicketAgent", async (req, res) => {
