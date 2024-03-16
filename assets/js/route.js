@@ -105,6 +105,10 @@ router.get("/adminDashboard", (req, res) => {
     res.sendFile(`${path}/admin/admin-index.html`);
 });
 
+router.get("/CompanyDetails", (req, res) => {
+    res.sendFile(`${path}/admin/admin-company-details.html`);
+});
+
 router.get("/whatsappbot", (req, res) => {
     res.sendFile(`${path}/admin/admin-bot.html`);
 });

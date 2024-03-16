@@ -150,7 +150,7 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title mb-0 text-center fs-3">
-                                        Manage Plans
+                                        Company Details
                                     </h3>
                                 </div>
                                 <div class="card-body">
@@ -163,7 +163,7 @@
                                                         class="gridjs-input gridjs-search-input" />
                                                 </div>
                                                 <div class="flex-shrink-1 mx-2">
-                                                    <input type="button" value="Add Plan" class="btn btn-primary"
+                                                    <input type="button" value="Add Company" class="btn btn-primary"
                                                         data-bs-toggle="modal" data-bs-target="#addModal" />
                                                 </div>
                                                 <div class="flex-shrink-0">
@@ -196,52 +196,55 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-light p-3">
-                        <h5 class="modal-title" id="modallbl">Edit Plans</h5>
+                        <h5 class="modal-title" id="modallbl">Edit Company details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             id="close-modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Plan Name</label>
-                            <input type="text" id="plan-name" class="form-control" placeholder="Enter Name" required />
+                            <label for="c-name" class="form-label">
+                                Company Name
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_c-name"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="c-name" data-type="name" disabled />
                         </div>
                         <div class="mb-3">
-                            <label for="phone-field" class="form-label">Price</label>
-                            <input type="text" id="plan-price" class="form-control" placeholder="Enter Price"
-                                required />
+                            <label for="c-email" class="form-label">
+                                Company Email
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_c-email"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="c-email" data-type="email" disabled />
                         </div>
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Duration (in months)</label>
-                            <input type="text" id="plan-duration" class="form-control" placeholder="Enter Duration"
-                                required />
+                            <label for="c-hostname" class="form-label">
+                                Hostname
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_c-hostname"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="c-hostname" data-type="message" />
                         </div>
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Total Instances</label>
-                            <input type="text" id="total-instance" class="form-control"
-                                placeholder="Enter Total Instances" required />
+                            <label for="c-portnumber" class="form-label">
+                                Port Number
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_c-portnumber"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="c-portnumber" data-type="number" />
                         </div>
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Total Messages</label>
-                            <input type="text" id="total-message" class="form-control"
-                                placeholder="Enter Total Messages" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="customername-field" class="form-label">Discount</label>
-                            <input type="text" id="plan-discount" class="form-control" placeholder="Enter Discount"
-                                required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="customername-field" class="form-label">Plan Type</label>
-                            <select id="plan-type" class="form-control" required>
-                                <option>-- Select Plan Type --</option>
-                                <option>Monthly</option>
-                                <option>Yearly</option>
-                            </select>
+                            <label for="c-passcode" class="form-label">
+                                Passcode(Only For Gmail)
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_c-passcode"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="c-passcode" data-type="message" />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="hstack gap-2 justify-content-end">
-                            <button class="btn btn-success" id="edit-btn">Edit Plan</button>
+                            <button class="btn btn-success" id="edit-btn">Edit Company Details</button>
                         </div>
                     </div>
                 </div>
@@ -253,51 +256,55 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-light p-3">
-                        <h5 class="modal-title" id="modallbl">Add Plans</h5>
+                        <h5 class="modal-title" id="modallbl">Add Company</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             id="close-modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Plan Name</label>
-                            <input type="text" id="p-name" class="form-control" placeholder="Enter Name" required />
+                            <label for="companyname" class="form-label">
+                                Company Name
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_companyname"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="companyname" data-type="name" />
                         </div>
                         <div class="mb-3">
-                            <label for="phone-field" class="form-label">Price</label>
-                            <input type="text" id="p-price" class="form-control" placeholder="Enter Price" required />
+                            <label for="companymail" class="form-label">
+                                Company Email
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_companymail"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="companymail" data-type="email" />
                         </div>
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Duration (in months)</label>
-                            <input type="text" id="p-duration" class="form-control" placeholder="Enter Duration"
-                                required />
+                            <label for="host" class="form-label">
+                                Hostname
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_host"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="host" data-type="message" />
                         </div>
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Total Instances</label>
-                            <input type="text" id="t-instance" class="form-control" placeholder="Enter Total Instances"
-                                required />
+                            <label for="port" class="form-label">
+                                Port Number
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_port"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="port" data-type="number" />
                         </div>
                         <div class="mb-3">
-                            <label for="customername-field" class="form-label">Total Messages</label>
-                            <input type="text" id="t-message" class="form-control" placeholder="Enter Total Messages"
-                                required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="customername-field" class="form-label">Discount</label>
-                            <input type="text" id="p-discount" class="form-control" placeholder="Enter Discount"
-                                required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="customername-field" class="form-label">Plan Type</label>
-                            <select id="p-type" class="form-control" required>
-                                <option>-- Select Plan Type --</option>
-                                <option>Monthly</option>
-                                <option>Yearly</option>
-                            </select>
+                            <label for="passcode" class="form-label">
+                                Passcode(Only For Gmail)
+                                <span class="text-danger">*</span>
+                                <span class="text-danger" id="err_passcode"></span>
+                            </label>
+                            <input type="text" class="form-control required" id="passcode" data-type="message" />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="hstack gap-2 justify-content-end">
-                            <button class="btn btn-success" id="add-btn">Add Plan</button>
+                            <button class="btn btn-success" id="add-btn">Add Company</button>
                         </div>
                     </div>
                 </div>
@@ -431,13 +438,12 @@
                         }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
                     if (k == Object.keys(content[j]).length - 1) {
                         out += `<td class="gridjs-td"><input type="button" id="${Object.values(content[j])[0]
-                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-id="${Object.values(content[j])[0]
-                            }" data-pname="${Object.values(content[j])[1]}" data-price="${Object.values(content[j])[2]
-                            }" data-duration="${Object.values(content[j])[3]
-                            }" data-tinstance="${Object.values(content[j])[4]
-                            }" data-tmessage="${Object.values(content[j])[5]
-                            }" data-discount="${Object.values(content[j])[6]}" data-ptype="${Object.values(content[j])[7]
-                            }" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
+                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-cid="${Object.values(content[j])[0]
+                            }" data-c_name="${Object.values(content[j])[1]
+                            }" data-c_email="${Object.values(content[j])[2]
+                            }" data-hostname="${Object.values(content[j])[3]
+                            }" data-portnumber="${Object.values(content[j])[4]
+                            }" data-passcode="${Object.values(content[j])[5]}" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
                             }" value="Delete" onclick="deleteRecord(this.id)"></td></tr>`;
                     }
                 }
@@ -452,7 +458,7 @@
                 url: "/getBtn",
                 method: "post",
                 data: {
-                    table: "plans",
+                    table: "company",
                     pgno: 1,
                     limit: localStorage.getItem("limit"),
                     paramstr: paramstr,
@@ -477,7 +483,7 @@
                           role="button"
                           class="gridjs-currentPage ${myclass}"
                           title="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                           aria-label="Page ${i + 1}"
                         >
                           ${i + 1}</button
@@ -489,7 +495,7 @@
                           class="${myclass} ${nextclass}"
                           title="Page ${i + 1}"
                           aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                         >
                           ${i + 1}</button
                         >`;
@@ -566,13 +572,12 @@
                         }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
                     if (k == Object.keys(content[j]).length - 1) {
                         out += `<td class="gridjs-td"><input type="button" id="${Object.values(content[j])[0]
-                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-id="${Object.values(content[j])[0]
-                            }" data-pname="${Object.values(content[j])[1]}" data-price="${Object.values(content[j])[2]
-                            }" data-duration="${Object.values(content[j])[3]
-                            }" data-tinstance="${Object.values(content[j])[4]
-                            }" data-tmessage="${Object.values(content[j])[5]
-                            }" data-discount="${Object.values(content[j])[6]}" data-ptype="${Object.values(content[j])[7]
-                            }" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
+                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-cid="${Object.values(content[j])[0]
+                            }" data-c_name="${Object.values(content[j])[1]
+                            }" data-c_email="${Object.values(content[j])[2]
+                            }" data-hostname="${Object.values(content[j])[3]
+                            }" data-portnumber="${Object.values(content[j])[4]
+                            }" data-passcode="${Object.values(content[j])[5]}" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
                             }" value="Delete" onclick="deleteRecord(this.id)"></td></tr>`;
                     }
                 }
@@ -589,7 +594,7 @@
                 url: "/getBtn",
                 method: "post",
                 data: {
-                    table: "plans",
+                    table: "company",
                     pgno: pn + 1,
                     limit: localStorage.getItem("limit"),
                     paramstr: paramstr,
@@ -627,7 +632,7 @@
                           role="button"
                           class="gridjs-currentPage ${myclass}"
                           title="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                           aria-label="Page ${i + 1}"
                         >
                           ${i + 1}</button
@@ -639,7 +644,7 @@
                           class="${myclass} ${nextclass}"
                           title="Page ${i + 1}"
                           aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                         >
                           ${i + 1}</button
                         >`;
@@ -713,13 +718,12 @@
                         }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
                     if (k == Object.keys(content[j]).length - 1) {
                         out += `<td class="gridjs-td"><input type="button" id="${Object.values(content[j])[0]
-                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-id="${Object.values(content[j])[0]
-                            }" data-pname="${Object.values(content[j])[1]}" data-price="${Object.values(content[j])[2]
-                            }" data-duration="${Object.values(content[j])[3]
-                            }" data-tinstance="${Object.values(content[j])[4]
-                            }" data-tmessage="${Object.values(content[j])[5]
-                            }" data-discount="${Object.values(content[j])[6]}" data-ptype="${Object.values(content[j])[7]
-                            }" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
+                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-cid="${Object.values(content[j])[0]
+                            }" data-c_name="${Object.values(content[j])[1]
+                            }" data-c_email="${Object.values(content[j])[2]
+                            }" data-hostname="${Object.values(content[j])[3]
+                            }" data-portnumber="${Object.values(content[j])[4]
+                            }" data-passcode="${Object.values(content[j])[5]}" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
                             }" value="Delete" onclick="deleteRecord(this.id)"></td></tr>`;
                     }
                 }
@@ -736,7 +740,7 @@
                 url: "/getBtn",
                 method: "post",
                 data: {
-                    table: "plans",
+                    table: "company",
                     pgno: pn - 1,
                     limit: localStorage.getItem("limit"),
                     paramstr: paramstr,
@@ -774,7 +778,7 @@
                           role="button"
                           class="gridjs-currentPage ${myclass}"
                           title="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                           aria-label="Page ${i + 1}"
                         >
                           ${i + 1}</button
@@ -786,7 +790,7 @@
                           class="${myclass} ${nextclass}"
                           title="Page ${i + 1}"
                           aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                         >
                           ${i + 1}</button
                         >`;
@@ -862,13 +866,12 @@
                         }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
                     if (k == Object.keys(content[j]).length - 1) {
                         out += `<td class="gridjs-td"><input type="button" id="${Object.values(content[j])[0]
-                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-id="${Object.values(content[j])[0]
-                            }" data-pname="${Object.values(content[j])[1]}" data-price="${Object.values(content[j])[2]
-                            }" data-duration="${Object.values(content[j])[3]
-                            }" data-tinstance="${Object.values(content[j])[4]
-                            }" data-tmessage="${Object.values(content[j])[5]
-                            }" data-discount="${Object.values(content[j])[6]}" data-ptype="${Object.values(content[j])[7]
-                            }" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
+                            }" value="Update" class="btn btn-sm btn-success updateBtn" data-bs-toggle="modal" data-cid="${Object.values(content[j])[0]
+                            }" data-c_name="${Object.values(content[j])[1]
+                            }" data-c_email="${Object.values(content[j])[2]
+                            }" data-hostname="${Object.values(content[j])[3]
+                            }" data-portnumber="${Object.values(content[j])[4]
+                            }" data-passcode="${Object.values(content[j])[5]}" data-bs-target="#showModal"></td><td class="gridjs-td"><input type="button" class="btn btn-sm btn-danger" id="${Object.values(content[j])[0]
                             }" value="Delete" onclick="deleteRecord(this.id)"></td></tr>`;
                     }
                 }
@@ -885,7 +888,7 @@
                 url: "/getBtn",
                 method: "post",
                 data: {
-                    table: "plans",
+                    table: "company",
                     pgno: pgno,
                     limit: localStorage.getItem("limit"),
                     paramstr: paramstr,
@@ -924,7 +927,7 @@
                           role="button"
                           class="gridjs-currentPage ${myclass}"
                           title="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                           aria-label="Page ${i + 1}"
                         >
                           ${i + 1}</button
@@ -936,7 +939,7 @@
                           class="${myclass} ${nextclass}"
                           title="Page ${i + 1}"
                           aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
+                          data-cid="${i + 1}"
                         >
                           ${i + 1}</button
                         >`;
@@ -978,12 +981,12 @@
         function deleteRecord(id) {
             $.ajax({
                 url: "/adminDeleteRecord",
-                data: { id: id, table: "plans", column: "planid" },
+                data: { id: id, table: "company", column: "company_id" },
                 method: "post",
                 success: function (data) {
                     if (data.status_code == 200) {
                         swal({
-                            title: "Recrd deleted",
+                            title: "Record deleted",
                             type: "success",
                             timer: 1500,
                             showConfirmButton: false,
@@ -992,7 +995,7 @@
                             url: "/getDataByPage",
                             method: "post",
                             data: {
-                                table: "plans",
+                                table: "company",
                                 pgno: 1,
                                 limit: localStorage.getItem("limit"),
                             },
@@ -1027,7 +1030,7 @@
                 url: "/getDataByPage",
                 method: "post",
                 data: {
-                    table: "plans",
+                    table: "company",
                     pgno: 1,
                     limit: localStorage.getItem("limit"),
                 },
@@ -1048,22 +1051,17 @@
             );
 
             $(document).on("click", "#add-btn", function () {
-                let pname = $("#p-name").val();
-                let price = $("#p-price").val();
-                let duration = $("#p-duration").val();
-                let instances = $("#t-instance").val();
-                let messages = $("#t-message").val();
-                let discount = $("#p-discount").val();
-                let type = $("#p-type").val();
-
+                let c_name = $("#companyname").val();
+                let c_email = $("#companymail").val();
+                let hostname = $("#host").val();
+                let portnumber = $("#port").val();
+                let passcode = $("#passcode").val();
                 if (
-                    pname == "" ||
-                    price == "" ||
-                    duration == "" ||
-                    instances == "" ||
-                    discount == "" ||
-                    messages == "" ||
-                    type == ""
+                    c_name == "" ||
+                    c_email == "" ||
+                    hostname == "" ||
+                    portnumber == "" ||
+                    passcode == ""
                 ) {
                     swal({
                         title: "All the records are required!!",
@@ -1076,16 +1074,15 @@
                         url: "/addRecord",
                         method: "post",
                         data: {
-                            pname: pname,
-                            price: price,
-                            duration: duration,
-                            instances: instances,
-                            messages: messages,
-                            discount: discount,
-                            type: type,
-                            table: "plans",
+                            c_name: c_name,
+                            c_email: c_email,
+                            hostname: hostname,
+                            portnumber: portnumber,
+                            passcode: passcode,
+                            table: "company",
                         },
                         success: function (result) {
+                            console.log("API:", result);
                             if (result.status_code == 200) {
                                 swal({
                                     title: "Record added",
@@ -1098,7 +1095,7 @@
                                     url: "/getDataByPage",
                                     method: "post",
                                     data: {
-                                        table: "plans",
+                                        table: "company",
                                         pgno: 1,
                                         limit: localStorage.getItem("limit"),
                                     },
@@ -1127,22 +1124,19 @@
             });
 
             $(document).on("click", ".updateBtn", function () {
-                let pid = $(this).attr("data-id");
-                let pname = $(this).attr("data-pname");
-                let price = $(this).attr("data-price");
-                let month = $(this).attr("data-duration");
-                let instances = $(this).attr("data-tinstance");
-                let messages = $(this).attr("data-tmessage");
-                let discount = $(this).attr("data-discount");
-                let type = $(this).attr("data-ptype");
-                $("#plan-name").val(pname);
-                $("#plan-price").val(price);
-                $("#plan-duration").val(month);
-                $("#total-instance").val(instances);
-                $("#total-message").val(messages);
-                $("#plan-discount").val(discount);
-                $("#plan-type").val(type);
-                $("#edit-btn").attr("data-id", pid);
+                let cid = $(this).attr("data-cid");
+                let cname = $(this).attr("data-c_name");
+                let cemail = $(this).attr("data-c_email");
+                let chostname = $(this).attr("data-hostname");
+                let cportnumber = $(this).attr("data-portnumber");
+                let cpasscode = $(this).attr("data-passcode");
+
+                $("#c-name").val(cname);
+                $("#c-email").val(cemail);
+                $("#c-hostname").val(chostname);
+                $("#c-portnumber").val(cportnumber);
+                $("#c-passcode").val(cpasscode);
+                $("#edit-btn").attr("data-cid", cid);
             });
 
             $(document).on("click", "#edit-btn", function () {
@@ -1150,17 +1144,12 @@
                     url: "/updateData",
                     method: "PUT",
                     data: {
-                        paramstr: `pname='${$("#plan-name").val()}', price=${$(
-                            "#plan-price"
-                        ).val()}, durationMonth=${$(
-                            "#plan-duration"
-                        ).val()}, totalInstance=${$(
-                            "#total-instance"
-                        ).val()}, totalMessage=${$("#total-message").val()}, discount=${$(
-                            "#plan-discount"
-                        ).val()}, plan_type='${$("#plan-type").val()}'`,
-                        condition: `planid=${$(this).attr("data-id")}`,
-                        table: "plans",
+                        paramstr: `c_name='${$("#c-name").val()}', c_email='${$("#c-email").val()}', 
+                        hostname='${$("#c-hostname").val()}', 
+                        portnumber=${$("#c-portnumber").val()}, 
+                        passcode='${$("#c-passcode").val()}'`,
+                        condition: `company_id='${$(this).attr("data-cid")}'`,
+                        table: "company",
                     },
                     success: function (result) {
                         if (result.status_code == 200) {
@@ -1175,7 +1164,7 @@
                                 url: "/getDataByPage",
                                 method: "post",
                                 data: {
-                                    table: "plans",
+                                    table: "company",
                                     pgno: 1,
                                     limit: localStorage.getItem("limit"),
                                 },
@@ -1209,7 +1198,7 @@
                         url: "/getDataByPage",
                         method: "post",
                         data: {
-                            table: "plans",
+                            table: "company",
                             pgno: 1,
                             limit: localStorage.getItem("limit"),
                         },
@@ -1244,12 +1233,12 @@
                         },
                     });
                 } else {
-                    let paramstr = `pname like '%${str}%' or cast(planid as char) like '%${str}%' or cast(price as char) like '%${str}%' or cast(durationMonth as char) like '%${str}%' or cast(totalInstance as char) like '%${str}%' or cast(totalMessage as char) like '%${str}%' or cast(discount as char) like '%${str}%' or plan_type like '%${str}%'`;
+                    let paramstr = `c_name like '%${str}%' or cast(company_id as char) like '%${str}%' or cast(c_email as char) like '%${str}%' or cast(hostname as char) like '%${str}%' or cast(portnumber as char) like '%${str}%' or cast(passcode as char) like '%${str}%'`;
                     $.ajax({
                         url: "/adminSearchRecord",
                         method: "POST",
                         data: {
-                            table: "plans",
+                            table: "company",
                             pgno: 1,
                             limit: localStorage.getItem("limit"),
                             paramstr: paramstr,
@@ -1313,7 +1302,7 @@
                             url: "/getDataByPage",
                             method: "post",
                             data: {
-                                table: "plans",
+                                table: "company",
                                 pgno: pn + 1,
                                 limit: localStorage.getItem("limit"),
                             },
@@ -1342,7 +1331,7 @@
                         url: "/getDataByPage",
                         method: "post",
                         data: {
-                            table: "plans",
+                            table: "company",
                             pgno: 1,
                             limit: localStorage.getItem("limit"),
                         },
@@ -1381,7 +1370,7 @@
                     // console.log(document.getElementsByClassName("mysearchbtn"));
                     var arr = document.getElementsByClassName("mysearchbtn").length;
                     count = 0;
-                    let paramstr = `pname like '%${str}%' or cast(planid as char) like '%${str}%' or cast(price as char) like '%${str}%' or cast(durationMonth as char) like '%${str}%' or cast(totalInstance as char) like '%${str}%' or cast(totalMessage as char) like '%${str}%' or cast(discount as char) like '%${str}%' or plan_type like '%${str}%'`;
+                    let paramstr = `c_name like '%${str}%' or cast(company_id as char) like '%${str}%' or cast(c_email as char) like '%${str}%' or cast(hostname as char) like '%${str}%' or cast(portnumber as char) like '%${str}%' or cast(passcode as char) like '%${str}%'`;
                     for (let pn = 1; pn <= arr; pn++) {
                         if (
                             document
@@ -1392,7 +1381,7 @@
                                 url: "/adminSearchRecord",
                                 method: "post",
                                 data: {
-                                    table: "plans",
+                                    table: "company",
                                     pgno: pn + 1,
                                     limit: localStorage.getItem("limit"),
                                     paramstr: paramstr,
@@ -1448,7 +1437,7 @@
                             url: "/getDataByPage",
                             method: "post",
                             data: {
-                                table: "plans",
+                                table: "company",
                                 pgno: pn - 1,
                                 limit: localStorage.getItem("limit"),
                             },
@@ -1476,7 +1465,7 @@
                         url: "/getDataByPage",
                         method: "post",
                         data: {
-                            table: "plans",
+                            table: "company",
                             pgno: 1,
                             limit: localStorage.getItem("limit"),
                         },
@@ -1515,7 +1504,7 @@
                     // console.log(document.getElementsByClassName("mysearchbtn"));
                     var arr = document.getElementsByClassName("mysearchbtn").length;
                     count = 0;
-                    let paramstr = `pname like '%${str}%' or cast(planid as char) like '%${str}%' or cast(price as char) like '%${str}%' or cast(durationMonth as char) like '%${str}%' or cast(totalInstance as char) like '%${str}%' or cast(totalMessage as char) like '%${str}%' or cast(discount as char) like '%${str}%' or plan_type like '%${str}%'`;
+                    let paramstr = `c_name like '%${str}%' or cast(company_id as char) like '%${str}%' or cast(c_email as char) like '%${str}%' or cast(hostname as char) like '%${str}%' or cast(portnumber as char) like '%${str}%' or cast(passcode as char) like '%${str}%'`;
                     for (let pn = 1; pn <= arr; pn++) {
                         if (
                             document
@@ -1526,7 +1515,7 @@
                                 url: "/adminSearchRecord",
                                 method: "post",
                                 data: {
-                                    table: "plans",
+                                    table: "company",
                                     pgno: pn - 1,
                                     limit: localStorage.getItem("limit"),
                                     paramstr: paramstr,
@@ -1569,14 +1558,14 @@
             });
 
             $(document).on("click", ".mybtn", function () {
-                let index = $(this).attr("data-id") - 1;
-                let btnno = $(this).attr("data-id");
+                let index = $(this).attr("data-cid") - 1;
+                let btnno = $(this).attr("data-cid");
                 $.ajax({
                     url: "/getDataByPage",
                     method: "post",
                     data: {
-                        table: "plans",
-                        pgno: $(this).attr("data-id"),
+                        table: "company",
+                        pgno: $(this).attr("data-cid"),
                         limit: localStorage.getItem("limit"),
                     },
                     success: function (content) {
@@ -1588,7 +1577,7 @@
                             "nextBtn",
                             index,
                             btnno,
-                            $(this).attr("data-id"),
+                            $(this).attr("data-cid"),
                             true
                         );
                     },
@@ -1603,7 +1592,7 @@
                         url: "/getDataByPage",
                         method: "post",
                         data: {
-                            table: "plans",
+                            table: "company",
                             pgno: 1,
                             limit: localStorage.getItem("limit"),
                         },
@@ -1639,15 +1628,15 @@
                         },
                     });
                 } else {
-                    let index = $(this).attr("data-id") - 1;
-                    let btnno = $(this).attr("data-id");
-                    let pgno = $(this).attr("data-id");
-                    let paramstr = `pname like '%${str}%' or cast(planid as char) like '%${str}%' or cast(price as char) like '%${str}%' or cast(durationMonth as char) like '%${str}%' or cast(totalInstance as char) like '%${str}%' or cast(totalMessage as char) like '%${str}%' or cast(discount as char) like '%${str}%' or plan_type like '%${str}%'`;
+                    let index = $(this).attr("data-cid") - 1;
+                    let btnno = $(this).attr("data-cid");
+                    let pgno = $(this).attr("data-cid");
+                    let paramstr = `c_name like '%${str}%' or cast(company_id as char) like '%${str}%' or cast(c_email as char) like '%${str}%' or cast(hostname as char) like '%${str}%' or cast(portnumber as char) like '%${str}%' or cast(passcode as char) like '%${str}%'`;
                     $.ajax({
                         url: "/adminSearchRecord",
                         method: "post",
                         data: {
-                            table: "plans",
+                            table: "company",
                             pgno: pgno,
                             limit: localStorage.getItem("limit"),
                             paramstr: paramstr,
