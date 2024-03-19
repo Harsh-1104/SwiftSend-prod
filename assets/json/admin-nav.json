@@ -10,6 +10,11 @@
         "icon": "mdi mdi-robot"
     },
     {
+        "page": "Company",
+        "link": "CompanyDetails",
+        "icon": "mdi-briefcase"
+    },
+    {
         "page": "Instances",
         "link": "instanceData",
         "icon": "ri-apps-2-line"

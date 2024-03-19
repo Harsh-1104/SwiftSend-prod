@@ -573,6 +573,15 @@
                                             <textarea class="form-control" style="resize: none;" id="t_description"
                                                 rows="10" data-type="message"></textarea>
                                         </div>
+                                        <div class="col-lg-12">
+                                            <label for="t_document" class="form-label">
+                                                Attachment
+                                                <!-- <span class="text-danger">*</span> -->
+                                                <!-- <span class="text-danger" id="err_t_document"></span> -->
+                                            </label>
+                                            <input type="file" id="t_document" class="form-control required"
+                                                data-type="name" multiple />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -783,14 +792,23 @@
                     oninput_validation('t_type');
                     oninput_validation('t_description');
                     if (objFlag.flag_t_subject == 0 && objFlag.flag_t_type == 0 && objFlag.flag_t_description == 0) {
+
+                        let formData = new FormData();
+                        formData.append("subject", `${$('#t_subject').val()}`);
+                        formData.append("t_type", `${$('#t_type').val()}`);
+                        formData.append("description", `${$('#t_description').val()}`);
+
+                        const attachmentFiles = document.getElementById('t_document').files;
+                        for (let i = 0; i < attachmentFiles.length; i++) {
+                            formData.append("attachments", attachmentFiles[i]);
+                        }
+
                         $.ajax({
                             url: "/addticket",
                             method: "POST",
-                            data: {
-                                "subject": $('#t_subject').val().trim(),
-                                "t_type": $('#t_type').val().trim(),
-                                "description": $('#t_description').val().trim()
-                            },
+                            contentType: false,
+                            processData: false,
+                            data: formData,
                             beforeSend: function () {
                                 $('#add_ticket')
                                     .removeClass('btn-primary btn-success')
@@ -865,6 +883,7 @@
                     }
                 }
             })
+
             $(document).on('click', '#mic', async function () {
 
                 mic("msg").then((result) => {
