@@ -45,7 +45,7 @@
     --vz-vertical-menu-sub-item-hover-color: #405189;
     --vz-vertical-menu-sub-item-active-color: #405189;
     --vz-vertical-menu-title-color: #919da9;
-    --vz-vertical-menu-bg-dark: linear-gradient(to right,#1e2744, var(--vz-primary));
+    --vz-vertical-menu-bg-dark: linear-gradient(to right, #1e2744, var(--vz-primary));
     --vz-vertical-menu-item-color-dark: #abb9e8;
     --vz-vertical-menu-item-hover-color-dark: #fff;
     --vz-vertical-menu-item-active-color-dark: #fff;
@@ -1274,7 +1274,8 @@
 
 @media (min-width:768px) {
     [data-layout=vertical][data-sidebar-size=sm] {
-        min-height: 1400px
+        min-height: 100vh;
+        /* Changed by Gajjar Harsh */
     }
 
     [data-layout=vertical][data-sidebar-size=sm] .main-content {
@@ -1311,7 +1312,8 @@
 
 [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .simplebar-content-wrapper,
 [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .simplebar-mask {
-    overflow: visible !important
+    /* overflow: visible !important */
+    overflow: visible
 }
 
 [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .simplebar-scrollbar,
@@ -14197,7 +14199,8 @@ span.flatpickr-weekday {
 }
 
 .auth-one-bg .bg-overlay {
-    background: linear-gradient(to bottom, #1e2744, var(--vz-primary));;
+    background: linear-gradient(to bottom, #1e2744, var(--vz-primary));
+    ;
     opacity: 0.9
 }
 

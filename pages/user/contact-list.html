@@ -295,7 +295,7 @@
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Status</th>
-                                            <th>Groups</th>
+                                            <th>Channel</th>
                                             <th style="width: 150px">Action</th>
                                         </tr>
                                     </thead>
@@ -310,6 +310,17 @@
                                         <h5 class="mt-2">No Contacts Found</h5>
                                     </div>
                                 </div>
+                                <!-- <div class="d-flex justify-content-end">
+                                    <div class="pagination-wrap hstack gap-2">
+                                        <a class="page-item pagination-prev disabled" href="#">
+                                            Previous
+                                        </a>
+                                        <ul class="pagination listjs-pagination mb-0"></ul>
+                                        <a class="page-item pagination-next" href="#">
+                                            Next
+                                        </a>
+                                    </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -592,6 +603,7 @@
     <script src="/assets/libs/prismjs/prism.js"></script>
     <script src="/assets/libs/list.js/list.min.js"></script>
     <script src="/assets/libs/list.pagination.js/list.pagination.min.js"></script>
+    <script src="/assets/js/pages/listjs.init.js"></script>
 
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
@@ -670,32 +682,6 @@
         $(document).ready(() => {
             chkLogin();
             var datasource = null;
-
-            $.ajax({
-                url: "/user",
-                method: "POST",
-                data: {
-                    "iid": iid,
-                },
-                success: function (val) {
-                    switch (val.status_code) {
-                        case '401': {
-                            InvalidUser();
-                            break;
-                        }
-
-                        case '404':
-                        case '500': {
-                            InternalServerError();
-                            break;
-                        }
-
-                        default: {
-                            $('#i_name').html(`<b class="text-primary">${val[0].i_name}</b>`);
-                        }
-                    }
-                }
-            });
 
             function handleAuthClick() {
                 tokenClient.callback = async (resp) => {
@@ -1325,6 +1311,7 @@
                                     </div>`);
                         },
                         success: function (val) {
+                            console.log("ABC : ", val);
                             if (val.status_code == '406') {
                                 swal({
                                     title: "Select Different File",
@@ -1354,6 +1341,8 @@
                                             data += `<td class="name">${colvalues[j]}</td>`;
                                         }
                                         data += `</tr>`;
+
+                                        if (i >= 199) break;
                                     }
                                     data += `</tbody></table>`;
 

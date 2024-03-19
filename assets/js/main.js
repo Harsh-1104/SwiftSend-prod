@@ -397,21 +397,64 @@ $(document).ready(function () {
                         .catch(error => {
                             console.error(error);
                         });
-                    // $.ajax({
-                    //     url: "/validateInstance",
-                    //     method: "POST",
-                    //     data: { iid: page[4] },
-                    //     success: function (data) {
-                    //         if (data.status_code != 200) {
-                    //             // alert(data);
-                    //             // console.log(data);
-                    //             // location.href = "/instance";
-                    //         }
-                    //         else {
 
-                    //         }
-                    //     }
-                    // })
+                    $.ajax({
+                        url: "/getData",
+                        method: "POST",
+                        data: {
+                            obj: {
+                                table: "instance",
+                                // paramstr: `disabled = 0`,
+                                paramstr: `true`,
+                            }
+                        },
+                        success: function (val) {
+                            const iid = document.URL.split("/")[4];
+                            var data = "";
+                            switch (val.status_code) {
+                                case '401': {
+                                    InvalidUser();
+                                    break;
+                                }
+
+                                case '500': {
+                                    InternalServerError();
+                                    break;
+                                }
+                                case '404': {
+                                    break;
+                                }
+
+                                default: {
+                                    data += `<div class="btn-group">`;
+                                    for (i in val) {
+                                        if (val[i].instance_id == iid) {
+                                            data += `<button type="button" class="btn btn-sm btn-white dropdown-toggle m-0 p-0 text-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><strong>${val[i].i_name}<strong></button>`;
+                                        }
+                                    }
+
+                                    data += `<div class="dropdown-menu">`;
+                                    for (i in val) {
+                                        if (val[i].instance_id != iid) {
+                                            if (val[i].disabled == 0) {
+                                                data += `<a class="dropdown-item text-primary" href="${document.URL.replace(iid, val[i].instance_id)}">
+                                                    <i class="ri-checkbox-circle-line align-middle text-success me-2"></i>
+                                                    ${val[i].i_name}
+                                                </a>`;
+                                            } else {
+                                                data += `<div class="dropdown-item text-primary opacity-50" style="user-select: none; cursor: not-allowed;">
+                                                    <i class="ri-close-circle-line align-middle text-danger me-2"></i>
+                                                    ${val[i].i_name}
+                                                </div>`;
+                                            }
+                                        }
+                                    }
+                                    data += `</div></div>`
+                                    $('#i_name').html(data);
+                                }
+                            }
+                        }
+                    });
                     break;
                 }
             }

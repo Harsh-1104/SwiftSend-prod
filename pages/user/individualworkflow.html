@@ -1423,32 +1423,6 @@
             const iid = document.URL.split("/")[4];
             // $('#addcard').click();
 
-            $.ajax({
-                url: "/user",
-                method: "POST",
-                data: {
-                    "iid": iid,
-                },
-                success: function (val) {
-                    switch (val.status_code) {
-                        case '401': {
-                            InvalidUser();
-                            break;
-                        }
-
-                        case '404':
-                        case '500': {
-                            InternalServerError();
-                            break;
-                        }
-
-                        default: {
-                            $('#i_name').html(`<b class="text-primary">${val[0].i_name}</b>`);
-                        }
-                    }
-                }
-            });
-
             function handleAuthClick(spreadsheet, spreadsheetname) {
                 tokenClient.callback = async (resp) => {
                     if (resp.error !== undefined) {
@@ -3832,7 +3806,7 @@
                 <tbody class="list form-check-all">`;
                 let channel_id = $("#channeldata").val();
                 $.ajax({
-                    url: "/get-channel-contact",
+                    url: "/get-channel-active-contact",
                     method: "post",
                     data: {
                         channel_id: channel_id,

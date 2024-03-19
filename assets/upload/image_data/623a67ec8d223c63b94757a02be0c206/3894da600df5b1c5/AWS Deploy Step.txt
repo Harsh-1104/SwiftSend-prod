@@ -1,0 +1,36 @@
+1 : Create Aws Account 
+2 : Create EC2 Instance on Any OS but t2.medium is mandatory
+3 : Generate one Key pair and store that on some secure place because in future it will useful to connect to EC2 instance.
+
+
+
+to Remove folder : sudo rm -r <Folder-name> | Ex. (sudo rm -r SwiftSend-prod)
+to give all permission to folder : sudo chmod -R 777 <path_to_directory> | Ex. (sudo chmod -R 777 SwiftSend-prod)
+
+ChatGPT - URL	: https://chat.openai.com/c/46aa7943-1afa-43ff-a1ac-fe7135de217a
+		: https://chat.openai.com/c/735e02b5-df7b-4f80-b615-b4fab75af827
+
+
+clone cmd : git clone -b only_api https://github.com/Harsh-1104/SwiftSend-prod.git
+
+
+
+Text document /
+contact group display and send msg on side of contact list 
+
+group search and filter
+
+Active and inactive filter in contact list 
+
+refresh btn on bulk msg send by channel
+
+in admin panel : mail change for company
+support agent 
+
+attachement in reply on support ticket and at the time of creation
+
+filter on dashboard
+
+instance inactive & update and admin also can delete and inactive or active the instance
+
+at the time of scanning add one line that it will take time
