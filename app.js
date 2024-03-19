@@ -43,6 +43,7 @@ const conn = mysql.createConnection({
     user: 'qitsolution_tempuser',
     password: 'Qit123@#india',
     database: 'qitsolution_swiftsend',
+    charset: 'utf8mb4'
 })
 
 //Db itentifier: swift-send-db-itentifier
@@ -77,7 +78,7 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(['/docs/assets', '/instance/assets', '/assets'], express.static("assets"));
 app.use("/", router);
 app.use(cors());
@@ -1841,7 +1842,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
     try {
         if (isValidapikey) {
             var clientarr = req.body.clients;
-            var query = `insert into contact (contact_id,apikey,name,email,phone,instance_id)values`;
+            var query = `insert into contact (contact_id,apikey,name,email,phone,instance_id) values`;
             for (var i in clientarr) {
                 let id = crypto.randomBytes(8).toString("hex");
                 if (i != clientarr.length - 1) {
@@ -1852,6 +1853,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
                 }
             }
             conn.query(query, (err, result) => {
+                //console.log(err);
                 if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                 res.send(status.ok());
             });
@@ -1863,6 +1865,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
     }
 });
 
+
 // Contact-list : Add contact
 app.post("/addcontact", async (req, res) => {
     apikey = req.cookies.apikey;
@@ -1872,7 +1875,7 @@ app.post("/addcontact", async (req, res) => {
         if (isValidapikey) {
             let id = crypto.randomBytes(8).toString("hex");
             conn.query(
-                `insert into contact values('${id}','${apikey}','${req.body.name}','${req.body.email}','${req.body.phone}','${req.body.iid}')`,
+                `insert into contact (contact_id,apikey,name,email,phone,instance_id) values('${id}','${apikey}','${req.body.name}','${req.body.email}','${req.body.phone}','${req.body.iid}')`,
                 (err, result) => {
                     if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                     res.send(status.ok());
@@ -3865,7 +3868,6 @@ app.post("/addticket", async (req, res) => {
             let description = req.body.description;
             let attachments = (req.files) ? Array.isArray(req.files.attachments) ? req.files.attachments : [req.files.attachments] : [];
 
-            console.log("attach:", attachments);
             let agents = new Array();
             let Account_Management = new Array();
             let Technical_Support = new Array();
