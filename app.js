@@ -43,6 +43,7 @@ const conn = mysql.createConnection({
     user: 'qitsolution_tempuser',
     password: 'Qit123@#india',
     database: 'qitsolution_swiftsend',
+    charset: 'utf8mb4'
 })
 
 //Db itentifier: swift-send-db-itentifier
@@ -82,7 +83,7 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(['/docs/assets', '/instance/assets', '/assets'], express.static("assets"));
 app.use("/", router);
 app.use(cors());
@@ -1880,6 +1881,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
                 }
             }
             conn.query(query, (err, result) => {
+                //console.log(err);
                 if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                 res.send(status.ok());
             });
@@ -1890,6 +1892,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
         res.send(status.unauthorized());
     }
 });
+
 
 // Contact-list : Add contact
 app.post("/addcontact", async (req, res) => {
@@ -3892,7 +3895,6 @@ app.post("/addticket", async (req, res) => {
             let description = req.body.description;
             let attachments = (req.files) ? Array.isArray(req.files.attachments) ? req.files.attachments : [req.files.attachments] : [];
 
-            console.log("attach:", attachments);
             let agents = new Array();
             let Account_Management = new Array();
             let Technical_Support = new Array();
