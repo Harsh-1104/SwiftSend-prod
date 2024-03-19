@@ -39,38 +39,39 @@ function userNotFound(iid) {
         type: 'error',
         timer: 2000,
         showConfirmButton: false,
-    }).then(() => {
-        $.ajax({
-            url: "/updateData",
-            method: "PUT",
-            data: {
-                "table": "instance",
-                "paramstr": `isActive = 0`,
-                "condition": `instance_id = '${iid}'`
-            },
-            success: function (val) {
-                switch (val.status_code) {
-                    case '400':
-                    case '401': {
-                        InvalidUser();
-                        break;
-                    }
+    })
+    // .then(() => {
+    //     $.ajax({
+    //         url: "/updateData",
+    //         method: "PUT",
+    //         data: {
+    //             "table": "instance",
+    //             "paramstr": `isActive = 0`,
+    //             "condition": `instance_id = '${iid}'`
+    //         },
+    //         success: function (val) {
+    //             switch (val.status_code) {
+    //                 case '400':
+    //                 case '401': {
+    //                     InvalidUser();
+    //                     break;
+    //                 }
 
-                    case '404':
-                    case '500': {
-                        InternalServerError();
-                        break;
-                    }
+    //                 case '404':
+    //                 case '500': {
+    //                     InternalServerError();
+    //                     break;
+    //                 }
 
-                    case '200': {
-                        $("#disconnect, #scanqr").addClass("d-none");
-                        $("#scanqr").removeClass("d-none");
-                        break;
-                    }
-                }
-            }
-        })
-    });
+    //                 case '200': {
+    //                     $("#disconnect, #scanqr").addClass("d-none");
+    //                     $("#scanqr").removeClass("d-none");
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     })
+    // });
 }
 
 function chkLogin() {
