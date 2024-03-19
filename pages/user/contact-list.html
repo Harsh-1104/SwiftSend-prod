@@ -1311,7 +1311,6 @@
                                     </div>`);
                         },
                         success: function (val) {
-                            console.log("ABC : ", val);
                             if (val.status_code == '406') {
                                 swal({
                                     title: "Select Different File",
@@ -1334,7 +1333,7 @@
                                     }
                                     data += `</tr></thead><tbody>`;
                                     for (var i in val.json) {
-                                        clientobj = val.json;
+                                        clientobj = val.json.slice(0, 200);
                                         colvalues = Object.values(val.json[i]);
                                         data += `<tr>`;
                                         for (var j in colvalues) {

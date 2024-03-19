@@ -82,8 +82,8 @@ let instance = new Razorpay({
 app.use(express.json());
 app.use(fileUpload());
 app.use(cookieParser());
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 app.use(['/docs/assets', '/instance/assets', '/assets'], express.static("assets"));
 app.use("/", router);
 app.use(cors());
@@ -1055,7 +1055,7 @@ app.post("/bulkcustommessage", async function (req, res) {
                                         if (i === contacts.length - 1) return res.send(status.ok());
                                     });
                             }).catch((error) => {
-                                console.log(`error in Sending Bulk Message to Channel ::::::: <${error}>`);
+                                // console.log(`error in Sending Bulk Message to Channel ::::::: <${error}>`);
                                 return res.send(status.userNotValid());
                             })
                         }
@@ -1100,7 +1100,7 @@ app.post("/sendmsgchannel", async function (req, res) {
                                     if (i === contacts.length - 1) return res.send(status.ok());
                                 });
                         }).catch((error) => {
-                            console.log(`error in Sending Bulk Message to Channel ::::::: <${error}>`);
+                            // console.log(`error in Sending Bulk Message to Channel ::::::: <${error}>`);
                             res.send(status.userNotValid());
                         })
                     }
@@ -1162,30 +1162,6 @@ app.post('/schedule', async (req, res) => {
                                                         obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
                                                             let msgid = crypto.randomBytes(8).toString("hex");
 
-                                if (req.files && Object.keys(req.files).length !== 0) {
-                                    const uploadedFile = req.files.image;
-                                    const uploadPath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-
-                                    uploadedFile.mv(uploadPath, async function (err) {
-                                        if (err) res.send(status.badRequest());
-                                        let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-                                        const media = MessageMedia.fromFilePath(filepath);
-                                        let data = {
-                                            "api": "/sendmsg",
-                                            "body": media,
-                                            "contacts": contacts
-                                        };
-                                        const task = cron.schedule(time, async () => {
-                                            let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-                                            const caption = req.body.caption;
-
-                                            if (obj[iid]) {
-                                                for (let i = 0; i < contacts.length; i++) {
-                                                    const chatId = `91${contacts[i]}@c.us`;
-                                                    await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
-                                                        var msgid = crypto.randomBytes(8).toString("hex");
-
-                                                        cloudinary.uploader.upload(filepath, { folder: 'SS' }).then((data) => {
                                                             conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                                                 [msgid, message, 'Schedule Single Message', chatId, iid, apikey, token, new Date()],
                                                                 function (err, result) {
@@ -1204,7 +1180,7 @@ app.post('/schedule', async (req, res) => {
                                                                     }
                                                                 });
                                                         }).catch((error) => {
-                                                            console.log(`error in Sending schedule Message ::::::: <${error}>`);
+                                                            // console.log(`error in Sending schedule Message ::::::: <${error}>`);
                                                             conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
                                                                 async function (err, result) {
                                                                     if (err || result.affectedRows < 1) return console.log(status.internalservererror());
@@ -1313,7 +1289,7 @@ app.post('/schedule', async (req, res) => {
                                                                             });
                                                                     });
                                                                 }).catch((error) => {
-                                                                    console.error(`error in sending Document ::::::: <${error}>`);
+                                                                    // console.error(`error in sending Document ::::::: <${error}>`);
                                                                     conn.query(`update schedule set status = ? where schedule_id = ?`, [`ERROR`, schedule_id],
                                                                         function (err, result) {
                                                                             if (err || result.affectedRows < 1) return console.log(status.internalservererror());
@@ -1366,7 +1342,6 @@ app.post('/schedule', async (req, res) => {
                 }
             }
         })
-
 });
 
 async function sendMessageToTeams(webhookUrl, message) {
@@ -1473,7 +1448,7 @@ app.post("/sendMail", async (req, res) => {
                                 return res.send(status.ok());
                             });
                     }).catch((error) => {
-                        console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                        // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                         return res.send(status.badRequest());
                     })
                 });
@@ -1644,7 +1619,7 @@ app.post("/bulktemplatemail", async function (req, res) {
                                     }
                                 });
                         }).catch((error) => {
-                            console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                            // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                             return res.send(status.badRequest());
                         })
                     }
@@ -1700,7 +1675,7 @@ app.post("/bulkcustommail", async function (req, res) {
                                 });
                         })
                     }).catch((error) => {
-                        console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                        // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                         return res.send(status.badRequest());
                     })
                 });
@@ -1748,7 +1723,7 @@ app.post("/sendmailchannel", async function (req, res) {
                                 }
                             });
                     }).catch((error) => {
-                        console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                        // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                         return res.send(status.userNotValid());
                     })
                 }
@@ -1867,6 +1842,10 @@ app.post("/createchannel", async (req, res) => {
 app.post("/importContactsFromGoogle", async (req, res) => {
     var apikey = req.cookies.apikey;
     const isValidapikey = await checkAPIKey(apikey);
+    // const contentLength = req.headers['content-length'];
+    // if (contentLength) {
+    //     console.log('Payload size:', parseInt(contentLength), 'bytes');
+    // }
     try {
         if (isValidapikey) {
             var clientarr = req.body.clients;
@@ -1874,14 +1853,14 @@ app.post("/importContactsFromGoogle", async (req, res) => {
             for (var i in clientarr) {
                 let id = crypto.randomBytes(8).toString("hex");
                 if (i != clientarr.length - 1) {
-                    query += `('${id}','${apikey}','${clientarr[i].name}','${clientarr[i].email}','${clientarr[i].phone}','${req.body.iid}'),`;
+                    query += `('${id}','${apikey}','${clientarr[i].name}','${clientarr[i].email}','${(clientarr[i].phone) ? clientarr[i].phone : 0}','${req.body.iid}'),`;
                 }
                 else {
-                    query += `('${id}','${apikey}','${clientarr[i].name}','${clientarr[i].email}','${clientarr[i].phone}','${req.body.iid}')`;
+                    query += `('${id}','${apikey}','${clientarr[i].name}','${clientarr[i].email}','${(clientarr[i].phone) ? clientarr[i].phone : 0}','${req.body.iid}')`;
                 }
             }
             conn.query(query, (err, result) => {
-                //console.log(err);
+                console.log(err);
                 if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                 res.send(status.ok());
             });
@@ -2934,7 +2913,7 @@ app.post('/api/:iid/message', async (req, res) => {
                                         deleteFolder(`/image_data/${apikey}/${iid}`);
                                     });
                                 }).catch((error) => {
-                                    console.error(`error in sending Document ::::::: <${error}>`);
+                                    // console.error(`error in sending Document ::::::: <${error}>`);
                                     logAPI("/message", apikey, iid, requestBody, "E");
                                     return res.status(403).send(Object.assign(status.forbidden(), {
                                         error: {
@@ -3455,7 +3434,7 @@ app.post("/resetpasswordmail", async (req, res) => {
                         sendEmail(sender, { to: email, bcc: "" }, subject, body).then(() => {
                             return res.send(status.ok());
                         }).catch((error) => {
-                            console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                            // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                             return res.send(status.badRequest());
                         })
                     }
@@ -3985,11 +3964,11 @@ app.post("/addticket", async (req, res) => {
                                                     sendEmail(sender, { to: email, bcc: "" }, `Ticket Acknowledgement | SwiftSend`, user_body).then(() => {
                                                         return res.send(status.ok());
                                                     }).catch((error) => {
-                                                        console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                        // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                                                         return res.send(status.badRequest());
                                                     })
                                                 }).catch((error) => {
-                                                    console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                                                    // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
                                                     return res.send(status.badRequest());
                                                 }).finally(() => {
                                                     deleteFolder(`/support-ticket_doc_data/${apikey}`);
