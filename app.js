@@ -63,9 +63,14 @@ conn.connect((err) => {
 })
 
 cloudinary.config({
-    cloud_name: "do6cd8c3p",
-    api_key: "589267637882559",
-    api_secret: "3HypXjPtwO8Jg9Bv23hTR83kY-M"
+    // <--------------Old Config-------------->
+    // cloud_name: "do6cd8c3p",
+    // api_key: "589267637882559",
+    // api_secret: "3HypXjPtwO8Jg9Bv23hTR83kY-M"
+    // <--------------New Config-------------->
+    cloud_name: "dx1ghhk7f",
+    api_key: "653234377299131",
+    api_secret: "z37qJcan_y9hvTHmdM2ffHrHHIo"
 });
 
 let instance = new Razorpay({
@@ -386,7 +391,7 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
         var Ac_name = userProfile.displayName;
         var Ac_mail = userProfile.emails[0].value;
         var Ac_image = userProfile.photos[0].value;
-        const URL = await cloudinary.uploader.upload(Ac_image, { folder: 'M3' });
+        const URL = await cloudinary.uploader.upload(Ac_image, { folder: 'SS' });
         let profile;
         if (URL) {
             profile = URL.secure_url;
@@ -936,7 +941,7 @@ app.post("/sendimage", async function (req, res) {
                                     let msgid = crypto.randomBytes(8).toString("hex");
                                     const chatId = `91${phonearray[i]}@c.us`;
                                     await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
-                                        cloudinary.uploader.upload(filepath, { folder: 'M3' }).then((data) => {
+                                        cloudinary.uploader.upload(filepath, { folder: 'SS' }).then((data) => {
                                             conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                                 [msgid, data.secure_url, `Document-${req.files.image.mimetype}`, chatId, iid, apikey, token, new Date()],
                                                 function (err, result) {
@@ -947,7 +952,6 @@ app.post("/sendimage", async function (req, res) {
                                                     }
                                                 });
                                         }).catch((err) => {
-                                            console.log(`error in storing Document on cloudinary ::::::: <${err}>`);
                                             conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                                 [msgid, uploadedFile.name, 'Document-' + req.files.image.mimetype, chatId, iid, apikey, token, new Date()],
                                                 function (err, result) {
@@ -1243,7 +1247,7 @@ app.post('/schedule', async (req, res) => {
                                                     await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
                                                         var msgid = crypto.randomBytes(8).toString("hex");
 
-                                                        cloudinary.uploader.upload(filepath, { folder: 'M3' }).then((data) => {
+                                                        cloudinary.uploader.upload(filepath, { folder: 'SS' }).then((data) => {
                                                             conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                                                 [msgid, data.secure_url, req.files.image.mimetype, chatId, iid, apikey, token, new Date()],
                                                                 function (err, result) {
@@ -1835,7 +1839,7 @@ app.post("/importContactsFromGoogle", async (req, res) => {
     try {
         if (isValidapikey) {
             var clientarr = req.body.clients;
-            var query = `insert into contact (contact_id,apikey,name,email,phone,instance_id)values`;
+            var query = `insert into contact (contact_id,apikey,name,email,phone,instance_id) values`;
             for (var i in clientarr) {
                 let id = crypto.randomBytes(8).toString("hex");
                 if (i != clientarr.length - 1) {
@@ -1866,7 +1870,7 @@ app.post("/addcontact", async (req, res) => {
         if (isValidapikey) {
             let id = crypto.randomBytes(8).toString("hex");
             conn.query(
-                `insert into contact values('${id}','${apikey}','${req.body.name}','${req.body.email}','${req.body.phone}','${req.body.iid}')`,
+                `insert into contact (contact_id,apikey,name,email,phone,instance_id) values('${id}','${apikey}','${req.body.name}','${req.body.email}','${req.body.phone}','${req.body.iid}')`,
                 (err, result) => {
                     if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                     res.send(status.ok());
@@ -2442,7 +2446,7 @@ app.post("/profile_img", async (req, res) => {
 
                 uploadedFile.mv(uploadPath, function (err) {
                     if (err) return res.send(status.badRequest());
-                    cloudinary.uploader.upload(uploadPath, { folder: 'M3' }).then((data) => {
+                    cloudinary.uploader.upload(uploadPath, { folder: 'SS' }).then((data) => {
                         conn.query(`UPDATE users SET image = '${data.secure_url}' WHERE apikey = '${apikey}'`,
                             function (err, result) {
                                 if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
@@ -2855,7 +2859,7 @@ app.post('/api/:iid/message', async (req, res) => {
                                 let msgid = crypto.randomBytes(8).toString("hex");
 
                                 await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
-                                    cloudinary.uploader.upload(filepath, { folder: 'M3' }).then((data) => {
+                                    cloudinary.uploader.upload(filepath, { folder: 'SS' }).then((data) => {
                                         conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                             [msgid, data.secure_url, `Document-${req.files.image.mimetype}`, chatId, iid, apikey, "none", new Date()],
                                             function (err, result) {
@@ -2871,7 +2875,6 @@ app.post('/api/:iid/message', async (req, res) => {
                                                 }));
                                             });
                                     }).catch((err) => {
-                                        console.log(`error in storing Document on cloudinary ::::::: <${err}>`);
                                         conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                             [msgid, uploadedFile.name, `Document-${req.files.image.mimetype}`, chatId, iid, apikey, "none", new Date()],
                                             function (err, result) {

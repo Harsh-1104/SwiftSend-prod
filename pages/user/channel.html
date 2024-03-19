@@ -41,7 +41,7 @@
     <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
 </head>
 
-<body>
+<body class="p-0">
     <!-- Begin page -->
     <div id="layout-wrapper">
         <header id="page-topbar">
@@ -220,7 +220,7 @@
                         <div class="search-box col-4">
                             <input type="text" class="form-control" id="searchChannel"
                                 placeholder="Search Channel..." />
-                            <i class="ri-search-line search-icon ms-3"></i>
+                            <i class="bx bx-search-alt-2 align-middle fs-4 search-icon ms-3"></i>
                         </div>
                         <div class="d-flex justify-content-end col-8">
                             <button type="button" class="btn btn-soft-danger waves-effect waves-light fs-15 me-2"
@@ -265,14 +265,24 @@
                     <div class="modal fade" id="addcontactmodal" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
                             <div class="modal-content">
-                                <div class="modal-header bg-soft-info p-3 mb-4">
+                                <div class="modal-header bg-soft-info p-3 mb-3">
                                     <h5 class="modal-title">
                                         Add Contact to <span class="channel_name text-primary"></span>
                                     </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-modal"></button>
                                 </div>
-                                <div class="modal-body px-3 p-0">
+                                <!-- <div class="row mx-2">
+                                    <div class="col">
+                                        <input type="search" class="form-control" placeholder="Search contacts..." />
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-soft-primary" id="checkAllContact">
+                                            <i class="ri-check-double-fill align-middle fs-5 me-2"></i>Check All
+                                        </button>
+                                    </div>
+                                </div> -->
+                                <div class="modal-body">
                                     <div data-simplebar data-simplebar-auto-hide="false" data-simplebar-track="primary"
                                         style="max-height: 300px;" class="mx-n3">
                                         <ul class="list list-group list-group-flush" id="addcontact-data"></ul>
@@ -404,35 +414,118 @@
 
             const iid = document.URL.split("/")[4];
 
-            $.ajax({
-                url: "/user",
-                method: "POST",
-                data: {
-                    "iid": iid,
-                },
-                success: function (val) {
-                    switch (val.status_code) {
-                        case '401': {
-                            InvalidUser();
-                            break;
-                        }
+            var channel_List = null, channel_contact_list = {};
 
-                        case '404':
-                        case '500': {
-                            InternalServerError();
-                            break;
-                        }
-
-                        default: {
-                            $('#i_name').html(`<b class="text-primary">${val[0].i_name}</b>`);
-                        }
+            function filterChannelResult(val) {
+                let output = ``;
+                if (val.length > 0 && val.status_code != 404) {
+                    for (let i = 0; i < val.length; i++) {
+                        output += `
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                    <div class="card" id="${val[i].channelName}">
+                                        <div class="card-header bg-primary align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <h4 class="card-title mb-0 d-flex align-items-center text-white" id="abc">
+                                                        ${val[i].channelName}
+                                                    </h4>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <ul class="list-inline card-toolbar-menu d-flex align-items-center mb-0">
+                                                        <li class="list-inline-item">
+                                                            <button class="dropdown-item deleteChannel fs-15" data-id="${val[i].channel_id}">
+                                                                <span class="text-end text-white">
+                                                                    <i class="bx bxs-trash fs-5"></i>
+                                                                </span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <div>
+                                                        <input type="search" class="searchContactChannel form-control" placeholder="Search contact in ${val[i].channelName}" data-search-channel-id="${val[i].channel_id}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button class="btn btn-outline-primary addcontact" data-id="${val[i].channel_id}" data-name="${val[i].channelName}" data-bs-toggle="modal" data-bs-target="#addcontactmodal">
+                                                        <i class="bx bx-user-plus align-middle fs-4"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <hr class="my-1 mx-n3" />
+                                            <div data-simplebar data-simplebar-auto-hide="false" 
+                                                style="height: calc(100vh - 65vh);" class="mx-n3">
+                                                <ul class="list list-group list-group-flush mb-3"
+                                                    id="channel${val[i].channel_id}">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <p class="mb-0 float-end">
+                                                <span class="text-muted">Total Contact :</span>
+                                                <span class="text-primary fw-bold" id="${val[i].channel_id}total"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>`;
                     }
                 }
-            });
+                else {
+                    output += `<div class="noresult p-5 container d-flex align-items-center justify-content-center">
+                                    <div class="text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#212529,secondary:#405189"
+                                            style="width: 75px; height: 75px"></lord-icon>
+                                        <h5 class="mt-2">No Channels Found</h5>
+                                    </div>
+                                </div>`;
+                }
+                $("#channelData").html(output);
+            }
+
+            function filterChannelContactResult(channel_id, val) {
+                let data = ``;
+                if (val.length > 0) {
+                    for (var i in val) {
+                        data += `
+                                <li class="list-group-item" data-id="${val[i].contact_id}" data-channel_id = "${channel_id}">
+                                    <div ${val[i].disable == 1 ? `class="d-flex opacity-75"` : 'class="d-flex"'}>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-13 mb-1 text-primary">
+                                                ${val[i].name}
+                                            </h5>
+                                            <p class="born timestamp text-muted mb-0">
+                                                <i class="ri-phone-fill text-primary me-2"></i>${val[i].phone}
+                                            </p>
+                                        </div>
+                                        <div class="flex-shrink-0 d-flex align-items-center me-2 delete_contact d-none" data-channel_id = "${channel_id}" data-contact_id="${val[i].contact_id}">
+                                            <i class="bx bx-user-minus text-danger fs-3 cursor-pointer"></i>
+                                        </div>
+                                    </div>
+                                </li>`;
+                    }
+                }
+                else {
+                    data += `
+                            <div class="noresult pt-5">
+                                <div class="text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                        colors="primary:#212529,secondary:#405189"
+                                        style="width: 75px; height: 75px"></lord-icon>
+                                    <h5 class="mt-2">No Contacts Added</h5>
+                                </div>
+                            </div>`;
+                }
+                $(`#${channel_id}total`).html(val.length);
+                $(`#channel${channel_id}`).html(data);
+            }
 
             function channelContactDisplay(channel_id) {
                 $.ajax({
-                    // url: "/get-channel-contact",
                     url: "/get-channel-contact",
                     method: "POST",
                     data: {
@@ -448,51 +541,23 @@
                             }
 
                             case '500': {
-                                // InternalServerError();
-                                break;
-                            }
-                            case '404': {
-                                data += `
-                                    <div class="noresult pt-5">
-                                        <div class="text-center">
-                                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                colors="primary:#212529,secondary:#405189"
-                                                style="width: 75px; height: 75px"></lord-icon>
-                                            <h5 class="mt-2">No Contacts Added</h5>
-                                        </div>
-                                    </div>`;
+                                InternalServerError();
                                 break;
                             }
 
+                            case '404': {
+                                channel_contact_list[`${channel_id}`] = [];
+                                filterChannelContactResult(channel_id, []);
+                                break;
+                            }
                             //  <p class="born timestamp text-muted mb-0" style="word-break: break-word;">
                             //         <i class="ri-mail-fill text-primary me-2"></i>${val[i].email}
                             //     </p>
                             default: {
-                                for (var i in val) {
-                                    data += `
-                                        <li class="list-group-item" data-id="1">
-                                            <div ${val[i].disable == 1 ? `class="d-flex opacity-50"` : 'class="d-flex"'}>
-                                                <div class="flex-shrink-0 d-flex align-items-center">
-                                                    <i class="bx bxs-user fs-4 text-primary"></i>
-                                                </div>
-                                                <div class="vr mx-2"></div>
-                                                <div class="flex-grow-1 mx-2">
-                                                    <h5 class="fs-13 mb-1 text-primary">
-                                                        ${val[i].name}
-                                                    </h5>
-                                                    <p class="born timestamp text-muted mb-0">
-                                                        <i class="ri-phone-fill text-primary me-2"></i>${val[i].phone}
-                                                    </p>
-                                                </div>
-                                                <div class="flex-shrink-0 d-flex align-items-center me-2 delete_contact d-none" data-channel_id = "${channel_id}" data-contact_id="${val[i].contact_id}">
-                                                    <i class="bx bx-user-minus text-danger fs-3 cursor-pointer"></i>
-                                                </div>
-                                            </div>
-                                        </li>`;
-                                }
+                                channel_contact_list[`${channel_id}`] = val;
+                                filterChannelContactResult(channel_id, val);
                             }
                         }
-                        $(`#channel${channel_id}`).html(data);
                     }
                 })
             }
@@ -503,6 +568,12 @@
                     method: "POST",
                     data: {
                         obj: obj
+                    },
+                    beforeSend: function () {
+                        $("#channelData").html(`<div id="status">
+                            <div class="spinner-border text-primary avatar-sm" role="status"></div>
+                            <span class="sr-only">Loading ...</span>
+                        </div>`);
                     },
                     success: function (val) {
                         var output = "", data = "";
@@ -516,68 +587,19 @@
                                 InternalServerError();
                                 break;
                             }
-                            case '404': {
-                                output += `
-                                <div class="noresult p-5 container d-flex align-items-center justify-content-center">
-                                    <div class="text-center">
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                            colors="primary:#212529,secondary:#405189"
-                                            style="width: 75px; height: 75px"></lord-icon>
-                                        <h5 class="mt-2">No Channels Found</h5>
-                                    </div>
-                                </div>`;
-                                break;
-                            }
 
                             default: {
-                                for (let i = 0; i < val.length; i++) {
-                                    channelContactDisplay(val[i].channel_id);
-                                    output += `
-                                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12" data-aos="zoom-in">
-                                                <div class="card card-animate" id="${val[i].channelName}">
-                                                    <div class="card-header py-2 mb-0 bg-soft-info">
-                                                        <div class="float-end">
-                                                            <button type="button" class="btn btn-light btn-icon waves-effect"
-                                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <i class="fa-solid fa-ellipsis-vertical fs-5"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-lg-end">
-                                                                <button class="dropdown-item deleteChannel fs-15 " data-id="${val[i].channel_id}">
-                                                                    <span class="text-end text-danger ">
-                                                                        <i class="bx bxs-trash me-2"></i>Delete Channel
-                                                                    </span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <h4 class="card-title mb-0 d-flex align-items-center py-2" id="abc">
-                                                            ${val[i].channelName}
-                                                        </h4>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="d-flex justify-content-evenly gap-3 mb-3">
-                                                            <button class="col-6 btn btn-primary btn-icon waves-effect px-3 addcontact w-50" data-id="${val[i].channel_id}" data-name="${val[i].channelName}" data-bs-toggle="modal" data-bs-target="#addcontactmodal">
-                                                                <i class="bx bx-user-plus align-middle fs-3 me-2"></i>Add
-                                                            </button>
-                                                            <button class="col-6 btn btn-soft-danger btn-icon waves-effect px-3 editcontact w-50" data-id="${val[i].channel_id}">
-                                                                <i class="bx bx-user-x align-middle fs-3 me-2"></i>Edit
-                                                            </button>
-                                                        </div>
-                                                        <div data-simplebar data-simplebar-auto-hide="false" 
-                                                            style="height: 40vh;" class="mx-n3">
-                                                            <ul class="list list-group list-group-flush mb-3"
-                                                                id="channel${val[i].channel_id}">
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>`;
+                                channel_List = val;
+                                filterChannelResult(val);
+                                for (var i in val) {
+                                    channelContactDisplay(val[i].channel_id)
                                 }
                             }
                         }
-                        $("#channelData").html(output);
                     }
                 });
             }
+
             channelDataDisplay({
                 table: "channel",
                 paramstr: `instance_id = '${iid}'`,
@@ -592,6 +614,17 @@
             $(".required").on('input', function () {
                 oninput_validation($(this).attr('id'));
             });
+
+            $(document).on('mouseenter', '.list-group-item', function () {
+                const contact_id = $(this).attr('data-id');
+                const data_channel_id = $(this).attr('data-channel_id');
+                $(`.delete_contact[data-contact_id='${contact_id}'][data-channel_id='${data_channel_id}']`).toggleClass('d-none');
+            }).on('mouseleave', '.list-group-item', function () {
+                const contact_id = $(this).attr('data-id');
+                const data_channel_id = $(this).attr('data-channel_id');
+                $(`.delete_contact[data-contact_id='${contact_id}'][data-channel_id='${data_channel_id}']`).toggleClass('d-none');
+            });
+
 
             $(document).on("click", '#createChannel', function () {
                 nullfield_validation('channel_name');
@@ -923,19 +956,65 @@
             });
 
             $(document).on('input', '#searchChannel', function () {
-                let val = $('#searchChannel').val();
+                let val = $('#searchChannel').val().trim();
 
-                if (val == null || val == "") {
-                    channelDataDisplay({
-                        table: "channel",
-                        paramstr: `instance_id = '${iid}'`,
+                function search(query) {
+                    query = query.toLowerCase();
+                    return channel_List.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
+                        }
+                        return false;
                     });
                 }
+
+                let Searchresult = search(val);
+
+                if (val == null || val == "") {
+                    filterChannelResult(channel_List);
+                    for (var i in channel_List) {
+                        filterChannelContactResult(channel_List[i].channel_id, channel_contact_list[channel_List[i].channel_id])
+                    }
+                }
                 else {
-                    channelDataDisplay({
-                        table: "channel",
-                        paramstr: `(channelName LIKE '%${val}%')`,
+                    filterChannelResult(Searchresult)
+                    for (var i in Searchresult) {
+                        filterChannelContactResult(channel_List[i].channel_id, channel_contact_list[channel_List[i].channel_id])
+                    }
+                }
+            })
+
+            $(document).on('input', '.searchContactChannel', function () {
+                const channel_id = $(this).attr('data-search-channel-id');
+                let search_val = $(`.searchContactChannel[data-search-channel-id="${channel_id}"]`).val().trim();
+
+                function search(query) {
+                    query = query.toLowerCase();
+                    return channel_contact_list[channel_id].filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
+                        }
+                        return false;
                     });
+                }
+
+                let Searchresult = search(search_val);
+
+                if (search_val == null || search_val == "") {
+                    filterChannelContactResult(channel_id, channel_contact_list[channel_id])
+                }
+                else {
+                    filterChannelContactResult(channel_id, Searchresult)
                 }
             })
 

@@ -427,41 +427,11 @@
     <!-- prismjs plugin -->
     <script src="/assets/libs/prismjs/prism.js"></script>
 
-    <!-- <script src="/assets/js/dataTables.buttons.min.js"></script>
-    <script src="/assets/js/buttons.print.min.js"></script>
-    <script src="/assets/js/buttons.html5.min.js"></script> -->
-
     <script>
         $(document).ready(() => {
             chkLogin();
 
             const iid = document.URL.split("/")[4];
-
-            $.ajax({
-                url: "/user",
-                method: "POST",
-                data: {
-                    "iid": iid,
-                },
-                success: function (val) {
-                    switch (val.status_code) {
-                        case '401': {
-                            InvalidUser();
-                            break;
-                        }
-
-                        case '404':
-                        case '500': {
-                            InternalServerError();
-                            break;
-                        }
-
-                        default: {
-                            $('#i_name').html(`<b class="text-primary">${val[0].i_name}</b>`);
-                        }
-                    }
-                }
-            });
 
             function ticket_data(filterData) {
                 var url = `/user/api/log/${iid}`

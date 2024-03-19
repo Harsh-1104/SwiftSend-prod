@@ -207,15 +207,6 @@
 				<div class="container-fluid">
 					<div class="page-title-box d-sm-flex align-items-center justify-content-between">
 						<div class="page-title">
-							<!-- <ol class="breadcrumb m-0" id="api_path">
-								<li class="breadcrumb-item">
-									<a href="/instance">
-										Instance
-									</a>
-								</li>
-								<li class="breadcrumb-item" id="i_name"></li>
-								<li class="breadcrumb-item active">Bulk Mail</li>
-							</ol> -->
 							<h3 class="text-center">Application stats</h3>
 						</div>
 
@@ -225,45 +216,46 @@
 								<i class="mdi mdi-microphone"></i>
 							</button>
 						</div>
-
 					</div>
-					<!-- <div class="card mb-2" id="msgform"> -->
-					<div class="col-lg-4">
-						<div class="mt-3 d-flex align-items-center gap-3">
-							<input type="text" id="time_period" class=" col-lg-6 form-control mr-3"
-								data-provider="flatpickr" data-date-format="Y-m-d" data-range-date="true"
-								placeholder="select from-date and to-date">
-							<button type="button" class="btn btn-outline-primary" id="Filter">
-								<i class="bx bx-search-alt-2 align-middle fs-5"></i>
-							</button>
-							<button class="col-lg-4 btn btn-soft-danger" type="button" id="clrfilter">
-								<i class="ri-close-line align-bottom"></i> Clear Filter
-							</button>
+					<div class="row">
+						<div class="col-lg-4">
+							<ul class="nav nav-tabs-custom justify-content-start nav-primary bg-none fs-15 mb-2"
+								role="tablist">
+								<li class="nav-item" role="presentation">
+									<a class="nav-link active" data-bs-toggle="tab" href="#whatsappcount" role="tab"
+										aria-selected="true">
+										<img width="25" height="25"
+											src="https://img.icons8.com/color/48/whatsapp--v1.png" alt="whatsapp--v1" />
+										<span class="mx-2">WhatsApp</span>
+									</a>
+								</li>
+								<li class="nav-item" role="presentation">
+									<a class="nav-link" data-bs-toggle="tab" href="#emailcount" role="tab"
+										aria-selected="false" tabindex="-1">
+										<img width="25" height="25" src="https://img.icons8.com/color/48/gmail-new.png"
+											alt="gmail-new" />
+										<span class="mx-2">Email</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="col-lg-8">
+							<div class="d-flex align-items-center justify-content-end gap-3">
+								<input type="text" id="time_period" class="form-control mr-3 w-50"
+									data-provider="flatpickr" data-date-format="Y-m-d" data-range-date="true"
+									placeholder="Select date Range">
+								<button type="button" class="btn btn-primary" id="Filter">
+									<i class="bx bx-search-alt-2 align-middle fs-5"></i>
+								</button>
+								<button class="btn btn-soft-danger w-20 d-none" type="button" id="clrfilter">
+									<i class="ri-close-line align-bottom"></i> Clear
+								</button>
+							</div>
 						</div>
 					</div>
-					<br><br>
-					<ul class="nav nav-tabs-custom justify-content-center nav-primary bg-none fs-15 mb-2"
-						role="tablist">
-						<li class="nav-item" role="presentation">
-							<a class="nav-link active" data-bs-toggle="tab" href="#whatsappcount" role="tab"
-								aria-selected="true">
-								<img width="30" height="30" src="https://img.icons8.com/color/48/whatsapp--v1.png"
-									alt="whatsapp--v1" />
-								<span class="mx-2">WhatsApp</span>
-							</a>
-						</li>
-						<li class="nav-item" role="presentation">
-							<a class="nav-link" data-bs-toggle="tab" href="#emailcount" role="tab" aria-selected="false"
-								tabindex="-1">
-								<img width="30" height="30" src="https://img.icons8.com/color/48/gmail-new.png"
-									alt="gmail-new" />
-								<span class="mx-2">Email</span>
-							</a>
-						</li>
-					</ul>
 
-					<br><br>
-					<div class="tab-content text-muted">
+					<div class="tab-content text-muted mt-2">
 						<div class="tab-pane active show" id="whatsappcount" role="tabpanel">
 							<div class="record" id="record"></div>
 						</div>
@@ -587,7 +579,7 @@
 									output += `<div class="col-lg-4 col-md-6 col-sm-12">
 													<div class="card card-animate">
 														<div class="card-header">
-															<h2 class="fw-medium text-primary">${val[i].i_name}</h2>
+															<div class="fw-medium text-primary fs-18">${val[i].i_name}</div>
 														</div>
 														<div id="id_${val[i].iid}" class="card-body">
 															<div class="p-0 text-dark fs-15">
@@ -635,11 +627,7 @@
 			}
 			email_summary();
 
-			function message_filter() {
-				const timePeriodValue = $("#time_period").val();
-				const timePeriodArray = timePeriodValue.split('to');
-				const startDate = timePeriodArray[0].trim();
-				const endDate = timePeriodArray[1].trim();
+			function message_filter(startDate, endDate) {
 				$.ajax({
 					url: "/message_filter",
 					method: "POST",
@@ -748,11 +736,7 @@
 				})
 			}
 
-			function email_filter() {
-				const timePeriodValue = $("#time_period").val();
-				const timePeriodArray = timePeriodValue.split('to');
-				const startDate = timePeriodArray[0].trim();
-				const endDate = timePeriodArray[1].trim();
+			function email_filter(startDate, endDate) {
 				$.ajax({
 					url: "/email_filter",
 					method: "POST",
@@ -844,12 +828,24 @@
 			}
 
 			$(document).on("click", "#Filter", function () {
-				message_filter();
-				email_filter();
+				const timePeriodValue = $("#time_period").val();
+
+				if (timePeriodValue != "" || timePeriodValue != '') {
+					const timePeriodArray = timePeriodValue.split('to');
+					const startDate = timePeriodArray[0].trim();
+					const endDate = timePeriodArray[1].trim();
+
+					$('#clrfilter').removeClass('d-none');
+
+					message_filter(startDate, endDate);
+					email_filter(startDate, endDate);
+				}
 			})
 
 			$(document).on('click', '#clrfilter', function () {
 				$("#time_period").val("")
+				$('#clrfilter').addClass('d-none');
+
 				message_summary();
 				email_summary();
 			});
