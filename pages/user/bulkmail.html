@@ -1519,37 +1519,53 @@
                                 })
                             }
                             else {
-                                colnames = Object.keys(val.json[0]);
+                                if (val.json.length > 0) {
+                                    colnames = Object.keys(val.json[0]);
 
-                                if (colnames.includes("name") && colnames.includes("phone") && colnames.includes("email")) {
-                                    let data = `<table class="table align-middle"><thead class="table-light"><tr>`;
-                                    for (let i = 0; i < colnames.length; i++) {
-                                        data += `<th>${colnames[i]}</th>`;
-                                    }
-                                    data += `</tr></thead><tbody class="">`;
+                                    let allRequiredColumnsIncluded = ["name", "phone", "email"].every(reqCol =>
+                                        colnames.some(col => col.toLowerCase() === reqCol)
+                                    );
 
-                                    localStorage.setItem("clientobj", val.json);
-                                    for (let i = 0; i < val.json.length; i++) {
-                                        colvalues = Object.values(val.json[i]);
-                                        clientobj = val.json;
+                                    if (allRequiredColumnsIncluded) {
+                                        let matchingColumn = colnames.find(c => c.toLowerCase() === "email");
 
-                                        let y = localStorage.getItem("clientobj");
-                                        data += `<tr>`;
-                                        for (let j = 0; j < colnames.length; j++) {
-                                            data += `<td class="name">` + colvalues[j] + `</td>`;
+                                        let valid_contact_list = val.json.filter(x => {
+                                            if (x[matchingColumn] && x[matchingColumn].length > 0) {
+                                                let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                                return emailPattern.test(x[matchingColumn].split(',')[0]);
+                                            } else {
+                                                return false;
+                                            }
+                                        });
+
+                                        $('#after_connect_div_localfile').removeClass('d-none');
+                                        var data = `<table class="table align-middle"><thead class="table-light"><tr>`;
+
+                                        data += `<th>Index</th>`;
+                                        for (let i = 0; i < colnames.length; i++) {
+                                            data += `<th>${colnames[i]}</th>`;
                                         }
-                                        data += `</tr>`;
+                                        data += `</tr></thead><tbody class="list form-check-all">`;
+
+                                        clientobj = valid_contact_list.slice(0, 200);
+                                        localStorage.setItem("clientobj", clientobj);
+                                        for (let i = 0; i < clientobj.length; i++) {
+                                            colvalues = Object.values(clientobj[i]);
+
+                                            data += `<tr><td class="name">${i + 1}</td>`;
+                                            for (let j = 0; j < colnames.length; j++) {
+                                                data += `<td class="name">${colvalues[j]}</td>`;
+                                            }
+                                            data += `</tr>`;
+                                        }
+                                        localStorage.setItem("colnames", colnames);
+                                        data += `</tbody></table>`;
+
+                                        $('#localfile_data').html(data);
                                     }
-
-                                    data += `</tbody></table>`;
-
-                                    localStorage.setItem("colnames", colnames);
-                                    $('#localfile_data').html(data);
-                                    $('#after_connect_div_localfile').removeClass('d-none');
-                                }
-                                else {
-                                    $('#localfile_data')
-                                        .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                                    else {
+                                        $('#localfile_data')
+                                            .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
                                                 <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
                                                     trigger="loop" colors="primary:#f06548"
                                                     state="morph-intro-cross" style="width:70px;height:70px">
@@ -1558,7 +1574,19 @@
                                             <p class="fs-15 text-center text-muted">
                                                 There is no such column like name, email, phone in this CSV File
                                             </p>`);
-                                    $('#datafile').addClass('form-control-danger');
+                                        $('#datafile').addClass('form-control-danger');
+                                    }
+                                }
+                                else {
+                                    $("#localfile_data").html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                                                <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
+                                                    trigger="loop" colors="primary:#f06548"
+                                                    state="morph-intro-cross" style="width:70px;height:70px">
+                                                </lord-icon>
+                                            </div>
+                                            <p class="fs-15 text-center text-muted">
+                                                There is no data in this CSV File
+                                            </p>`);
                                 }
                             }
                         }
