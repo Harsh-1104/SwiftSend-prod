@@ -1040,11 +1040,16 @@ app.post("/bulkcustommessage", async function (req, res) {
             let message = req.body.message;
             var contacts = req.body.contacts;
 
+            let valid_contacts = contacts.filter(x => x.length == 10);
+            let notInValidContact = contacts.filter(x => !valid_contacts.includes(x));
+
+
             conn.query(`select * from instance where instance_id = '${iid}' and apikey = '${apikey}' and token = '${token}'`,
                 async function (err, result) {
                     if (err || result.length <= 0) return res.send(status.forbidden());
-                    for (let i = 0; i < contacts.length; i++) {
-                        const chatId = `91${contacts[i]}@c.us`;
+                    if (valid_contacts.length <= 0) return res.send(status.notAccepted())
+                    for (let i = 0; i < valid_contacts.length; i++) {
+                        const chatId = `91${valid_contacts[i]}@c.us`;
                         let msgid = crypto.randomBytes(8).toString("hex");
                         if (obj[iid]) {
                             obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
@@ -1052,11 +1057,12 @@ app.post("/bulkcustommessage", async function (req, res) {
                                     [msgid, message, 'Bulk Message custom', chatId, iid, apikey, token, new Date()],
                                     function (err, result) {
                                         if (err || result.affectedRows < 1) return res.send(status.internalservererror());
-                                        if (i === contacts.length - 1) return res.send(status.ok());
+                                        if (i === valid_contacts.length - 1) return res.send(status.ok());
                                     });
                             }).catch((error) => {
+                                console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} | error in Sending Bulk Message to Channel ::::::: `, error);
                                 // console.log(`error in Sending Bulk Message to Channel ::::::: <${error}>`);
-                                return res.send(status.userNotValid());
+                                // return res.send(status.userNotValid());
                             })
                         }
                         else {
@@ -1089,7 +1095,8 @@ app.post("/sendmsgchannel", async function (req, res) {
             let notInValidContact = contacts.filter(x => !valid_contacts.includes(x));
 
             conn.query(`select * from instance where instance_id = '${iid}' and apikey = '${apikey}' and token = '${token}'`, async function (err, result) {
-                if (err || result.length <= 0) return res.send(status.forbidden());
+                if (err || result.length <= 0) return res.send(status.unauthorized());
+                if (valid_contacts.length <= 0) return res.send(status.notAccepted())
                 for (let i = 0; i < valid_contacts.length; i++) {
                     const chatId = `91${valid_contacts[i]}@c.us`;
                     let msgid = crypto.randomBytes(8).toString("hex");
@@ -3411,6 +3418,7 @@ app.post("/resetpasswordmail", async (req, res) => {
             apikey: 'null'
         }
         tableData(data, async (result) => {
+            console.log(result);
             let flag = false;
             for (let i in result) {
                 if (email == result[i].email) {
@@ -3421,6 +3429,7 @@ app.post("/resetpasswordmail", async (req, res) => {
                     flag = false;
                 }
             }
+            console.log("flag :", flag);
             if (!flag) return res.send(status.nodatafound());
             conn.query(`select * from company`,
                 function (err, result) {
@@ -3432,12 +3441,13 @@ app.post("/resetpasswordmail", async (req, res) => {
                             "email": `${result[0].c_email}`,
                             "passcode": `${result[0].passcode}`
                         };
-                        sendEmail(sender, { to: email, bcc: "" }, subject, body).then(() => {
-                            return res.send(status.ok());
-                        }).catch((error) => {
-                            // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
-                            return res.send(status.badRequest());
-                        })
+                        console.log("A");
+                        // sendEmail(sender, { to: email, bcc: "" }, subject, body).then(() => {
+                        //     return res.send(status.ok());
+                        // }).catch((error) => {
+                        //     // console.log(`error in Sending  E-Mail ::::::: <${error}>`);
+                        //     return res.send(status.badRequest());
+                        // })
                     }
                 })
         });

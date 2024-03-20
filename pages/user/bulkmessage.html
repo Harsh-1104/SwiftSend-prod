@@ -2311,6 +2311,24 @@
                                             break;
                                         }
 
+                                        case '406': {
+                                            swal({
+                                                title: `Contacts are not valid.`,
+                                                type: "error",
+                                                timer: 2500,
+                                                showConfirmButton: false,
+                                            }).then(() => {
+                                                $('#channelmsgtype_custom_send')
+                                                    .removeClass('btn-warning btn-success')
+                                                    .addClass('btn-primary')
+                                                    .html(`<i class= "mdi mdi-send me-lg-2 me-md-2"></i>
+                                                <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                    Send to All
+                                                </span>`);
+                                            });
+                                            break;
+                                        }
+
                                         case '500': {
                                             InternalServerError();
                                             break;
@@ -2769,6 +2787,24 @@
                                             break;
                                         }
 
+                                        case '406': {
+                                            swal({
+                                                title: `Contacts are not valid.`,
+                                                type: "error",
+                                                timer: 2500,
+                                                showConfirmButton: false,
+                                            }).then(() => {
+                                                $('#channelmsgtype_custom_send')
+                                                    .removeClass('btn-warning btn-success')
+                                                    .addClass('btn-primary')
+                                                    .html(`<i class= "mdi mdi-send me-lg-2 me-md-2"></i>
+                                                <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                    Send to All
+                                                </span>`);
+                                            });
+                                            break;
+                                        }
+
                                         case '1013': {
                                             userNotFound(iid);
                                             $('#localfilemsgtype_custom_send')
@@ -3207,6 +3243,24 @@
                                         switch (val.status_code) {
                                             case '401': {
                                                 InvalidUser();
+                                                break;
+                                            }
+
+                                            case '406': {
+                                                swal({
+                                                    title: `Contacts are not valid.`,
+                                                    type: "error",
+                                                    timer: 2500,
+                                                    showConfirmButton: false,
+                                                }).then(() => {
+                                                    $('#channelmsgtype_custom_send')
+                                                        .removeClass('btn-warning btn-success')
+                                                        .addClass('btn-primary')
+                                                        .html(`<i class= "mdi mdi-send me-lg-2 me-md-2"></i>
+                                                <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                    Send to All
+                                                </span>`);
+                                                });
                                                 break;
                                             }
 
