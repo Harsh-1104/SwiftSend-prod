@@ -1162,30 +1162,6 @@ app.post('/schedule', async (req, res) => {
                                                         obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
                                                             let msgid = crypto.randomBytes(8).toString("hex");
 
-                                if (req.files && Object.keys(req.files).length !== 0) {
-                                    const uploadedFile = req.files.image;
-                                    const uploadPath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-
-                                    uploadedFile.mv(uploadPath, async function (err) {
-                                        if (err) res.send(status.badRequest());
-                                        let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-                                        const media = MessageMedia.fromFilePath(filepath);
-                                        let data = {
-                                            "api": "/sendmsg",
-                                            "body": media,
-                                            "contacts": contacts
-                                        };
-                                        const task = cron.schedule(time, async () => {
-                                            let filepath = `${__dirname}/assets/upload/image_data/${apikey}/${iid}/${uploadedFile.name}`;
-                                            const caption = req.body.caption;
-
-                                            if (obj[iid]) {
-                                                for (let i = 0; i < contacts.length; i++) {
-                                                    const chatId = `91${contacts[i]}@c.us`;
-                                                    await obj[iid].send_whatsapp_document(chatId, media, caption).then((messageId) => {
-                                                        var msgid = crypto.randomBytes(8).toString("hex");
-
-                                                        cloudinary.uploader.upload(filepath, { folder: 'SS' }).then((data) => {
                                                             conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
                                                                 [msgid, message, 'Schedule Single Message', chatId, iid, apikey, token, new Date()],
                                                                 function (err, result) {
@@ -1368,7 +1344,6 @@ app.post('/schedule', async (req, res) => {
         })
 
 });
-
 async function sendMessageToTeams(webhookUrl, message) {
     try {
         const payload = { text: message };
