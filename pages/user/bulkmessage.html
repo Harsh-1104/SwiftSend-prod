@@ -2517,7 +2517,7 @@
                                 if (val.status_code == 406) {
                                     $('#after_connect_div_localfile').addClass('d-none');
                                     swal({
-                                        title: "No File selected",
+                                        title: "Invalid File selected",
                                         html: `Only <span class="text-danger">CSV</span> File allowed.`,
                                         type: 'error',
                                         timer: 2500,
@@ -2528,37 +2528,46 @@
                                 }
                                 else {
                                     $("#localfile_refresh").removeClass('d-none');
-                                    colnames = Object.keys(val.json[0]);
 
-                                    if (colnames.includes("name") && colnames.includes("phone") && colnames.includes("email")) {
-                                        $('#after_connect_div_localfile').removeClass('d-none');
-                                        var data = `<table class="table align-middle"><thead class="table-light"><tr>`;
+                                    if (val.json.length > 0) {
+                                        colnames = Object.keys(val.json[0]);
 
-                                        for (let i = 0; i < colnames.length; i++) {
-                                            data += `<th>${colnames[i]}</th>`;
-                                        }
-                                        data += `</tr></thead><tbody class="list form-check-all">`;
+                                        let allRequiredColumnsIncluded = ["name", "phone", "email"].every(reqCol =>
+                                            colnames.some(col => col.toLowerCase() === reqCol)
+                                        );
 
-                                        localStorage.setItem("clientobj", val.json);
-                                        for (let i = 0; i < val.json.length; i++) {
-                                            colvalues = Object.values(val.json[i]);
-                                            clientobj = val.json;
+                                        if (allRequiredColumnsIncluded) {
+                                            let matchingColumn = colnames.find(c => c.toLowerCase() === "phone");
 
-                                            let y = localStorage.getItem("clientobj");
-                                            data += `<tr>`;
-                                            for (let j = 0; j < colnames.length; j++) {
-                                                data += `<td class="name">${colvalues[j]}</td>`;
+                                            let valid_contact_list = val.json.filter(x => x[matchingColumn].length == 10);
+                                            $('#after_connect_div_localfile').removeClass('d-none');
+                                            var data = `<table class="table align-middle"><thead class="table-light"><tr>`;
+
+                                            data += `<th>Index</th>`;
+                                            for (let i = 0; i < colnames.length; i++) {
+                                                data += `<th>${colnames[i]}</th>`;
                                             }
-                                            data += `</tr>`;
-                                            if (i >= 199) break;
-                                        }
-                                        localStorage.setItem("colnames", colnames);
-                                        data += `</tbody></table>`;
+                                            data += `</tr></thead><tbody class="list form-check-all">`;
 
-                                        $('#localfile_data').html(data);
-                                    } else {
-                                        $('#localfile_data')
-                                            .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                                            clientobj = valid_contact_list.slice(0, 200);
+                                            localStorage.setItem("clientobj", clientobj);
+                                            for (let i = 0; i < clientobj.length; i++) {
+                                                colvalues = Object.values(clientobj[i]);
+
+                                                data += `<tr><td class="name">${i + 1}</td>`;
+                                                for (let j = 0; j < colnames.length; j++) {
+                                                    data += `<td class="name">${colvalues[j]}</td>`;
+                                                }
+                                                data += `</tr>`;
+                                            }
+                                            localStorage.setItem("colnames", colnames);
+                                            data += `</tbody></table>`;
+
+                                            $('#localfile_data').html(data);
+                                        }
+                                        else {
+                                            $('#localfile_data')
+                                                .html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
                                                 <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
                                                     trigger="loop" colors="primary:#f06548"
                                                     state="morph-intro-cross" style="width:70px;height:70px">
@@ -2567,7 +2576,19 @@
                                             <p class="fs-15 text-center text-muted">
                                                 There is no such column like name, email, phone in this CSV File
                                             </p>`);
-                                        $('#datafile').addClass('form-control-danger');
+                                            $('#datafile').addClass('form-control-danger');
+                                        }
+                                    }
+                                    else {
+                                        $("#localfile_data").html(`<div class="d-flex justify-content-center text-danger text-center pt-5">
+                                                <lord-icon src="https://cdn.lordicon.com/nhfyhmlt.json"
+                                                    trigger="loop" colors="primary:#f06548"
+                                                    state="morph-intro-cross" style="width:70px;height:70px">
+                                                </lord-icon>
+                                            </div>
+                                            <p class="fs-15 text-center text-muted">
+                                                There is no data in this CSV File
+                                            </p>`);
                                     }
                                 }
                             }
@@ -2871,23 +2892,26 @@
                         for (let i = 0; i < clientobj.length; i++) {
                             contacts.push(clientobj[i].phone);
                         }
+                        // console.log("contacts :", contacts);
+                        console.log("clientobj :", clientobj);
                         nullfield_validation('localfilemsgtype_document_file');
                         if (objFlag.flag_localfilemsgtype_document_file == 0) {
-                            let contacts_str = "";
-                            for (let i = 0; i < contacts.length; i++) {
-                                if (i == contacts.length - 1) {
-                                    contacts_str += `${contacts[i]}`;
-                                }
-                                else {
-                                    contacts_str += `${contacts[i]},`;
-                                }
-                            }
+                            // let contacts_str = "";
+                            // for (let i = 0; i < contacts.length; i++) {
+                            //     if (i == contacts.length - 1) {
+                            //         contacts_str += `${contacts[i]}`;
+                            //     }
+                            //     else {
+                            //         contacts_str += `${contacts[i]},`;
+                            //     }
+                            // }
+                            // console.log("contacts_str :", contacts_str);
                             let formData = new FormData();
                             formData.append("iid", iid);
                             formData.append("image", document.getElementById('localfilemsgtype_document_file').files[0]);
                             formData.append("caption", $('#localfilemsgtype_template_document_caption').val());
                             formData.append("token", $('#token').val().trim());
-                            formData.append("phonearray", contacts_str);
+                            formData.append("phonearray", contacts);
                             $.ajax({
                                 url: "/sendimage",
                                 method: "POST",
