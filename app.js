@@ -914,9 +914,6 @@ app.post("/bulktemplatemessage", async function (req, res) {
 // Bulkmessage : Send Document and Image API
 app.post("/sendimage", async function (req, res) {
     apikey = req.cookies.apikey;
-    console.log("req.body.sample : ", req.body.sample);
-    console.log("---");
-    console.log("req.body.phonearray : ", req.body.phonearray);
     const isValidapikey = await checkAPIKey(apikey);
     try {
         if (isValidapikey) {
