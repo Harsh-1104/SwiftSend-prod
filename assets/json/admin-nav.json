@@ -12,7 +12,7 @@
     {
         "page": "Company",
         "link": "CompanyDetails",
-        "icon": "mdi-briefcase"
+        "icon": "mdi mdi-briefcase"
     },
     {
         "page": "Instances",

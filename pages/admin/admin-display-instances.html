@@ -168,8 +168,6 @@
                                                         <option value="5">5 records</option>
                                                         <option value="10">10 records</option>
                                                         <option value="15">15 records</option>
-                                                        <option value="20">20 records</option>
-                                                        <option value="25">25 records</option>
                                                         <option value="30">30 records</option>
                                                     </select>
                                                 </div>
@@ -320,6 +318,45 @@
     <script src="/assets/sweetalert2/sweetalert2.all.js"></script>
 
     <script>
+        function filterResult(val) {
+            if (val.length > 0) {
+                let data = ``;
+                $('#instance-list').addClass('d-none');
+                $('.noresult').addClass('d-none');
+                $('#instance-list').removeClass('d-none');
+                for (var i in val) {
+                    data += `<tr class="gridjs-tr">
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    ${val[i].instance_id}
+                                </td>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    ${val[i].i_name}</td>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    ${val[i].apikey}</td>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    ${val[i].token}</th>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    ${val[i].create_date}</td>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    ${val[i].isActive}</td>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    <div class="form-check form-switch" data-id="${val[i].instance_id}">
+                <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
+                ${val[i].disabled == 0 ? `<label class="form-check-label" for="${val[i].instance_id}">Active</label>` : `<label class="form-check-label" for="${val[i].instance_id}">Disable</label>`}
+            </div></td>
+                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
+                                    <input type="button" id="${val[i].instance_id}" class="btn btn-sm btn-danger" value="Delete" onclick="deleteRecord(this.id)"></td>
+                            </tr>`;
+                }
+                $("#instance-list").html(data);
+            }
+            else {
+                $('#instance-list').addClass('d-none');
+                $('.noresult').addClass('d-none');
+                $('.noresult').removeClass('d-none');
+            }
+        }
+
         function display_instances() {
             $.ajax({
                 url: "/getAdminData",
@@ -353,39 +390,48 @@
                             datasource = val;
                             $('#instance-list').addClass('d-none');
                             $('.noresult').addClass('d-none');
-                            //$('#select_all').removeClass('d-none');
                             $('#instance-list').removeClass('d-none');
-                            for (var i in val) {
-                                data += `<tr class="gridjs-tr">
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].instance_id}
-                                                            </td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].i_name}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].apikey}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].token}</th>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].create_date}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].isActive}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                <div class="form-check form-switch" data-id="${val[i].instance_id}">
-                                            <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
-                                            ${val[i].disabled == 0 ? `<label class="form-check-label" for="${val[i].instance_id}">Active</label>` : `<label class="form-check-label" for="${val[i].instance_id}">Disable</label>`}
-                                        </div></td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                <input type="button" id="${val[i].instance_id}" class="btn btn-sm btn-danger" value="Delete" onclick="deleteRecord(this.id)"></td>
-                                                        </tr>`;
-                            }
-                            $("#instance-list").html(data);
+                            filterResult(val);
                         }
                     }
                 }
             });
         }
         display_instances();
+
+        $(document).on("input", "#searchText", function () {
+
+            let val = $('#searchText').val().trim();
+            let checkboxes = document.querySelectorAll(`input[name="filter-type"]:checked`);
+            Array.prototype.forEach.call(checkboxes, function (el) {
+                $(`input[name="filter-type"]`).prop("checked", false);
+                $(`input[name="filter-type"][id="all"]`).prop("checked", true);
+            });
+
+            function search(query) {
+                query = query.toLowerCase();
+                return datasource.filter(function (obj) {
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                            return true;
+                        }
+                        else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
+
+            let Searchresult = search($('#searchText').val().trim());
+
+            if (val == null || val == "") {
+                filterResult(datasource)
+            }
+            else {
+                filterResult(Searchresult)
+            }
+        })
 
         $(document).on('click', ".switch-active", function () {
             const iid = $(this).attr('id');
@@ -484,8 +530,6 @@
         $(document).on("change", "#chklimit", function () {
             let data = "";
             var num = $("#chklimit").val();
-            //localStorage.setItem("limit", num);
-            console.log("limit", num);
             $.ajax({
                 url: "/getDataByPage",
                 method: "post",
@@ -514,35 +558,11 @@
                     }
                     else if (!val.status_code) {
                         if ($("#chklimit").val() == "All") {
-                            display_instances();
+                            filterResult(dataSource);
                         }
                         else {
-                            for (var i in val) {
-                                data += `<tr class="gridjs-tr">
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].instance_id}
-                                                            </td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].i_name}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].apikey}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].token}</th>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].create_date}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                ${val[i].isActive}</td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                <div class="form-check form-switch" data-id="${val[i].instance_id}">
-                                            <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
-                                            ${val[i].disabled == 0 ? `<label class="form-check-label" for="${val[i].instance_id}">Active</label>` : `<label class="form-check-label" for="${val[i].instance_id}">Disable</label>`}
-                                        </div></td>
-                                                            <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                                                <input type="button" id="${val[i].instance_id}" class="btn btn-sm btn-danger" value="Delete" onclick="deleteRecord(this.id)"></td>
-                                                        </tr>`;
-                            }
+                            filterResult(val);
                         }
-                        $("#instance-list").html(data);
                     }
                 },
             });

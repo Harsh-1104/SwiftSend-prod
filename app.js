@@ -1353,7 +1353,6 @@ app.post('/schedule', async (req, res) => {
             }
         })
 });
-
 async function sendMessageToTeams(webhookUrl, message) {
     try {
         const payload = { text: message };
