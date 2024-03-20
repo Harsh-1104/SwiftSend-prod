@@ -1085,10 +1085,13 @@ app.post("/sendmsgchannel", async function (req, res) {
             let message = req.body.message;
             let contacts = req.body.contacts;
 
+            let valid_contacts = contacts.filter(x => x.length == 10);
+            let notInValidContact = contacts.filter(x => !valid_contacts.includes(x));
+
             conn.query(`select * from instance where instance_id = '${iid}' and apikey = '${apikey}' and token = '${token}'`, async function (err, result) {
                 if (err || result.length <= 0) return res.send(status.forbidden());
-                for (let i = 0; i < contacts.length; i++) {
-                    const chatId = `91${contacts[i]}@c.us`;
+                for (let i = 0; i < valid_contacts.length; i++) {
+                    const chatId = `91${valid_contacts[i]}@c.us`;
                     let msgid = crypto.randomBytes(8).toString("hex");
                     if (obj[iid]) {
                         obj[iid].send_whatsapp_message(chatId, message).then((messageId) => {
@@ -1097,11 +1100,11 @@ app.post("/sendmsgchannel", async function (req, res) {
                                 [msgid, message, 'Bulk Message channel', chatId, iid, apikey, token, new Date()],
                                 function (err, result) {
                                     if (err || result.affectedRows < 1) return res.send(status.internalservererror());
-                                    if (i === contacts.length - 1) return res.send(status.ok());
+                                    if (i === valid_contacts.length - 1) return res.send(status.ok());
                                 });
                         }).catch((error) => {
-                            // console.log(`error in Sending Bulk Message to Channel ::::::: <${error}>`);
-                            res.send(status.userNotValid());
+                            console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} | error in Sending Bulk Message to Channel ::::::: `, error);
+                            // res.send(status.userNotValid());
                         })
                     }
                     else {
@@ -1126,10 +1129,10 @@ app.post('/schedule', async (req, res) => {
             if (err || result.length <= 0) return res.send(status.internalservererror());
             if (result.length > 0) {
                 const sender = {
-                    "hostname": 'smtp.gmail.com',
-                    "port": '465',
-                    "email": 'dashboardcrm.2022@gmail.com',
-                    "passcode": 'ofesjzhktjomxdqv'
+                    "hostname": `${result[0].hostname}`,
+                    "port": `${result[0].portnumber}`,
+                    "email": `${result[0].c_email}`,
+                    "passcode": `${result[0].passcode}`
                 };
                 const isValidapikey = await checkAPIKey(apikey);
                 try {
@@ -1860,7 +1863,6 @@ app.post("/importContactsFromGoogle", async (req, res) => {
                 }
             }
             conn.query(query, (err, result) => {
-                console.log(err);
                 if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                 res.send(status.ok());
             });
@@ -2101,7 +2103,6 @@ app.post("/sendEmailVerification", (req, res) => {
                     };
                     sendEmail(sender, { to: to, bcc: "" }, subject, body).then(() => {
                         return res.send(status.ok());
-
                     }).catch((error) => {
                         return res.send(status.badRequest());
                     })
@@ -3399,10 +3400,10 @@ app.post('/user', async (req, res) => {
 
 app.post("/resetpasswordmail", async (req, res) => {
     const email = req.body.email;
+    const domain = (process.argv[3]) ? process.argv[3] : `localhost:8081`
     const subject = `Reset password from SwiftSend | Communication Service`;
-    const body = `<div class="u-row-container" style="padding: 0px;background-color: transparent"><div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;"><div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;"><div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"><div style="height: 100%;width: 100% !important;"><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"><div style="line-height: 140%; text-align: left; word-wrap: break-word;"><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p><p style="font-size: 14px; line-height: 140%;">&nbsp;</p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">We have sent you this email in response to your request to reset your password on company name.</span></p><p style="font-size: 14px; line-height: 140%;">&nbsp;</p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">To reset your password, please follow the link below:</span></p></div></td></tr></tbody></table><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:0px 40px;font-family:'Lato',sans-serif;" align="left"><div align="left"><a href="${process.env.DOMAIN}/password-change" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #18163a; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;"><span style="display:block;padding:15px 40px;line-height:120%;"><span style="font-size: 18px; line-height: 21.6px;">Reset Password</span></span></a></div></td></tr></tbody></table>
+    const body = `<div class="u-row-container" style="padding: 0px;background-color: transparent"><div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;"><div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;"><div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"><div style="height: 100%;width: 100% !important;"><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"><div style="line-height: 140%; text-align: left; word-wrap: break-word;"><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p><p style="font-size: 14px; line-height: 140%;">&nbsp;</p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">We have sent you this email in response to your request to reset your password on company name.</span></p><p style="font-size: 14px; line-height: 140%;">&nbsp;</p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">To reset your password, please follow the link below:</span></p></div></td></tr></tbody></table><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:0px 40px;font-family:'Lato',sans-serif;" align="left"><div align="left"><a href="${domain}/password-change" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #18163a; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;"><span style="display:block;padding:15px 40px;line-height:120%;"><span style="font-size: 18px; line-height: 21.6px;">Reset Password</span></span></a></div></td></tr></tbody></table>
             <table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"></td></tr></tbody></table></div></div></div></div></div>`;
-
     if (email) {
         const data = {
             table: 'users',
