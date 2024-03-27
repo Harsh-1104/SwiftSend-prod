@@ -498,11 +498,11 @@
                                         </div>
                                         <div id="after_connect_div_gsheet" class="d-none">
                                             <div class="col-12 mb-2">
-                                                <label for="spreedsheet" class="form-label">
-                                                    Spreed-Sheet
+                                                <label for="spreadsheet" class="form-label">
+                                                    Spread-Sheet
                                                     <span class="text-danger">*</span>
                                                 </label>
-                                                <select class="form-select mb-3" id="spreedsheet"></select>
+                                                <select class="form-select mb-3" id="spreadsheet"></select>
                                             </div>
                                             <div class="col-12 mb-2">
                                                 <label for="sheetname" class="form-label">
@@ -517,7 +517,8 @@
                                                     Message Type
                                                 </label>
                                                 <select class="form-select type_change" id="gsheetmsgtype">
-                                                    <option value="" disabled selected>select message type</option>
+                                                    <option value="select message type" disabled selected>select message
+                                                        type</option>
                                                     <option value="document">Document message</option>
                                                     <option value="custom">Custom message</option>
                                                     <option value="template">Template message</option>
@@ -652,7 +653,8 @@
                                             <div class="mb-3">
                                                 <label for="msgtype" class="form-label">Message Type</label>
                                                 <select class="form-select type_change" id="localfilemsgtype">
-                                                    <option value="" disabled selected>select message type</option>
+                                                    <option value="select message type" disabled selected>select message
+                                                        type</option>
                                                     <option value="document">Document message</option>
                                                     <option value="custom">Custom message</option>
                                                     <option value="template">Template message</option>
@@ -782,7 +784,8 @@
                                                     Message Type
                                                 </label>
                                                 <select class="form-select channel_type_change" id="channelmsgtype">
-                                                    <option value="" disabled selected>Select Message Type</option>
+                                                    <option value="select message type" disabled selected>select message
+                                                        type</option>
                                                     <option value="document">Document message</option>
                                                     <option value="custom">Custom message</option>
                                                     <option value="template">Template message</option>
@@ -1139,7 +1142,7 @@
                     await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetID}?key=${API_KEY}`)
                         .then((response) => response.json())
                         .then((data) => {
-                            let sheetName = `<option selected disabled>Select Sheetname</option>`, count = 0;
+                            let sheetName = `<option value="Select sheetname" selected disabled>Select sheetname</option>`, count = 0;
                             const sheetNames = data.sheets.map((sheet) => sheet.properties);
                             for (i = 0; i < sheetNames.length; i++) {
                                 sheetName += `<option value='${count}'>${sheetNames[i].title}</option>`;
@@ -1154,7 +1157,7 @@
                                 icon: "warning",
                                 closeOnEsc: true,
                             });
-                            document.getElementById("sheetname").innerHTML = "";
+                            document.getElementById("sheetname").innerHTML = "Select sheetname";
                             console.error("There was an error!", error);
                         });
                 }
@@ -1232,12 +1235,12 @@
 
                         $('#after_connect_div_gsheet').removeClass('d-none');
                         const files = response.result.files;
-                        let output = `<option selected disabled>Select spreedsheet</option>`;
+                        let output = `<option value="Select spreadsheet" selected disabled>Select spreadsheet</option>`;
                         if (!files || files.length == 0) {
                             document.getElementById("content").innerText = "No files found.";
                             return;
                         } else {
-                            $('#sheetname').html(`<option selected disabled>Select Sheetname</option>`);
+                            $('#sheetname').html(`<option value="Select sheetname" selected disabled>Select sheetname</option>`);
                             var obj = {};
                             for (var i = 0; i < files.length; i++) {
                                 if (files[i].mimeType == "application/vnd.google-apps.spreadsheet") {
@@ -1249,7 +1252,7 @@
                                 }
                             }
                         }
-                        document.getElementById("spreedsheet").innerHTML = output;
+                        document.getElementById("spreadsheet").innerHTML = output;
                     }
 
                     $.ajax({
@@ -1973,7 +1976,7 @@
                                         <span class="text-danger" id="err_col${i + 1}"></span>
                                     </label>
                                     <select class="form-select selcol" id="col${i + 1}">
-                                        <option disabled selected>Select column</option>`;
+                                        <option value="Select column" disabled selected>Select column</option>`;
                                     for (let j = 0; j < x.length; j++) {
                                         obj1 += `<option value="${x[j]}">${x[j]}</option>`;
                                     }
@@ -1990,7 +1993,7 @@
                             url: "/dis_template",
                             method: "GET",
                             success: function (data) {
-                                let obj = `<option disabled selected>Select Template</option>`
+                                let obj = `<option value="Select Template" disabled selected>Select Template</option>`
                                 for (var i = 0; i < data.length; i++) {
                                     obj += `<option value = "${data[i].temp_name}">${data[i].temp_name}</option>`;
                                 }
@@ -2025,8 +2028,8 @@
                         handleAuthClick();
                     });
 
-                    $(document).on("change", "#spreedsheet", function () {
-                        getSheet($("#spreedsheet").val());
+                    $(document).on("change", "#spreadsheet", function () {
+                        getSheet($("#spreadsheet").val());
                     });
 
                     $(".type_change").change(function () {
@@ -2132,9 +2135,9 @@
                     }
 
                     $(document).on("change", "#sheetname", function () {
-                        nullfield_validation('spreedsheet');
-                        if (objFlag.flag_spreedsheet == 0) {
-                            var ssid = $("#spreedsheet").val();
+                        nullfield_validation('spreadsheet');
+                        if (objFlag.flag_spreadsheet == 0) {
+                            var ssid = $("#spreadsheet").val();
                             var sheetindex = $("#sheetname").val();
                             gsheetdata(ssid, sheetindex);
 
@@ -2142,9 +2145,9 @@
                     });
 
                     $('#gsheet_refresh').click(function () {
-                        nullfield_validation('spreedsheet');
-                        if (objFlag.flag_spreedsheet == 0) {
-                            var ssid = $("#spreedsheet").val();
+                        nullfield_validation('spreadsheet');
+                        if (objFlag.flag_spreadsheet == 0) {
+                            var ssid = $("#spreadsheet").val();
                             var sheetindex = $("#sheetname").val();
                             gsheetdata(ssid, sheetindex);
 
@@ -2153,13 +2156,144 @@
 
 
                     // googlesheet template message btn event
-                    $(document).on("click", "#gsheetmsgtype_template_send", function () {
+                    // $(document).on("click", "#gsheetmsgtype_template_send", function () {
 
+                    //     let nthcol = document.getElementsByClassName('selcol').length;
+                    //     let flag = false;
+                    //     for (let i = 1; i <= nthcol; i++) {
+                    //         nullfield_validation(`col${i}`);
+                    //     }
+                    //     for (let i = 1; i <= nthcol; i++) {
+                    //         if (objFlag[`flag_col${i}`] == 0) {
+                    //             flag = true;
+                    //         } else {
+                    //             flag = false;
+                    //             break;
+                    //         }
+                    //     }
+
+                    //     nullfield_validation('gsheetmsgtype_template_textarea');
+                    //     nullfield_validation('spreadsheet');
+                    //     nullfield_validation('sheetname');
+                    //     if (objFlag.flag_gsheetmsgtype_template_textarea == 0 && objFlag.flag_spreadsheet == 0 && objFlag.flag_sheetname == 0 && flag) {
+                    //         let selectedcol = new Array();
+                    //         for (let i = 0; i < document.getElementsByClassName("selcol").length; i++) {
+                    //             let data2 = document.getElementsByClassName("selcol")[i].value;
+                    //             selectedcol.push(data2);
+                    //         }
+
+                    //         let contacts = new Array();
+                    //         for (let i = 0; i < clientarr.length; i++) {
+                    //             contacts.push(clientarr[i].phone);
+                    //         }
+
+                    //         $.ajax({
+                    //             url: "/bulktemplatemessage",
+                    //             method: "POST",
+                    //             data: {
+                    //                 "iid": iid,
+                    //                 "token": $("#token").val().trim(),
+                    //                 "message": $("#gsheetmsgtype_template_textarea").val(),
+                    //                 "clientobj": clientarr,
+                    //                 "selectedcol": selectedcol,
+                    //                 "contacts": contacts,
+                    //             },
+                    //             beforeSend: function () {
+                    //                 $('#gsheetmsgtype_template_send')
+                    //                     .removeClass('btn-primary btn-success')
+                    //                     .addClass('btn-warning')
+                    //                     .html(`<span class="d-flex align-items-center">
+                    //                     <span class="flex-grow-1 me-lg-2 me-md-2">
+                    //                         Sending
+                    //                     </span>
+                    //                     <span class="spinner-border flex-shrink-0" role="status">
+                    //                         <span class="visually-hidden"></span>
+                    //                     </span>
+                    //                 </span>`);
+                    //             },
+                    //             success: function (val) {
+                    //                 switch (val.status_code) {
+                    //                     case '401': {
+                    //                         InvalidUser();
+                    //                         break;
+                    //                     }
+
+                    //                     case '500': {
+                    //                         InternalServerError();
+                    //                         break;
+                    //                     }
+
+                    //                     case '1013': {
+                    //                         userNotFound(iid);
+                    //                         $('#gsheetmsgtype_template_send')
+                    //                             .removeClass('btn-warning btn-success')
+                    //                             .addClass('btn-primary')
+                    //                             .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                    //                             <span class="d-none d-lg-inline-block d-md-inline-block">
+                    //                                 Send to All
+                    //                             </span>`);
+                    //                         break;
+                    //                     }
+
+                    //                     case '403': {
+                    //                         swal({
+                    //                             title: `Instance not valid`,
+                    //                             type: 'error',
+                    //                             timer: 2000,
+                    //                             showConfirmButton: false,
+                    //                         }).then(() => {
+                    //                             $('#gsheetmsgtype_template_send')
+                    //                                 .removeClass('btn-warning btn-success')
+                    //                                 .addClass('btn-primary')
+                    //                                 .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                    //                             <span class="d-none d-lg-inline-block d-md-inline-block">
+                    //                                 Send to All
+                    //                             </span>`);
+                    //                         });
+                    //                         break;
+                    //                     }
+
+                    //                     case '200': {
+                    //                         swal({
+                    //                             title: "Messages sent to all Contacts",
+                    //                             type: "success",
+                    //                             timer: 2000,
+                    //                             showConfirmButton: false,
+                    //                         }).then(() => {
+                    //                             $('#gsheetmsgtype_template_send')
+                    //                                 .removeClass('btn-warning btn-success')
+                    //                                 .addClass('btn-primary')
+                    //                                 .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                    //                             <span class="d-none d-lg-inline-block d-md-inline-block">
+                    //                                 Send to All
+                    //                             </span>`);
+                    //                             $("#gsheetmsgtype_message_box").val('');
+                    //                             $("#spreadsheet").val("Select spreadsheet");
+                    //                             $("#sheetname").val("Select sheetname");
+                    //                             $("#gsheetmsgtype").val("select message type");
+                    //                             $("#gsheet_refresh").addClass("d-none");
+                    //                             $("#sheet_data").html("");
+                    //                             $("#gsheetmsgtype_template").addClass("d-none");
+
+                    //                         });
+                    //                         break;
+                    //                     }
+                    //                 }
+                    //             }
+                    //         });
+                    //     }
+                    // });
+
+                    $(document).on("click", "#gsheetmsgtype_template_send", function () {
                         let nthcol = document.getElementsByClassName('selcol').length;
                         let flag = false;
+
+                        // Perform nullfield_validation for columns
                         for (let i = 1; i <= nthcol; i++) {
                             nullfield_validation(`col${i}`);
                         }
+
+                        // Check flag for each column
                         for (let i = 1; i <= nthcol; i++) {
                             if (objFlag[`flag_col${i}`] == 0) {
                                 flag = true;
@@ -2169,115 +2303,117 @@
                             }
                         }
 
+                        // Perform nullfield_validation for other fields
                         nullfield_validation('gsheetmsgtype_template_textarea');
-                        nullfield_validation('spreedsheet');
+                        nullfield_validation('spreadsheet');
                         nullfield_validation('sheetname');
-                        if (objFlag.flag_gsheetmsgtype_template_textarea == 0 && objFlag.flag_spreedsheet == 0 && objFlag.flag_sheetname == 0 && flag) {
-                            let selectedcol = new Array();
+
+                        // Initialize selectedcol
+                        let selectedcol = [];
+
+                        // If there are selected columns, populate selectedcol
+                        if (nthcol > 0) {
                             for (let i = 0; i < document.getElementsByClassName("selcol").length; i++) {
                                 let data2 = document.getElementsByClassName("selcol")[i].value;
                                 selectedcol.push(data2);
                             }
+                        }
 
-                            let contacts = new Array();
-                            for (let i = 0; i < clientarr.length; i++) {
-                                contacts.push(clientarr[i].phone);
-                            }
+                        // If selectedcol is undefined or null, set it to an empty array
+                        if (!selectedcol) {
+                            selectedcol = [];
+                        }
 
-                            $.ajax({
-                                url: "/bulktemplatemessage",
-                                method: "POST",
-                                data: {
-                                    "iid": iid,
-                                    "token": $("#token").val().trim(),
-                                    "message": $("#gsheetmsgtype_template_textarea").val(),
-                                    "clientobj": clientarr,
-                                    "selectedcol": selectedcol,
-                                    "contacts": contacts,
-                                },
-                                beforeSend: function () {
-                                    $('#gsheetmsgtype_template_send')
-                                        .removeClass('btn-primary btn-success')
-                                        .addClass('btn-warning')
-                                        .html(`<span class="d-flex align-items-center">
-                                        <span class="flex-grow-1 me-lg-2 me-md-2">
-                                            Sending
-                                        </span>
-                                        <span class="spinner-border flex-shrink-0" role="status">
-                                            <span class="visually-hidden"></span>
-                                        </span>
-                                    </span>`);
-                                },
-                                success: function (val) {
-                                    switch (val.status_code) {
-                                        case '401': {
-                                            InvalidUser();
-                                            break;
-                                        }
+                        // Populate contacts array
+                        let contacts = [];
+                        for (let i = 0; i < clientarr.length; i++) {
+                            contacts.push(clientarr[i].phone);
+                        }
 
-                                        case '500': {
-                                            InternalServerError();
-                                            break;
-                                        }
-
-                                        case '1013': {
-                                            userNotFound(iid);
-                                            $('#gsheetmsgtype_template_send')
-                                                .removeClass('btn-warning btn-success')
-                                                .addClass('btn-primary')
-                                                .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
-                                                <span class="d-none d-lg-inline-block d-md-inline-block">
-                                                    Send to All
-                                                </span>`);
-                                            break;
-                                        }
-
-                                        case '403': {
-                                            swal({
-                                                title: `Instance not valid`,
-                                                type: 'error',
-                                                timer: 2000,
-                                                showConfirmButton: false,
-                                            }).then(() => {
-                                                $('#gsheetmsgtype_template_send')
-                                                    .removeClass('btn-warning btn-success')
-                                                    .addClass('btn-primary')
-                                                    .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
-                                                <span class="d-none d-lg-inline-block d-md-inline-block">
-                                                    Send to All
-                                                </span>`);
-                                            });
-                                            break;
-                                        }
-
-                                        case '200': {
-                                            swal({
-                                                title: "Messages sent to all Contacts",
-                                                type: "success",
-                                                timer: 2000,
-                                                showConfirmButton: false,
-                                            }).then(() => {
-                                                $('#gsheetmsgtype_template_send')
-                                                    .removeClass('btn-warning btn-success')
-                                                    .addClass('btn-primary')
-                                                    .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
-                                                <span class="d-none d-lg-inline-block d-md-inline-block">
-                                                    Send to All
-                                                </span>`);
-                                            });
-                                            break;
-                                        }
+                        // Send AJAX request
+                        $.ajax({
+                            url: "/bulktemplatemessage",
+                            method: "POST",
+                            data: {
+                                "iid": iid,
+                                "token": $("#token").val().trim(),
+                                "message": $("#gsheetmsgtype_template_textarea").val(),
+                                "clientobj": clientarr,
+                                "selectedcol": selectedcol,
+                                "contacts": contacts,
+                            },
+                            beforeSend: function () {
+                                $('#gsheetmsgtype_template_send')
+                                    .removeClass('btn-primary btn-success')
+                                    .addClass('btn-warning')
+                                    .html(`<span class="d-flex align-items-center">
+                    <span class="flex-grow-1 me-lg-2 me-md-2">
+                        Sending
+                    </span>
+                    <span class="spinner-border flex-shrink-0" role="status">
+                        <span class="visually-hidden"></span>
+                    </span>
+                </span>`);
+                            },
+                            success: function (val) {
+                                switch (val.status_code) {
+                                    case '401': {
+                                        InvalidUser();
+                                        break;
+                                    }
+                                    case '500': {
+                                        InternalServerError();
+                                        break;
+                                    }
+                                    case '1013': {
+                                        userNotFound(iid);
+                                        break;
+                                    }
+                                    case '403': {
+                                        swal({
+                                            title: `Instance not valid`,
+                                            type: 'error',
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                        break;
+                                    }
+                                    case '200': {
+                                        swal({
+                                            title: "Messages sent to all Contacts",
+                                            type: "success",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        }).then(() => {
+                                            $("#gsheetmsgtype_message_box").val('');
+                                            $("#spreadsheet").val("Select spreadsheet");
+                                            $("#sheetname").val("Select sheetname");
+                                            $("#gsheetmsgtype").val("select message type");
+                                            $("#gsheet_refresh").addClass("d-none");
+                                            $("#sheet_data").html("");
+                                            $("#gsheetmsgtype_template").addClass("d-none");
+                                        });
+                                        break;
                                     }
                                 }
-                            });
-                        }
+                                // Reset button to default state
+                                $('#gsheetmsgtype_template_send')
+                                    .removeClass('btn-warning btn-success')
+                                    .addClass('btn-primary')
+                                    .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                    <span class="d-none d-lg-inline-block d-md-inline-block">
+                        Send to All
+                    </span>`);
+                            }
+                        });
                     });
+
 
                     $(document).on("click", "#gsheetmsgtype_custom_send", function () {
                         nullfield_validation('gsheetmsgtype_message_box');
-                        nullfield_validation('spreedsheet');
+                        nullfield_validation('spreadsheet');
                         nullfield_validation('sheetname');
-                        if (objFlag.flag_gsheetmsgtype_message_box == 0 && objFlag.flag_spreedsheet == 0 && objFlag.flag_sheetname == 0) {
+                        if (objFlag.flag_gsheetmsgtype_message_box == 0 && objFlag.flag_spreadsheet == 0 && objFlag.flag_sheetname == 0) {
                             let contacts = new Array();
                             for (let i = 0; i < clientarr.length; i++) {
                                 contacts.push(clientarr[i].phone);
@@ -2378,7 +2514,12 @@
                                                 <span class="d-none d-lg-inline-block d-md-inline-block">
                                                     Send to All
                                                 </span>`);
-                                                $("#gsheetmsgtype_message_box").val('   ')
+                                                $("#gsheetmsgtype_message_box").val('');
+                                                $("#spreadsheet").val("Select spreadsheet");
+                                                $("#sheetname").val("Select sheetname");
+                                                $("#gsheetmsgtype").val("select message type");
+                                                $("#gsheet_refresh").addClass("d-none");
+                                                $("#sheet_data").html("");
                                             });
                                             break;
                                         }
@@ -2390,9 +2531,9 @@
 
                     $(document).on("click", "#gsheetmsgtype_document_send", function () {
                         nullfield_validation('gsheetmsgtype_document_file');
-                        nullfield_validation('spreedsheet');
+                        nullfield_validation('spreadsheet');
                         nullfield_validation('sheetname');
-                        if (objFlag.flag_gsheetmsgtype_document_file == 0 && objFlag.flag_spreedsheet == 0 && objFlag.flag_sheetname == 0) {
+                        if (objFlag.flag_gsheetmsgtype_document_file == 0 && objFlag.flag_spreadsheet == 0 && objFlag.flag_sheetname == 0) {
                             let contacts = new Array();
                             for (let i = 0; i < clientarr.length; i++) {
                                 contacts.push(clientarr[i].phone);
@@ -2479,7 +2620,11 @@
                                                 timer: 2000,
                                                 showConfirmButton: false,
                                             }).then(function () {
-                                                $("#gsheetmsgtype_document_file, #sheetname,#spreedsheet,#gsheetmsgtype").val("");
+                                                $("#gsheetmsgtype_document_file,#gsheetmsgtype").val("");
+                                                $("#spreadsheet").val("Select spreadsheet");
+                                                $("#sheetname").val("Select sheetname");
+                                                $("#gsheet_refresh").addClass("d-none");
+
                                                 $("#sheet_data").html("");
                                                 $('#gsheetmsgtype_document_send')
                                                     .removeClass('btn-success btn-warning')
@@ -2497,7 +2642,9 @@
                         }
                     })
 
+
                     $("#localfile_refresh").addClass('d-none');
+                    var matchingColumn = null;
                     function localfiledata(frmdata) {
                         $.ajax({
                             type: "POST",
@@ -2537,7 +2684,7 @@
                                         );
 
                                         if (allRequiredColumnsIncluded) {
-                                            let matchingColumn = colnames.find(c => c.toLowerCase() === "phone");
+                                            matchingColumn = colnames.find(c => c.toLowerCase() === "phone");
 
                                             let valid_contact_list = val.json.filter(x => x[matchingColumn].length == 10);
                                             $('#after_connect_div_localfile').removeClass('d-none');
@@ -2651,15 +2798,33 @@
                     $(document).on("click", "#localfilemsgtype_template_send", function (e) {
                         let nthcol = document.getElementsByClassName('selcol').length;
                         let flag = false;
-                        for (let i = 1; i <= nthcol; i++) {
-                            nullfield_validation(`col${i}`);
+                        // for (let i = 1; i <= nthcol; i++) {
+                        //     nullfield_validation(`col${i}`);
+                        // }
+                        // for (let i = 1; i <= nthcol; i++) {
+                        //     if (objFlag[`flag_col${i}`] == 0) {
+                        //         flag = true;
+                        //     } else {
+                        //         flag = false;
+                        //         break;
+                        //     }
+                        // }
+
+                        if (nthcol == 0) {
+                            flag = true;
                         }
-                        for (let i = 1; i <= nthcol; i++) {
-                            if (objFlag[`flag_col${i}`] == 0) {
-                                flag = true;
-                            } else {
-                                flag = false;
-                                break;
+                        else {
+                            console.log("nthcol : ", nthcol);
+                            for (let i = 1; i <= nthcol; i++) {
+                                nullfield_validation(`col${i}`);
+                            }
+                            for (let i = 1; i <= nthcol; i++) {
+                                if (objFlag[`flag_col${i}`] == 0) {
+                                    flag = true;
+                                } else {
+                                    flag = false;
+                                    break;
+                                }
                             }
                         }
 
@@ -2682,11 +2847,10 @@
                                 data: {
                                     "iid": iid,
                                     "token": $("#token").val().trim(),
-                                    "template": $("#template").val(),
+                                    "matchingColumn": matchingColumn,
                                     "message": $("#localfilemsgtype_template_textarea").val(),
                                     "clientobj": clientobj,
                                     "selectedcol": selectedcol,
-                                    "contacts": contacts,
                                 },
                                 beforeSend: function () {
                                     $('#localfilemsgtype_template_send')
@@ -2757,6 +2921,11 @@
                                                 <span class="d-none d-lg-inline-block d-md-inline-block">
                                                     Send to All
                                                 </span>`);
+                                                $("#localfilemsgtype_document_file,#datafile,#localfilemsgtype").val("");
+                                                $("#localfile_data").html("");
+                                                $("#localfilemsgtype_template").addClass("d-none");
+                                                $("#localfilemsgtype_template_textarea").val("");
+                                                $("#localfile_refresh").addClass("d-none");
                                             });
                                             break;
                                         }
@@ -2877,6 +3046,11 @@
                                                 <span class="d-none d-lg-inline-block d-md-inline-block">
                                                     Send to All
                                                 </span>`);
+                                                $("#localfilemsgtype_document_file,#datafile,#localfilemsgtype").val("");
+                                                $("#localfile_data").html("");
+                                                $("#localfile_refresh").addClass("d-none");
+                                                $("#localfilemsgtype_custom").addClass("d-none");
+                                                $("#localfile_message_box").val("");
                                             });
                                             break;
                                         }
@@ -2981,7 +3155,6 @@
                                                 showConfirmButton: false,
                                             }).then(function () {
                                                 $("#localfilemsgtype_document_file,#datafile,#localfilemsgtype").val("");
-                                                $("#localfile_data").html("");
                                                 $('#localfilemsgtype_document_send')
                                                     .removeClass('btn-success btn-warning')
                                                     .addClass('btn-primary')
@@ -2989,6 +3162,12 @@
                                                     <span class="d-none d-lg-inline-block d-md-inline-block">
                                                         Send
                                                     </span>`);
+
+                                                $("#localfilemsgtype_document").addClass("d-none");
+                                                $("#localfile_data").html("");
+                                                $("#localfile_refresh").addClass("d-none");
+                                                $("#localfilemsgtype_template_document_caption").val("");
+
                                             })
                                             break;
                                         }
@@ -3039,7 +3218,7 @@
                                     }
 
                                     default: {
-                                        let data = `<option value = "null" selected disabled> Select Channel</option>`;
+                                        let data = `<option value = "Select channel" selected disabled> Select Channel</option>`;
                                         for (var i in val) {
                                             data += `<option value = "${val[i].channel_id}"> ${val[i].channelName}</option>`;
                                         }
@@ -3150,7 +3329,7 @@
                                         <span class="text-danger" id="err_col${i + 1}"></span>
                                     </label>
                                     <select class="form-select selcol" id="col${i + 1}">
-                                        <option disabled selected>Select column</option>`;
+                                        <option value="Select column" disabled selected>Select column</option>`;
                                     for (let j = 0; j < x.length; j++) {
                                         obj1 += `<option value="${x[j]}">${x[j]}</option>`;
                                     }
@@ -3167,7 +3346,7 @@
                             url: "/dis_template",
                             method: "GET",
                             success: function (data) {
-                                let obj = `<option disabled selected>Select Template</option>`
+                                let obj = `<option value="Select Template" disabled selected>Select Template</option>`
                                 for (var i = 0; i < data.length; i++) {
                                     if (data[i].userfields < 4) {
                                         obj += `<option value = "${data[i].temp_name}">${data[i].temp_name}</option>`;
@@ -3313,8 +3492,11 @@
                                                     showConfirmButton: false,
                                                 }).then(() => {
                                                     $('#contact_data').html('');
-                                                    $('#channel_list').val('null');
-                                                    $('#channel_message_box').val('');
+                                                    $("#channel_list").val("Select channel");
+                                                    $("#contact_refresh").addClass("d-none");
+                                                    $("#channelmsgtype").val("select message type");
+                                                    $("#channel_message_box").val("");
+                                                    $("#channelmsgtype_custom").addClass("d-none");
                                                     $('#channelmsgtype_custom_send')
                                                         .removeClass('btn-warning btn-success')
                                                         .addClass('btn-primary')
@@ -3441,6 +3623,12 @@
                                                             <span class="d-none d-lg-inline-block d-md-inline-block">
                                                                 Send to All
                                                             </span>`);
+                                                $('#contact_data').html('');
+                                                $("#channel_list").val("Select channel");
+                                                $("#contact_refresh").addClass("d-none");
+                                                $("#channelmsgtype").val("select message type");
+                                                $("#channelmsgtype_template_data").val("Select Template");
+                                                $("#channelmsgtype_template").addClass("d-none");
                                             });
                                             break;
                                         }
@@ -3550,6 +3738,11 @@
                                                         <span class="d-none d-lg-inline-block d-md-inline-block">
                                                             Send to All
                                                         </span>`);
+                                                    $("#channelmsgtype_document").addClass("d-none");
+                                                    $("#contact_refresh").addClass("d-none");
+                                                    $("#contact_data").html("");
+                                                    $("#channelmsgtype").val("select message type");
+                                                    $("#channel_list").val("Select channel");
                                                 })
                                                 break;
                                             }

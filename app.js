@@ -851,11 +851,11 @@ app.post("/bulktemplatemessage", async function (req, res) {
             const iid = req.body.iid;
             const token = req.body.token;
 
-            let contacts = req.body.contacts;
+            let matchingColumn = req.body.matchingColumn;
             let msg = req.body.message;
             let clientobj = req.body.clientobj;
-            let selectedcol = req.body.selectedcol;
-
+            let selectedcol = req.body.selectedcol || [];
+            console.log("selected col:", selectedcol);
             let msgarr;
 
             if (selectedcol.length == 1) {
@@ -873,19 +873,23 @@ app.post("/bulktemplatemessage", async function (req, res) {
             else if (selectedcol.length == 5) {
                 msgarr = five(msg, clientobj, selectedcol);
             }
+            else {
+                msgarr = msg;
+            }
 
             conn.query(`select * from instance where instance_id = '${iid}' and apikey = '${apikey}' and token = '${token}'`,
                 function (err, result) {
                     if (err || result.length <= 0) return res.send(status.forbidden());
-                    for (let i = 0; i < contacts.length; i++) {
-                        if (obj[iid]) {
-                            let chatId = `91${contacts[i]}@c.us`;
+                    for (let i = 0; i < clientobj.length; i++) {
 
-                            obj[iid].send_whatsapp_message(chatId, msgarr[i]).then((messageId) => {
+                        if (obj[iid]) {
+                            let chatId = `91${clientobj[i][matchingColumn]}@c.us`;
+
+                            obj[iid].send_whatsapp_message(chatId, (selectedcol.length == 0) ? msgarr : msgarr[i]).then((messageId) => {
                                 let msgid = crypto.randomBytes(8).toString("hex");
 
                                 conn.query(`insert into message values(?,?,?,?,?,?,?,?)`,
-                                    [msgid, msgarr[i], 'Bulk Message Template', chatId, iid, apikey, token, new Date()],
+                                    [msgid, (selectedcol.length == 0) ? msgarr : msgarr[i], 'Bulk Message Template', chatId, iid, apikey, token, new Date()],
                                     function (err, result) {
                                         if (err || result.affectedRows < 1) return status.internalservererror();
                                         if (i === clientobj.length - 1) {
@@ -4132,180 +4136,201 @@ app.get("/dis_cstm_template", function (req, res) {
     );
 });
 
-function one(message, clientobj, selectedcol) {
-    let keys = Object.keys(clientobj[0]);
-    let msgarray = new Array();
-    let value1arr = new Array();
+function dynamicReplace(message, clientobj, selectedcol) {
+    let msgarray = [];
+    let valueArrays = Array.from({ length: selectedcol.length }, () => []);
 
-    for (let i = 0; i < keys.length; i++) {
-        for (let j = 0; j < selectedcol.length; j++) {
-            if (keys[i] == selectedcol[j]) {
-                for (let k = 0; k < clientobj.length; k++) {
-                    let values = Object.values(clientobj[k]);
-                    if (keys[i] == selectedcol[0]) {
-                        value1arr.push(values[i]);
-                    }
-                }
-            }
-        }
-    }
-    let tempmsg;
     for (let k = 0; k < clientobj.length; k++) {
-        tempmsg = message.replace("[value1]", value1arr[k]);
+        let tempmsg = message;
+        for (let i = 0; i < selectedcol.length; i++) {
+            let placeholder = `[value-${i + 1}]`;
+            let colIndex = Object.keys(clientobj[k]).indexOf(selectedcol[i]);
+            let value = colIndex !== -1 ? Object.values(clientobj[k])[colIndex] : "";
+            valueArrays[i].push(value);
+            tempmsg = tempmsg.replace(placeholder, value);
+        }
         msgarray.push(tempmsg);
     }
-    return msgarray;
+    return { messages: msgarray, values: valueArrays };
 }
 
-function two(message, clientobj, selectedcol) {
-    let keys = Object.keys(clientobj[0]);
-    let msgarray = new Array();
-    let value1arr = new Array();
-    let value2arr = new Array();
-
-    for (let i = 0; i < keys.length; i++) {
-        for (let j = 0; j < selectedcol.length; j++) {
-            if (keys[i] == selectedcol[j]) {
-                for (let k = 0; k < clientobj.length; k++) {
-                    let values = Object.values(clientobj[k]);
-                    if (keys[i] == selectedcol[0]) {
-                        value1arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[1]) {
-                        value2arr.push(values[i]);
-                    }
-                }
-            }
-        }
-    }
-    let tempmsg;
-    for (let k = 0; k < clientobj.length; k++) {
-        tempmsg = message.replace("[value1]", value1arr[k]);
-        tempmsg = tempmsg.replace("[value2]", value2arr[k]);
-        msgarray.push(tempmsg);
-    }
-    return msgarray;
-}
+// Similarly implement logic for three, four, and five functions
 
 
-function three(message, clientobj, selectedcol) {
-    let keys = Object.keys(clientobj[0]);
-    let msgarray = new Array();
-    let value1arr = new Array();
-    let value2arr = new Array();
-    let value3arr = new Array();
-    for (let i = 0; i < keys.length; i++) {
-        for (let j = 0; j < selectedcol.length; j++) {
-            if (keys[i] == selectedcol[j]) {
-                for (let k = 0; k < clientobj.length; k++) {
-                    let values = Object.values(clientobj[k]);
-                    if (keys[i] == selectedcol[0]) {
-                        value1arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[1]) {
-                        value2arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[2]) {
-                        value3arr.push(values[i]);
-                    }
-                }
-            }
-        }
-    }
-    let tempmsg;
-    for (let k = 0; k < clientobj.length; k++) {
-        tempmsg = message.replace("[value1]", value1arr[k]);
-        tempmsg = tempmsg.replace("[value2]", value2arr[k]);
-        tempmsg = tempmsg.replace("[value3]", value3arr[k]);
-        msgarray.push(tempmsg);
-    }
-    return msgarray;
-}
+// function one(message, clientobj, selectedcol) {
+//     let keys = Object.keys(clientobj[0]);
+//     let msgarray = new Array();
+//     let value1arr = new Array();
 
-function four(message, clientobj, selectedcol) {
-    let keys = Object.keys(clientobj[0]);
-    let msgarray = new Array();
-    let value1arr = new Array();
-    let value2arr = new Array();
-    let value3arr = new Array();
-    let value4arr = new Array();
-    for (let i = 0; i < keys.length; i++) {
-        for (let j = 0; j < selectedcol.length; j++) {
-            if (keys[i] == selectedcol[j]) {
-                // let custommsg;
-                for (let k = 0; k < clientobj.length; k++) {
-                    let values = Object.values(clientobj[k]);
-                    if (keys[i] == selectedcol[0]) {
-                        value1arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[1]) {
-                        value2arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[2]) {
-                        value3arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[3]) {
-                        value4arr.push(values[i]);
-                    }
-                }
-            }
-        }
-    }
-    let tempmsg;
-    for (let k = 0; k < clientobj.length; k++) {
-        tempmsg = message.replace("[value1]", value1arr[k]);
-        tempmsg = tempmsg.replace("[value2]", value2arr[k]);
-        tempmsg = tempmsg.replace("[value3]", value3arr[k]);
-        tempmsg = tempmsg.replace("[value4]", value4arr[k]);
-        msgarray.push(tempmsg);
-    }
-    return msgarray;
-}
+//     for (let i = 0; i < keys.length; i++) {
+//         for (let j = 0; j < selectedcol.length; j++) {
+//             if (keys[i] == selectedcol[j]) {
+//                 for (let k = 0; k < clientobj.length; k++) {
+//                     let values = Object.values(clientobj[k]);
+//                     if (keys[i] == selectedcol[0]) {
+//                         value1arr.push(values[i]);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     let tempmsg;
+//     for (let k = 0; k < clientobj.length; k++) {
+//         tempmsg = message.replace("[value1]", value1arr[k]);
+//         msgarray.push(tempmsg);
+//     }
+//     return msgarray;
+// }
 
-function five(message, clientobj, selectedcol) {
-    let keys = Object.keys(clientobj[0]);
-    let msgarray = new Array();
-    let value1arr = new Array();
-    let value2arr = new Array();
-    let value3arr = new Array();
-    let value4arr = new Array();
-    let value5arr = new Array();
+// function two(message, clientobj, selectedcol) {
+//     let keys = Object.keys(clientobj[0]);
+//     let msgarray = new Array();
+//     let value1arr = new Array();
+//     let value2arr = new Array();
 
-    for (let i = 0; i < keys.length; i++) {
-        for (let j = 0; j < selectedcol.length; j++) {
-            if (keys[i] == selectedcol[j]) {
-                for (let k = 0; k < clientobj.length; k++) {
-                    let values = Object.values(clientobj[k]);
-                    if (keys[i] == selectedcol[0]) {
-                        value1arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[1]) {
-                        value2arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[2]) {
-                        value3arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[3]) {
-                        value4arr.push(values[i]);
-                    }
-                    if (keys[i] == selectedcol[4]) {
-                        value5arr.push(values[i]);
-                    }
-                }
-            }
-        }
-    }
-    let tempmsg;
-    for (let k = 0; k < clientobj.length; k++) {
-        tempmsg = message.replace("[value1]", value1arr[k]);
-        tempmsg = tempmsg.replace("[value2]", value2arr[k]);
-        tempmsg = tempmsg.replace("[value3]", value3arr[k]);
-        tempmsg = tempmsg.replace("[value4]", value4arr[k]);
-        tempmsg = tempmsg.replace("[value5]", value5arr[k]);
-        msgarray.push(tempmsg);
-    }
-    return msgarray;
-}
+//     for (let i = 0; i < keys.length; i++) {
+//         for (let j = 0; j < selectedcol.length; j++) {
+//             if (keys[i] == selectedcol[j]) {
+//                 for (let k = 0; k < clientobj.length; k++) {
+//                     let values = Object.values(clientobj[k]);
+//                     if (keys[i] == selectedcol[0]) {
+//                         value1arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[1]) {
+//                         value2arr.push(values[i]);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     let tempmsg;
+//     for (let k = 0; k < clientobj.length; k++) {
+//         tempmsg = message.replace("[value1]", value1arr[k]);
+//         tempmsg = tempmsg.replace("[value2]", value2arr[k]);
+//         msgarray.push(tempmsg);
+//     }
+//     return msgarray;
+// }
+
+
+// function three(message, clientobj, selectedcol) {
+//     let keys = Object.keys(clientobj[0]);
+//     let msgarray = new Array();
+//     let value1arr = new Array();
+//     let value2arr = new Array();
+//     let value3arr = new Array();
+//     for (let i = 0; i < keys.length; i++) {
+//         for (let j = 0; j < selectedcol.length; j++) {
+//             if (keys[i] == selectedcol[j]) {
+//                 for (let k = 0; k < clientobj.length; k++) {
+//                     let values = Object.values(clientobj[k]);
+//                     if (keys[i] == selectedcol[0]) {
+//                         value1arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[1]) {
+//                         value2arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[2]) {
+//                         value3arr.push(values[i]);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     let tempmsg;
+//     for (let k = 0; k < clientobj.length; k++) {
+//         tempmsg = message.replace("[value1]", value1arr[k]);
+//         tempmsg = tempmsg.replace("[value2]", value2arr[k]);
+//         tempmsg = tempmsg.replace("[value3]", value3arr[k]);
+//         msgarray.push(tempmsg);
+//     }
+//     return msgarray;
+// }
+
+// function four(message, clientobj, selectedcol) {
+//     let keys = Object.keys(clientobj[0]);
+//     let msgarray = new Array();
+//     let value1arr = new Array();
+//     let value2arr = new Array();
+//     let value3arr = new Array();
+//     let value4arr = new Array();
+//     for (let i = 0; i < keys.length; i++) {
+//         for (let j = 0; j < selectedcol.length; j++) {
+//             if (keys[i] == selectedcol[j]) {
+//                 // let custommsg;
+//                 for (let k = 0; k < clientobj.length; k++) {
+//                     let values = Object.values(clientobj[k]);
+//                     if (keys[i] == selectedcol[0]) {
+//                         value1arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[1]) {
+//                         value2arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[2]) {
+//                         value3arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[3]) {
+//                         value4arr.push(values[i]);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     let tempmsg;
+//     for (let k = 0; k < clientobj.length; k++) {
+//         tempmsg = message.replace("[value1]", value1arr[k]);
+//         tempmsg = tempmsg.replace("[value2]", value2arr[k]);
+//         tempmsg = tempmsg.replace("[value3]", value3arr[k]);
+//         tempmsg = tempmsg.replace("[value4]", value4arr[k]);
+//         msgarray.push(tempmsg);
+//     }
+//     return msgarray;
+// }
+
+// function five(message, clientobj, selectedcol) {
+//     let keys = Object.keys(clientobj[0]);
+//     let msgarray = new Array();
+//     let value1arr = new Array();
+//     let value2arr = new Array();
+//     let value3arr = new Array();
+//     let value4arr = new Array();
+//     let value5arr = new Array();
+
+//     for (let i = 0; i < keys.length; i++) {
+//         for (let j = 0; j < selectedcol.length; j++) {
+//             if (keys[i] == selectedcol[j]) {
+//                 for (let k = 0; k < clientobj.length; k++) {
+//                     let values = Object.values(clientobj[k]);
+//                     if (keys[i] == selectedcol[0]) {
+//                         value1arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[1]) {
+//                         value2arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[2]) {
+//                         value3arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[3]) {
+//                         value4arr.push(values[i]);
+//                     }
+//                     if (keys[i] == selectedcol[4]) {
+//                         value5arr.push(values[i]);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     let tempmsg;
+//     for (let k = 0; k < clientobj.length; k++) {
+//         tempmsg = message.replace("[value1]", value1arr[k]);
+//         tempmsg = tempmsg.replace("[value2]", value2arr[k]);
+//         tempmsg = tempmsg.replace("[value3]", value3arr[k]);
+//         tempmsg = tempmsg.replace("[value4]", value4arr[k]);
+//         tempmsg = tempmsg.replace("[value5]", value5arr[k]);
+//         msgarray.push(tempmsg);
+//     }
+//     return msgarray;
+// }
 
 app.post("/createworkflow", async (req, res) => {
     apikey = req.cookies.apikey;
