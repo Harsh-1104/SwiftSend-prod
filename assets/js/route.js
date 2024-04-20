@@ -43,6 +43,9 @@ router.get("/docs/:folder/:page", async (req, res) => {
 
 
 /*--------------------[ User ]--------------------*/
+router.get("/wba", (req, res) => {
+    res.sendFile(`${path}/user/wba.html`);
+})
 
 router.get("/dashboard", (req, res) => {
     res.sendFile(`${path}/user/index.html`);

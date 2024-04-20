@@ -10,6 +10,11 @@
         "icon": "ri-apps-2-line",
         "submenu": [
             {
+                "page": "Business API",
+                "link": "wba",
+                "icon": "bx bxs-message-detail"
+            },
+            {
                 "page": "Bulk Message",
                 "link": "bulkmessage",
                 "icon": "bx bxs-message-detail"

@@ -4476,10 +4476,46 @@ function logAPI(api, apikey, iid, requestBody, type) {
         });
 }
 
+// 11ZA API Integration
+app.get("/wba/getTemplate", async (req, res) => {
+    apikey = req.cookies.apikey;
+    const isValidapikey = await checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            const response = await fetch(`https://app.11za.in/apis/template/getTemplates`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "authToken": "U2FsdGVkX1//x0bFqhPhEL4Ka5QCqfJ+JKYGu1qCROBFGxMUlZTu9Qy3Qqog4pdH4ptCIQPbj6RcJVDmeSQ72sFa3kf0jBVUZ8dD6L8hDXYcHv/XDMNEZ8NkfYweM5/zkr0gOY270t57clUTTlAyQmM8fSVG/l2SXUxlXCyjZ8nFoD8WQOpKoZem1cjAatov",
+                    "search": "",
+                    "page": "1",
+                    "limit": "10"
+                }),
+            });
+            const data = await response.json();
+            res.send(data);
+        }
+        else {
+            return res.status(404).send({
+                "Error Code": "404",
+                "Message": "Apikey is invalid / missing"
+            });
+        }
+    }
+    catch (e) {
+        return res.status(404).send({
+            "Error Code": "404",
+            "Message": "Invalid Body / missing data"
+        });
+    }
+});
 
 app.use((req, res) => {
     res.status(404).sendFile(`${__dirname}/pages/404.html`);
 });
+
 
 app.listen(port, () => {
     console.log(`${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`);

@@ -351,6 +351,7 @@ $(document).ready(function () {
 
             switch (page[5].split('?')[0]) {
                 case 'logs':
+                case 'wba':
                 case 'bulkmessage':
                 case 'bulkmail':
                 case 'contact-list':
