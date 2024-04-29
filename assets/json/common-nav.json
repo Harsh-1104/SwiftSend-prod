@@ -10,19 +10,9 @@
         "icon": "ri-apps-2-line",
         "submenu": [
             {
-                "page": "Business API",
+                "page": "Message",
                 "link": "wba",
                 "icon": "bx bxs-message-detail"
-            },
-            {
-                "page": "Bulk Message",
-                "link": "bulkmessage",
-                "icon": "bx bxs-message-detail"
-            },
-            {
-                "page": "Bulk Mail",
-                "link": "bulkmail",
-                "icon": "fas fa-mail-bulk"
             },
             {
                 "page": "Contacts",
@@ -33,33 +23,13 @@
                 "page": "Channel",
                 "link": "channel",
                 "icon": "mdi mdi-account-group"
-            },
-            {
-                "page": "Chat",
-                "link": "chat",
-                "icon": "bx bxs-chat"
-            },
-            {
-                "page": "Workflow",
-                "link": "workflow",
-                "icon": "mdi mdi-arrow-decision"
-            },
-            {
-                "page": "Log Details",
-                "link": "logs",
-                "icon": "ri-list-check-2"
             }
         ]
     },
     {
-        "page": "Custom Template",
-        "link": "customtemplate",
+        "page": "Template",
+        "link": "template",
         "icon": "ri-pages-fill"
-    },
-    {
-        "page": "Email Configuration",
-        "link": "addpasscode",
-        "icon": "ri-lock-password-fill"
     },
     {
         "page": "Support Ticket",
@@ -70,10 +40,5 @@
         "page": "Pricing",
         "link": "subscription",
         "icon": "ri-price-tag-3-fill"
-    },
-    {
-        "page": "API DOCS",
-        "link": "docs",
-        "icon": "bx bxs-book"
     }
 ]

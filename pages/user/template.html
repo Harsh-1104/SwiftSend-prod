@@ -42,6 +42,63 @@
     <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
 </head>
 
+<style>
+    .message {
+        color: #000;
+        clear: both;
+        line-height: 18px;
+        font-size: 15px;
+        padding: 8px;
+        position: relative;
+        margin: 8px 0;
+        max-width: 85%;
+        word-wrap: break-word;
+        z-index: -1;
+    }
+
+    .message:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-style: solid;
+    }
+
+    .metadata {
+        display: inline-block;
+        padding: 0 0 0 7px;
+        position: relative;
+        bottom: -4px;
+    }
+
+    .metadata .time {
+        color: rgba(190, 190, 190, 0.7);
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .message.received {
+        background: #fff;
+        border-radius: 0px 5px 5px 5px;
+        float: left;
+    }
+
+    .message.received .metadata {
+        padding: 0 0 0 16px;
+    }
+
+    .message.received:after {
+        border-width: 0px 10px 10px 0;
+        border-color: transparent #fff transparent transparent;
+        top: 0;
+        left: -10px;
+    }
+
+    .message-footer {
+        border-top: 1px solid red;
+    }
+</style>
+
 <body>
 
     <!-- Begin page -->
@@ -182,6 +239,11 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <div class="page-title">
+                            <h4 class="text-center mb-0">Templates</h4>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <div class="search-box col-4">
                             <input type="text" class="form-control" id="searchtemplate"
@@ -189,10 +251,6 @@
                             <i class="bx bx-search-alt-2 align-middle fs-4 search-icon ms-3"></i>
                         </div>
                         <div class="d-flex justify-content-end col-8">
-                            <button type="button" class="btn btn-soft-danger waves-effect waves-light fs-15 me-2"
-                                id="mic" data-bs-toggle="modal" data-bs-target="#voice_input">
-                                <i class="mdi mdi-microphone"></i>
-                            </button>
                             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createtemplatemodal"
                                 id="createtemplatemodalbtn">
                                 <i class="ri-add-circle-line align-middle me-lg-2"></i>
@@ -261,6 +319,20 @@
                         </div>
                     </div>
                     <div class="row" id="templateData"></div>
+                    <div class="message received">
+                        <div class="message-header">
+                            This is header message.
+                        </div>
+                        <div class="message-body">
+                            This is body message.
+                        </div>
+                        <span class="metadata">
+                            <span class="time" id="time"></span>
+                        </span>
+                        <div class="message-footer">
+                            This is footer message.
+                        </div>
+                    </div>
                 </div>
             </div>
             <footer class="footer"></footer>
@@ -368,28 +440,15 @@
     <script>
         $(document).ready(function () {
             chkLogin();
-            function temmplateDataDisplay(obj) {
-                $.ajax({
-                    url: "/getData",
-                    method: "POST",
-                    data: {
-                        obj: obj
-                    },
-                    success: function (val) {
-                        console.log(val);
-                        var output = "", data = "";
-                        switch (val.status_code) {
-                            case '401': {
-                                InvalidUser();
-                                break;
-                            }
 
-                            case '500': {
-                                InternalServerError();
-                                break;
-                            }
-                            case '404': {
-                                output += `
+            function temmplateDataDisplay() {
+                $.ajax({
+                    url: "/api/template/gettemplate",
+                    method: "GET",
+                    success: function (val) {
+                        var output = "", data = "";
+                        if (val.data.length <= 0) {
+                            output += `
                                 <div class="noresult p-5 container d-flex align-items-center justify-content-center">
                                     <div class="text-center">
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -398,14 +457,12 @@
                                         <h5 class="mt-2">No Template created</h5>
                                     </div>
                                 </div>`;
-                                break;
-                            }
-
-                            default: {
-                                for (let i = 0; i < val.length; i++) {
-                                    output += `
+                        }
+                        else {
+                            for (let i = 0; i < val.data.length; i++) {
+                                output += `
                                             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" data-aos="zoom-in">
-                                                <div class="card card-animate" id="${val[i].cstm_id}">
+                                                <div class="card card-animate" id="${val.data[i].id}">
                                                     <div class="card-header py-2 mb-0 bg-soft-info">
                                                         <div class="float-end">
                                                             <button type="button" class="btn btn-light btn-icon waves-effect"
@@ -413,7 +470,7 @@
                                                                 <i class="fa-solid fa-ellipsis-vertical fs-5"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-end">
-                                                                <button class="dropdown-item remove-item-btn fs-13" data-id="${val[i].cstm_id}">
+                                                                <button class="dropdown-item remove-item-btn fs-13" data-id="${val.data[i].id}">
                                                                     <span class="text-end text-danger">
                                                                         <i class="bx bxs-trash align-middle me-2"></i>
                                                                         Delete
@@ -422,28 +479,23 @@
                                                             </div>
                                                         </div>
                                                         <h4 class="card-title mb-0 d-flex align-items-center py-2" id="abc">
-                                                            ${val[i].cstm_name}
+                                                            ${val.data[i].name}
                                                         </h4>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div data-simplebar data-simplebar-auto-hide="false" 
-                                                            style="height: 150px;" class="p-1 fs-15">
-                                                                ${val[i].cstm_msg}
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>`;
-                                }
                             }
                         }
                         $("#templateData").html(output);
+                    }, error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 401) InvalidUser();
                     }
                 });
             }
-            temmplateDataDisplay({
-                table: "cstm_template",
-                paramstr: `true`,
-            });
+            temmplateDataDisplay();
+
+            $('#time').html(`${new Date().getHours()} : ${new Date().getMinutes()}`);
 
             $(document).on('click', '#createtemplatemodalbtn', () => {
                 $('#modallbl').html('Create Custome Template');
@@ -600,98 +652,6 @@
                     });
                 }
             })
-
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "create" && data[1] == "template") {
-                        $("#createtemplatemodalbtn").click();
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if ((data[0] == "edit" || data[0] == "update") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `cstm_template`,
-                                    paramstr: `cstm_name='${data[1]}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".edit-item-btn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".edit-item-btn")[i].getAttribute("data-id") == data[0].cstm_id) {
-                                        $(".edit-item-btn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "delete" && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `cstm_template`,
-                                    paramstr: `cstm_name='${data[1]}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".remove-item-btn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".remove-item-btn")[i].getAttribute("data-id") == data[0].cstm_id) {
-                                        $(".remove-item-btn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
-
-
         })
     </script>
 

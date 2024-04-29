@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "dev": "nodemon app.js",
     "dev443": "nodemon app.js 443",
     "dev80": "nodemon app.js 80"

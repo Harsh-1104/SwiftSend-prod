@@ -207,11 +207,11 @@
                     </div>
                     <div class="card" id="msgform">
                         <h3 class="card-header text-center">
-                            Send Messages from here
+                            Whatsapp Business API
                         </h3>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label" id="apiurl_lbl">Templates</label>
+                                <label class="form-label" id="template_lbl">Templates</label>
                                 <select id="template" class="form-select"></select>
                             </div>
                             <div class="mb-3">
@@ -324,23 +324,6 @@
                     </div>
                 </div>
             </div>
-
-            <div id="voice_input" class="modal zoomIn">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button> -->
-                        </div>
-                        <div class="modal-body">
-                            <div class="fs-1 text-center" id="msgvoice" style="resize: none;">
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- JAVASCRIPT -->
@@ -379,33 +362,49 @@
     <script src="/assets/sweetalert2/sweetalert2.all.js"></script>
 
 
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-
     <script>
         $(document).ready(() => {
+            chkLogin();
+
+            const iid = document.URL.split("/")[4];
 
             var output = "";
             function display_template() {
                 $.ajax({
-                    url: "/wba/getTemplate",
+                    url: "/api/template/gettemplate",
                     method: "GET",
-                    success: function (data) {
-                        //console.log(data.Data.docs[0].name);
+                    success: function (val) {
+                        var output = "", data = "";
                         output += `<option value="" selected disabled>Select template</option>`;
-                        for (let i in data.Data.docs) {
-                            output += `<option value="${data.Data.docs[i].name}/${data.Data.docs[i].localizations[0].language}">${data.Data.docs[i].name}</option>`;
+                        if (val.data.length <= 0) {
+                            // output += `
+                            //     <option>
+                            //         <div class="noresult p-5 container d-flex align-items-center justify-content-center">
+                            //             <div class="text-center">
+                            //                 <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                            //                     colors="primary:#212529,secondary:#405189"
+                            //                     style="width: 75px; height: 75px"></lord-icon>
+                            //                 <h5 class="mt-2">No Template created</h5>
+                            //             </div>
+                            //         </div>
+                            //     </option>`;
+                        }
+                        else {
+                            for (let i in val.data) {
+                                output += `<option value="${val.data[i].name}">${val.data[i].name}</option>`;
+                            }
                         }
                         $("#template").html(output);
+                    }, error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 401) InvalidUser();
                     },
-                    error: function (err) {
-                        console.log("Error:", err);
-                    }
                 })
             }
             display_template();
-            $("#apiurl").on("change", () => {
-                switch ($("#apiurl").val()) {
+
+            $("#template").on("change", () => {
+                switch ($("#template").val().split('/')[0]) {
                     case 'template': {
                         $("#msgform").removeClass("d-none");
                         $("#imageform, #bulkmsg").addClass("d-none");
@@ -423,21 +422,79 @@
             });
 
             $(document).on("click", "#sendmsg", function () {
-                $.ajax({
-                    url: "/wba/sendTemplate",
-                    method: "POST",
-                    data: {
-                        "phone": $("#phone").val().trim(),
-                        "template": $("#template").val().split('/')[0],
-                        "lang": $("#template").val().split('/')[1],
-                    },
-                    success: (result) => {
-                        console.log(result);
-                    },
-                    error: (error) => {
-                        console.log(error);
+                nullfield_validation('phone');
+                nullfield_validation('template');
+
+                if (objFlag.flag_phone == 0 && objFlag.flag_template == 0) {
+                    let formData = new FormData();
+                    formData.append("iid", iid);
+                    formData.append("phone", $("#phone").val().trim());
+                    formData.append("template", $("#template").val().split('/')[0]);
+                    formData.append("lang", $("#template").val().split('/')[1]);
+                    if ($("#template").val().split('/')[0] == 'qc_report' || $("#template").val().split('/')[0] == 'report_doc') {
+                        const file_data = document.getElementById('document_file').files[0];
+                        formData.append("image", file_data);
                     }
-                })
+                    $.ajax({
+                        url: "/wba/sendTemplate",
+                        method: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                            $('#sendmsg')
+                                .removeClass('btn-primary btn-success')
+                                .addClass('btn-warning')
+                                .html(`<span class= "d-flex align-items-center">
+                                                    <span class="flex-grow-1 me-2">
+                                                        Sending
+                                                    </span>
+                                                    <span class="spinner-border flex-shrink-0" role="status">
+                                                        <span class="visually-hidden"></span>
+                                                    </span>
+                                                </span>`);
+                        },
+                        success: (result) => {
+                            console.log(result);
+                            if (result.Status == 200) {
+                                swal({
+                                    title: `Message sent.`,
+                                    type: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                }).then(function () {
+                                    $("#phone").val("");
+                                    $('#sendmsg')
+                                        .removeClass('btn-success btn-warning')
+                                        .addClass('btn-primary')
+                                        .html(`<i class= "mdi mdi-send me-lg-2 me-md-2"></i>
+                                                            <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                                Send
+                                                            </span>`);
+                                })
+                            }
+                            else {
+                                swal({
+                                    title: `Error in sending Message`,
+                                    type: 'error',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                }).then(function () {
+                                    $('#sendmsg')
+                                        .removeClass('btn-success btn-warning')
+                                        .addClass('btn-primary')
+                                        .html(`<i class= "mdi mdi-send me-lg-2 me-md-2"></i>
+                                                            <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                                Send
+                                                            </span>`);
+                                })
+                            }
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    })
+                }
             })
         })
     </script>

@@ -43,9 +43,6 @@ router.get("/docs/:folder/:page", async (req, res) => {
 
 
 /*--------------------[ User ]--------------------*/
-router.get("/wba", (req, res) => {
-    res.sendFile(`${path}/user/wba.html`);
-})
 
 router.get("/dashboard", (req, res) => {
     res.sendFile(`${path}/user/index.html`);
@@ -67,16 +64,8 @@ router.get("/instance", (req, res) => {
     res.sendFile(`${path}/user/instance.html`);
 })
 
-router.get("/customtemplate", (req, res) => {
-    res.sendFile(`${path}/user/customtemplate.html`);
-});
-
-router.get("/addpasscode", (req, res) => {
-    res.sendFile(`${path}/user/addpasscode.html`);
-});
-
-router.get("/workflow", (req, res) => {
-    res.sendFile(`${path}/user/workflow.html`);
+router.get("/template", (req, res) => {
+    res.sendFile(`${path}/user/template.html`);
 });
 
 router.get("/phoneverify", (req, res) => {
@@ -185,11 +174,5 @@ router.get("/supportScan", (req, res) => {
 });
 
 /*----------------------------------------------------*/
-
-/*--------------------[ Only API ]--------------------*/
-
-// router.get("/logs", (req, res) => {
-//     res.sendFile(`${path}/user/log.html`);
-// });
 
 module.exports = router;

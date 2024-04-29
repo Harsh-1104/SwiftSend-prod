@@ -224,15 +224,13 @@ $(document).ready(function () {
     });
 
     switch (page[3]) {
-        case 'logs':
         case 'dashboard':
         case 'instance':
-        case 'customtemplate':
+        case 'template':
         case 'support-ticket':
         case 'updateprofile':
         case 'profile':
-        case 'subscription':
-        case 'addpasscode': {
+        case 'subscription': {
             fetch('../../assets/json/common-nav.json')
                 .then(response => response.json())
                 .then(data => {
@@ -350,15 +348,10 @@ $(document).ready(function () {
             })
 
             switch (page[5].split('?')[0]) {
-                case 'logs':
                 case 'wba':
                 case 'bulkmessage':
-                case 'bulkmail':
                 case 'contact-list':
-                case 'channel':
-                case 'individualworkflow':
-                case 'workflow':
-                case 'chat': {
+                case 'channel': {
                     fetch('../../assets/json/common-nav.json')
                         .then(response => response.json())
                         .then(data => {
