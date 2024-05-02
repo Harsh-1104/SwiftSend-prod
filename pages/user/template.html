@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="/assets/libs/aos/aos.css" />
     <!-- Layout config Js -->
     <script src="/assets/js/layout.js"></script>
+    <!-- Template Css-->
+    <link href="/assets/css/template.css" rel="stylesheet" type="text/css" />
     <!-- Bootstrap Css -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
@@ -43,60 +45,7 @@
 </head>
 
 <style>
-    .message {
-        color: #000;
-        clear: both;
-        line-height: 18px;
-        font-size: 15px;
-        padding: 8px;
-        position: relative;
-        margin: 8px 0;
-        max-width: 85%;
-        word-wrap: break-word;
-        z-index: -1;
-    }
 
-    .message:after {
-        position: absolute;
-        content: "";
-        width: 0;
-        height: 0;
-        border-style: solid;
-    }
-
-    .metadata {
-        display: inline-block;
-        padding: 0 0 0 7px;
-        position: relative;
-        bottom: -4px;
-    }
-
-    .metadata .time {
-        color: rgba(190, 190, 190, 0.7);
-        font-size: 12px;
-        display: inline-block;
-    }
-
-    .message.received {
-        background: #fff;
-        border-radius: 0px 5px 5px 5px;
-        float: left;
-    }
-
-    .message.received .metadata {
-        padding: 0 0 0 16px;
-    }
-
-    .message.received:after {
-        border-width: 0px 10px 10px 0;
-        border-color: transparent #fff transparent transparent;
-        top: 0;
-        left: -10px;
-    }
-
-    .message-footer {
-        border-top: 1px solid red;
-    }
 </style>
 
 <body>
@@ -117,7 +66,6 @@
                                     <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
-
 
                             <a href="/" class="logo logo-light">
                                 <span class="logo-sm">
@@ -239,11 +187,6 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <div class="page-title">
-                            <h4 class="text-center mb-0">Templates</h4>
-                        </div>
-                    </div>
                     <div class="row mb-3">
                         <div class="search-box col-4">
                             <input type="text" class="form-control" id="searchtemplate"
@@ -251,86 +194,54 @@
                             <i class="bx bx-search-alt-2 align-middle fs-4 search-icon ms-3"></i>
                         </div>
                         <div class="d-flex justify-content-end col-8">
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createtemplatemodal"
-                                id="createtemplatemodalbtn">
+                            <a href="/template/create" class="btn btn-success">
                                 <i class="ri-add-circle-line align-middle me-lg-2"></i>
                                 <span class="d-none d-lg-inline-block">Create Template</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
-                    <div class="modal fade" id="createtemplatemodal" tabindex="-1" aria-labelledby=""
-                        aria-hidden="true">
+                    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="" aria-hidden="true">
                         <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-soft-info p-3">
-                                    <h5 class="modal-title" id="modallbl"></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                        id="close-modal"></button>
+                            <div class="modal-content border border-0">
+                                <div class="modal-header bg-primary p-3 ">
+                                    <h5 class="modal-title text-light" id="modallbl"></h5>
+                                    <i class="ri-close-line align-middle text-light fs-22" data-bs-dismiss="modal"
+                                        aria-label="Close" id="close-modal" style="cursor: pointer;"></i>
                                 </div>
-                                <div class="modal-body">
-
-                                    <!-- new -->
-                                    <div
-                                        class="bg-danger bg-opacity-10 border border-danger p-2 rounded-3 text-danger mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <i class="ri-error-warning-line align-middle fs-20"></i>
-                                            <div class="vr mx-2"></div>
-                                            <p class="fs-14 fw-medium mb-0" style="text-align: justify;">
-                                                Note: In the message you have to '{}' put on user-customfields where you
-                                                want user data.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <!-- new -->
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">
-                                            Name
-                                            <span class="text-danger">*</span>
-                                            <span class="text-danger" id="err_name"></span>
-                                        </label>
-                                        <input type="text" class="form-control required" id="name" data-type="name"
-                                            placeholder="Enter template name" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="message" class="form-label">
-                                            Custom message
-                                            <span class="text-danger">*</span>
-                                            <span class="text-danger" id="err_message"></span>
-                                        </label>
-                                        <textarea class="form-control required" rows="6" data-type="message"
-                                            id="message" placeholder="Create your template here..."></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="field" class="form-label">
-                                            User Field
-                                            <span class="text-danger">*</span>
-                                            <span class="text-danger" id="err_field"></span>
-                                        </label>
-                                        <input type="number" class="form-control required" data-type="number" id="field"
-                                            disabled />
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="create" class="btn btn-primary d-none">
-                                        Create
-                                    </button>
+                                <div class="modal-body d-flex align-items-center justify-content-center background-image gap-2"
+                                    id="template-body" style="flex-direction: column;">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row" id="templateData"></div>
-                    <div class="message received">
-                        <div class="message-header">
-                            This is header message.
-                        </div>
-                        <div class="message-body">
-                            This is body message.
-                        </div>
-                        <span class="metadata">
-                            <span class="time" id="time"></span>
-                        </span>
-                        <div class="message-footer">
-                            This is footer message.
+                    <div class="card">
+                        <h3 class="card-header text-center">Templates</h3>
+                        <div class="card-body">
+                            <div class="table-responsive table-card mb-1" id="table-fixed-header" data-simplebar
+                                data-simplebar-auto-hide="false" style="max-height: 55vh;">
+                                <table class="table align-middle table-nowrap mb-0" id="customerTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th>Language</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list form-check-all" id="template-list"></tbody>
+                                </table>
+                                <div class="noresult d-none py-5">
+                                    <div class="text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#212529,secondary:#405189"
+                                            style="width: 75px; height: 75px">
+                                        </lord-icon>
+                                        <h5 class="mt-2">No Templates Found</h5>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -441,78 +352,183 @@
         $(document).ready(function () {
             chkLogin();
 
+            let template_list = [];
+
+            function TemplateDataDisplay(val) {
+                if (val.length > 0) {
+                    let data = ``;
+                    $('#template-list').addClass('d-none');
+                    $('.noresult').addClass('d-none');
+                    $('#template-list').removeClass('d-none');
+                    for (var i in val) {
+                        data += `
+                                <tr ${val[i].disable == "REJECTED " ? `class="opacity-50"` : ''}>
+                                    <td class="customer_name w-25 text-truncate" style="max-width: 120px;">${val[i].name}</td>
+                                    <td class="customer_email w-25">
+                                        ${val[i].category}
+                                    </td>
+                                    <td class="customer_email w-25">
+                                        <h5>
+                                            <span class="badge border ${val[i].status == "PENDING" ? `border-warning text-warning` : `border-success text-success`}">
+                                                <i class="${val[i].status == "PENDING" ? `ri-time-line` : `ri-checkbox-circle-line`} align-middle me-1"></i>
+                                                ${val[i].status}
+                                            </span>
+                                        </h5>
+                                    </td>
+                                    <td class="customer_phone w-10 text-truncate" style="max-width: 20px;">
+                                        <h5><span class="badge border border-primary text-primary">${val[i].language.toUpperCase()}</span></h5>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <div class="show">
+                                                <button class="btn btn-sm btn-primary show-template-btn fs-12"
+                                                    data-bs-toggle="modal" data-bs-target="#showModal" 
+                                                    data-id="${val[i].id}">
+                                                    <i class="mdi mdi-eye align-bottom me-lg-1"></i>
+                                                    <span class="d-none d-lg-inline-block">View</span>
+                                                </button>
+                                            </div>
+                                            <div class="edit">
+                                                <button class="btn btn-sm btn-success edit-item-btn fs-12"
+                                                    data-id="${val[i].id}">
+                                                    <i class="mdi mdi-lead-pencil align-bottom me-lg-1"></i>
+                                                    <span class="d-none d-lg-inline-block">Edit</span>
+                                                </button>
+                                            </div>
+                                            <div class="remove">
+                                                <button class="btn btn-sm btn-soft-danger remove-item-btn fs-12" 
+                                                    data-id="${val[i].id}"  data-name="${val[i].name}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Delete">
+                                                        <i class="mdi mdi-trash-can align-bottom me-lg-1"></i>
+                                                        <span class="d-none d-lg-inline-block">Remove</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                    }
+                    $("#template-list").html(data);
+                }
+                else {
+                    $('#template-list').addClass('d-none');
+                    $('.noresult').addClass('d-none');
+                    $('.noresult').removeClass('d-none');
+                    $('#select_all').addClass('d-none');
+                }
+            }
+
             function temmplateDataDisplay() {
                 $.ajax({
                     url: "/api/template/gettemplate",
                     method: "GET",
-                    success: function (val) {
-                        var output = "", data = "";
-                        if (val.data.length <= 0) {
-                            output += `
-                                <div class="noresult p-5 container d-flex align-items-center justify-content-center">
-                                    <div class="text-center">
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                            colors="primary:#212529,secondary:#405189"
-                                            style="width: 75px; height: 75px"></lord-icon>
-                                        <h5 class="mt-2">No Template created</h5>
-                                    </div>
-                                </div>`;
-                        }
-                        else {
-                            for (let i = 0; i < val.data.length; i++) {
-                                output += `
-                                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12" data-aos="zoom-in">
-                                                <div class="card card-animate" id="${val.data[i].id}">
-                                                    <div class="card-header py-2 mb-0 bg-soft-info">
-                                                        <div class="float-end">
-                                                            <button type="button" class="btn btn-light btn-icon waves-effect"
-                                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <i class="fa-solid fa-ellipsis-vertical fs-5"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-end">
-                                                                <button class="dropdown-item remove-item-btn fs-13" data-id="${val.data[i].id}">
-                                                                    <span class="text-end text-danger">
-                                                                        <i class="bx bxs-trash align-middle me-2"></i>
-                                                                        Delete
-                                                                    </span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <h4 class="card-title mb-0 d-flex align-items-center py-2" id="abc">
-                                                            ${val.data[i].name}
-                                                        </h4>
-                                                    </div>
+                    beforeSend: () => {
+                        $("#template-list").html(`<tr class="">
+                                            <td class="text-center py-5" colspan="5">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
                                                 </div>
-                                            </div>`;
-                            }
+                                            </td>
+                                        </tr>`);
+                    },
+                    success: function (val) {
+                        if (val.success) {
+                            TemplateDataDisplay(val.data);
+                            template_list = val.data;
                         }
-                        $("#templateData").html(output);
                     }, error: (error) => {
                         if (error.status === 500) InternalServerError();
                         if (error.status === 401) InvalidUser();
                     }
                 });
-            }
+            };
             temmplateDataDisplay();
 
-            $('#time').html(`${new Date().getHours()} : ${new Date().getMinutes()}`);
+            $(document).on("click", ".show-template-btn", function () {
+                let id = $(this).attr("data-id");
+                const template = template_list.find(x => x.id == id);
 
-            $(document).on('click', '#createtemplatemodalbtn', () => {
-                $('#modallbl').html('Create Custome Template');
+                $('#modallbl').html(`${template.name}`);
+                let result = `<div class="bg-success text-light px-3 py-1 rounded-3 fw-semibold">
+                                    Preview
+                                </div>
+                                <div class="message">`;
 
-                $('#create, #edit').addClass("d-none");
-                $('#create').removeClass("d-none");
+                const hasFooter = template.components.some(component => component.type === "FOOTER");
+
+                for (let i in template.components) {
+                    if (template.components[i].type == "HEADER") {
+                        result += `<div class="part-msg">`;
+                        switch (template.components[i].format) {
+                            case "IMAGE": {
+                                result += `<div class="message-header">
+                                                <div class="message-header-media">
+                                                    <i class="ri-image-2-fill align-middle fs-2 text-primary"></i>
+                                                </div>
+                                            </div>`;
+                                break;
+                            }
+                            case "TEXT": {
+                                result += `<div class="message-header">${template.components[i].text}</div>`;
+                                break;
+                            }
+                            case "DOCUMENT": {
+                                result += `<div class="message-header">
+                                                <div class="message-header-media">
+                                                    <i class="bx bxs-file-doc align-middle fs-2 text-primary"></i>
+                                                </div>
+                                            </div>`;
+                                break;
+                            }
+                        }
+                    }
+                    if (template.components[i].type == "BODY") {
+                        result += `<div class="message-body">${template.components[i].text}</div>`;
+
+                        (!hasFooter ? result += `</div>` : result += ``)
+                    }
+                    if (template.components[i].type == "FOOTER") {
+                        result += `<div class="message-footer">${template.components[i].text}</div>`;
+
+                        (hasFooter ? result += `</div>` : result += ``)
+                    }
+                    if (template.components[i].type == "BUTTONS") {
+                        result += `<div class="part-link">`;
+                        for (let j in template.components[i].buttons) {
+                            switch (template.components[i].buttons[j].type) {
+                                case "URL": {
+                                    result += `<div class="message-link text-primary">
+                                                <i class="ri-share-box-line align-middle"></i>
+                                                <span title="${template.components[i].buttons[j].url}">${template.components[i].buttons[j].text}</span>
+                                            </div>`;
+                                    break;
+                                }
+                                case "PHONE_NUMBER": {
+                                    result += `<div class="message-link text-primary">
+                                                <i class="ri-phone-fill align-middle"></i>
+                                                <span title="${template.components[i].buttons[j].phone_number}">${template.components[i].buttons[j].text}</span>
+                                            </div>`;
+                                    break;
+                                }
+                                case "QUICK_REPLY": {
+                                    result += `<div class="message-header">${template.components[i].text}</div>`;
+                                    break;
+                                }
+                                case "COPY_CODE": {
+                                    result += `<div class="message-header">${template.components[i].text}</div>`;
+                                    break;
+                                }
+                                case "FLOW": {
+                                    result += `<div class="message-header">${template.components[i].text}</div>`;
+                                    break;
+                                }
+                            }
+                        }
+                        result += `</div>`;
+                    }
+                }
+                result += `</div>`;
+                $('#template-body').html(result);
             });
-
-            $(".required").on("focusout", function () {
-                onfocusout_validation($(this).attr("id"));
-            });
-
-            $(".required").on("input", function () {
-                oninput_validation($(this).attr("id"));
-            });
-
-            focusEvent('name', 'message');
 
             function countOccurrences(str) {
                 var matches = str.match(/{([^}]*)}/g);
@@ -526,62 +542,18 @@
                 $('#field').val(count);
             })
 
-            $(document).on('click', '#create', function () {
-                nullfield_validation('name');
-                nullfield_validation('message');
-                nullfield_validation('field');
-                if (objFlag.flag_name == 0 && objFlag.flag_message == 0 && objFlag.flag_field == 0) {
-                    oninput_validation('name');
-                    oninput_validation('message');
-                    oninput_validation('field');
-                    if (objFlag.flag_name == 0 && objFlag.flag_message == 0 && objFlag.flag_field == 0) {
-                        $.ajax({
-                            url: "/create_custom_template",
-                            method: "POST",
-                            data: {
-                                "name": $("#name").val().trim(),
-                                "message": $('#message').val(),
-                                "field": $("#field").val()
-                            },
-                            success: function (val) {
-                                switch (val.status_code) {
-                                    case '401': {
-                                        InvalidUser();
-                                        break;
-                                    }
-
-                                    case '500': {
-                                        InternalServerError();
-                                        break;
-                                    }
-
-                                    case '200': {
-                                        $('#close-modal').click();
-                                        swal({
-                                            title: "Template added successfully",
-                                            type: "success",
-                                            timer: 1500,
-                                            showConfirmButton: false,
-                                        }).then(function () {
-                                            $('#name, #messag, #field').val('');
-                                            $('.required').removeClass('form-control-danger form-control-success');
-                                        });
-                                        break;
-                                    }
-                                }
-
-                                temmplateDataDisplay({
-                                    table: "cstm_template",
-                                    paramstr: `true`,
-                                });
-                            }
-                        })
-                    }
-                }
-            })
-
             $(document).on('click', '.remove-item-btn', function () {
                 const id = $(this).attr("data-id");
+                const name = $(this).attr("data-name");
+
+                console.log(id);
+                console.log(name);
+
+
+
+                const encodedID = btoa(id);
+                console.log("encodedID : ", encodedID);
+                // const encodedID = Buffer.from(id).toString('base64');
                 swal({
                     title: 'Are you sure?',
                     text: "You won't be able to access this anymore..!!",
@@ -595,41 +567,29 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "/deleterecord",
+                            url: `/api/template/deleteTemplateByID/${encodedID}/${name}`,
                             method: "delete",
-                            data: {
-                                obj: {
-                                    "table": "cstm_template",
-                                    "paramstr": `cstm_id = '${id}'`,
-                                }
-                            },
                             success: function (val) {
+                                if (val.success) {
+                                    swal({
+                                        title: "Template Removed",
+                                        type: "success",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    }).then(function () {
+                                        temmplateDataDisplay()
+                                    });
+                                }
                                 switch (val.status_code) {
-                                    case '401': {
-                                        InvalidUser();
-                                        break;
-                                    }
-
-                                    case '500': {
-                                        InternalServerError();
-                                        break;
-                                    }
-
                                     case '200': {
-                                        swal({
-                                            title: "Template Removed",
-                                            type: "success",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        }).then(function () {
-                                            temmplateDataDisplay({
-                                                table: "cstm_template",
-                                                paramstr: `true`,
-                                            });
-                                        });
+
                                         break;
                                     }
                                 }
+                            }, error: (error) => {
+                                if (error.status === 500) InternalServerError();
+                                if (error.status === 401) InvalidUser();
+                                console.log(error);
                             }
                         });
                     }
