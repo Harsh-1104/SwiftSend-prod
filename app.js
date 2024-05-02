@@ -208,7 +208,7 @@ function deleteFolder(folderPath) {
 const tableData = (data, callback) => {
     try {
         const sql = `SELECT * FROM ${data.table} WHERE ${data.paramstr} AND apikey = '${data.apikey}'`;
-        console.log(sql);
+        // console.log(sql);
         conn.query(sql,
             (err, result) => {
                 if (err) return callback(Object.assign(status.internalservererror(), { error: err }));

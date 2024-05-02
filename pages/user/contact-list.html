@@ -1462,120 +1462,6 @@
                 }
             })
 
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "add" && data[1] == "contact") {
-                        $("#addcontactmodalbtn").click();
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if (data[0] == "import" && data[1] == "from" && data[2] == "Google" && data[3] == "sheet") {
-                        $("#gsheetimport").click();
-                    }
-                    else if (data[0] == "import" && data[1] == "from" && data[2] == "csv" && data[3] == "file") {
-                        $("#csvimport").click();
-                    }
-                    else if ((data[0] == "edit" || data[0] == "update") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `contact`,
-                                    paramstr: `name='${data[1]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".edit-item-btn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".edit-item-btn")[i].getAttribute("data-id") == data[0].contact_id) {
-                                        $(".edit-item-btn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if ((data[0] == "delete" || data[0] == "remove") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `contact`,
-                                    paramstr: `name='${data[1]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".remove-item-btn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".remove-item-btn")[i].getAttribute("data-id") == data[0].contact_id) {
-                                        $(".remove-item-btn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmessage" || (data[2] == "bulk" && data[3] == "message"))) {
-                        location.href = `/instance/${iid}/bulkmessage`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmail" || (data[2] == "bulk" && data[3] == "mail"))) {
-                        location.href = `/instance/${iid}/bulkmail`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "contacts" || (data[2] == "contact" && data[3] == "list"))) {
-                        location.href = `/instance/${iid}/contact-list`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "channel") {
-                        location.href = `/instance/${iid}/channel`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "chat") {
-                        location.href = `/instance/${iid}/chat`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "workflow") {
-                        location.href = `/instance/${iid}/workflow`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
-
             $(document).on('click', ".switch-active", function () {
                 const cid = $(this).attr('id');
                 let cval = ($(`#${cid}:checked`).length === 0) ? 1 : 0;
@@ -1693,7 +1579,6 @@
             })
         });
     </script>
-
 </body>
 
 </html>

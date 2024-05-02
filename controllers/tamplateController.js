@@ -36,14 +36,16 @@ const getAllTemplate = async (req, res) => {
         if (response.status === 200) {
             res.status(200).json({
                 success: true,
-                message: "Message sent successfully",
                 data: newData,
             });
-        } else {
-            res.status(500).json({ success: false, message: "Failed to send message" });
+        }
+        else {
+            res.status(500).json({
+                success: false,
+                message: "An error occurred while fetching templates",
+            });
         }
     } catch (error) {
-        // console.error("Error occurred while fetching templates:", error);
         res.status(500).json({
             success: false,
             message: "An error occurred while fetching templates",
@@ -74,11 +76,8 @@ const getAllTemplateStatus = async (req, res) => {
                 return { name, language, status, category, id };
             });
 
-            console.log(filteredData); // Log filtered data here
-
             res.status(200).json({
                 success: true,
-                message: "Message sent successfully",
                 data: filteredData,
             });
         } else if (responseData.data && Array.isArray(responseData.data)) {
@@ -88,11 +87,8 @@ const getAllTemplateStatus = async (req, res) => {
                 return { name, language, status, category, id };
             });
 
-            console.log(filteredData); // Log filtered data here
-
             res.status(200).json({
                 success: true,
-                message: "Message sent successfully",
                 data: filteredData,
             });
         } else {
@@ -104,7 +100,6 @@ const getAllTemplateStatus = async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Error occurred while fetching templates:", error);
         res.status(500).json({
             success: false,
             message: "An error occurred while fetching templates",
@@ -146,13 +141,14 @@ const getAllTemplateID = async (req, res) => {
         if (response.status === 200) {
             res.status(200).json({
                 success: true,
-                message: "Message sent successfully",
                 data: responseData,
             });
         } else {
-            res
-                .status(500)
-                .json({ success: false, message: "Failed to send message" });
+            res.status(500).json({
+                success: false,
+                message: "An error occurred while fetching templates",
+                errorMessage: error.response,
+            });
         }
     } catch (error) {
         if (error.response) {
@@ -165,7 +161,6 @@ const getAllTemplateID = async (req, res) => {
                 });
             }
         }
-        console.error("Error occurred while fetching templates:", error);
         res.status(500).json({
             success: false,
             message: "An error occurred while fetching templates",
@@ -211,7 +206,6 @@ const deleteTemplateByID = async (req, res) => {
             }
         );
         const responseData = response.data;
-        console.log("this is my data : ", responseData);
         if (response.status === 200) {
             res.status(200).json({
                 success: true,
@@ -219,9 +213,7 @@ const deleteTemplateByID = async (req, res) => {
                 data: responseData,
             });
         } else {
-            res
-                .status(500)
-                .json({ success: false, message: "Failed to send message" });
+            res.status(500).json({ success: false, message: "Failed to send message" });
         }
     } catch (error) {
         if (error.response) {
