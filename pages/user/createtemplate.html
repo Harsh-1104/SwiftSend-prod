@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  data-layout="vertical"
+  data-topbar="light"
+  data-sidebar="dark"
+  data-sidebar-size="lg"
+  data-sidebar-image="none"
+  data-preloader="disable"
+>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Contact-list</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      content="Premium Multipurpose Admin & Dashboard Template"
+      name="description"
+    />
+    <meta content="Themesbrand" name="author" />
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" />
+
+    <!-- jsvectormap css -->
+    <link
+      href="/assets/libs/jsvectormap/css/jsvectormap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!--Swiper slider css-->
+    <link
+      href="/assets/libs/swiper/swiper-bundle.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- aos css -->
+    <link rel="stylesheet" href="/assets/libs/aos/aos.css" />
+    <!-- Layout config Js -->
+    <script src="/assets/js/layout.js"></script>
+    <!-- Bootstrap Css -->
+    <link
+      href="/assets/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Icons Css -->
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <!-- custom Css-->
+    <link href="/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Font Awesome Files -->
+    <link href="/assets/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="/assets/fontawesome/css/solid.css" rel="stylesheet" />
+    <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" />
+    <link href="/assets/fontawesome/css/regular.css" rel="stylesheet" />
+    <link href="/assets/fontawesome/css/regular.min.css" rel="stylesheet" />
+    <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
+  </head>
+
+  <body class="p-0">
+    <div id="layout-wrapper">
+      <header id="page-topbar">
+        <div class="layout-width">
+          <div class="navbar-header">
+            <div class="d-flex">
+              <!-- LOGO -->
+              <div class="navbar-brand-box horizontal-logo">
+                <a href="/" class="logo logo-dark">
+                  <span class="logo-sm">
+                    <img src="/assets/images/logo-sm.svg" alt="" height="60" />
+                  </span>
+                  <span class="logo-lg">
+                    <img
+                      src="/assets/images/logo-dark.svg"
+                      alt=""
+                      height="60"
+                    />
+                  </span>
+                </a>
+
+                <a href="/" class="logo logo-light">
+                  <span class="logo-sm">
+                    <img src="/assets/images/logo-sm.svg" alt="" height="60" />
+                  </span>
+                  <span class="logo-lg">
+                    <img
+                      src="/assets/images/logo-dark.svg"
+                      alt=""
+                      height="100"
+                      width="200"
+                    />
+                  </span>
+                </a>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
+                id="topnav-hamburger-icon"
+              >
+                <span class="hamburger-icon">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </button>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <div class="dropdown d-md-none topbar-head-dropdown header-item">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                  id="page-header-search-dropdown"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="bx bx-search fs-22"></i>
+                </button>
+                <div
+                  class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                  aria-labelledby="page-header-search-dropdown"
+                >
+                  <form class="p-3">
+                    <div class="form-group m-0">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Search ..."
+                          aria-label="Recipient's username"
+                        />
+                        <button class="btn btn-primary" type="submit">
+                          <i class="mdi mdi-magnify"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="ms-1 header-item">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                  data-toggle="fullscreen"
+                >
+                  <i class="bx bx-fullscreen fs-22"></i>
+                </button>
+              </div>
+
+              <div class="ms-1 header-item">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode"
+                >
+                  <i class="bx bx-moon fs-22"></i>
+                </button>
+              </div>
+
+              <div class="dropdown ms-sm-3 header-item topbar-user">
+                <button
+                  type="button"
+                  class="btn"
+                  id="page-header-user-dropdown"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span class="d-flex align-items-center">
+                    <img
+                      class="rounded-circle header-profile-user profileimg"
+                    />
+                    <span class="text-start ms-xl-2">
+                      <span
+                        class="d-none d-xl-inline-block ms-1 fw-medium user-name-text profilename"
+                      ></span>
+                      <span
+                        class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text"
+                      >
+                        Founder
+                      </span>
+                    </span>
+                  </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <!-- item-->
+                  <h6 class="dropdown-header">
+                    Welcome <span class="profilename"></span>
+                  </h6>
+                  <a class="dropdown-item" href="/profile">
+                    <i
+                      class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"
+                    ></i>
+                    <span class="align-middle">Profile</span>
+                  </a>
+                  <a class="dropdown-item" href="/subscription">
+                    <i
+                      class="mdi mdi-credit-card-chip text-muted fs-16 align-middle me-1"
+                    ></i>
+                    <span class="align-middle">Pay</span>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" id="logout">
+                    <i
+                      class="mdi mdi-logout text-muted fs-16 align-middle me-1"
+                    ></i>
+                    <span class="align-middle" data-key="t-logout">Logout</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- ========== App Menu ========== -->
+      <div class="app-menu navbar-menu">
+        <!-- LOGO -->
+        <div class="navbar-brand-box">
+          <!-- Dark Logo-->
+          <a href="/" class="logo logo-dark">
+            <span class="logo-sm">
+              <img src="/assets/images/logo-sm.svg" alt="" height="60" />
+            </span>
+            <span class="logo-lg">
+              <img
+                src="/assets/images/logo-dark.svg"
+                alt=""
+                height="100"
+                width="200"
+              />
+            </span>
+          </a>
+
+          <a href="/" class="logo logo-light">
+            <span class="logo-sm">
+              <img src="/assets/images/logo-sm.svg" alt="" height="60" />
+            </span>
+            <span class="logo-lg">
+              <img
+                src="/assets/images/logo-dark.svg"
+                alt=""
+                height="100"
+                width="200"
+              />
+            </span>
+          </a>
+          <button
+            type="button"
+            class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
+            id="vertical-hover"
+          >
+            <i class="ri-record-circle-line"></i>
+          </button>
+        </div>
+
+        <div id="scrollbar">
+          <div id="scrollbar">
+            <div class="container-fluid">
+              <div id="two-column-menu"></div>
+              <ul
+                class="navbar-nav"
+                id="navbar-nav"
+                data-aos="fade-right"
+                data-aos-duration="1000"
+              ></ul>
+            </div>
+          </div>
+        </div>
+        <!-- Left Sidebar End -->
+        <!-- Vertical Overlay-->
+        <!-- <div class="vertical-overlay"></div> -->
+      </div>
+      <!-- ============================================================== -->
+      <!-- Start right Content here -->
+      <!-- ============================================================== -->
+      <div class="main-content">
+        <div class="page-content">
+          <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Vertical nav Steps</h4>
+                </div><!-- end card header -->
+                <div class="card-body form-steps">
+                    <div class="vertical-navs-step">
+                        <div class="row gy-5">
+                            <div class="col-lg-3">
+                                <div class="nav flex-column custom-nav nav-pills" role="tablist"
+                                    aria-orientation="vertical">
+                                    <button class="nav-link done" id="v-pills-bill-info-tab"
+                                        data-bs-toggle="pill" data-bs-target="#v-pills-bill-info"
+                                        type="button" role="tab" aria-controls="v-pills-bill-info"
+                                        aria-selected="true">
+                                        <span class="step-title me-2">
+                                            <i class="ri-close-circle-fill step-icon me-2"></i> Step 1
+                                        </span>
+                                       Create Template
+                                    </button>
+                                    <button class="nav-link active" id="v-pills-bill-address-tab"
+                                        data-bs-toggle="pill" data-bs-target="#v-pills-bill-address"
+                                        type="button" role="tab" aria-controls="v-pills-bill-address"
+                                        aria-selected="false">
+                                        <span class="step-title me-2">
+                                            <i class="ri-close-circle-fill step-icon me-2"></i> Step 2
+                                        </span>
+                                        Details of Template 
+                                    </button>
+                                </div>
+                                <!-- end nav -->
+                            </div> <!-- end col-->
+                            <div class="col-lg-8">
+                                <div class="px-lg-4">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade" id="v-pills-bill-info"
+                                            role="tabpanel" aria-labelledby="v-pills-bill-info-tab">
+
+                                            <div class="card">
+                                                <h3 class="card-header text-center">Create New Template</h3>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <label for="document_file" class="form-label">
+                                                           Category
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_document_file"></span>
+                                                        </label>
+                                                        <div class="form-check form-radio-primary mb-3">
+                                                            <input type="radio" id="Marketing_radio" name="Category" class="form-check-input required" data-type="radio" />  Marketing
+                                                        </div>
+                                                        <div class="form-check form-radio-primary mb-3">
+                                                            <input type="radio" id="Utility_radio" name="Category" class="form-check-input required" data-type="radio" />  Utility
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="document_name" class="form-label">
+                                                            Template Name
+                                                        </label>
+                                                        <div class="position-relative">
+                                                            <input type="text" id="document_Name" class="form-control pe-5 required"
+                                                            data-type="message">
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-start gap-3 mt-4">
+                                                      <button type="button" id="switchToEditTemplateButton"
+                                                          class="btn btn-success btn-label right ms-auto nexttab nexttab"
+                                                          data-nexttab="v-pills-bill-address-tab"><i
+                                                              class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Go
+                                                          to Shipping</button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                
+                                              </div>
+                                              <!-- end tab pane -->
+                                            <div class="tab-pane fade show active" id="v-pills-bill-address"
+                                            role="tabpanel" aria-labelledby="v-pills-bill-address-tab">
+                                            
+                                            <div class="card">
+                                                <h3 class="card-header text-center">Edit Template</h3>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <h4 for="document_Header" class="form-label">
+                                                           Header 
+                                                            <span class="badge bg-primary-subtle text-primary">Optional</span>
+                                                            <span class="text-danger" id="err_Header"></span>
+                                                        </h4>
+                                                        <div class="mb-3">
+                                                            <select id="headertype" class="form-control">
+                                                                <option value="None">None</option>
+                                                                <option value="Text">Text</option>
+                                                                <option value="Media">Media</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-none" id="headerText">
+                                                        <label for="document_headertext" class="form-label">
+                                                            Header Text
+                                                        </label>
+                                                        <div class="position-relative mb-3 ">
+                                                            <input type="text" id="yourDynamicVariableField" class="form-control pe-5 required"
+                                                            data-type="message">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <button class="btn btn-primary btn-load" id="yourAddInputFieldButton">+ Add Field</button>
+                                                        </div>
+                                                        <div id="yourInputFieldsContainer">
+                                                            <!-- Input fields for the second button will be added here -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-none" id="headerMedia">
+                                                        <label for="document_headermedia" class="form-label">
+                                                            Header Media
+                                                        </label>
+                                                        <div class="form-check form-radio-primary position-relative mb-3">
+                                                            <input type="radio" id="imageRadio" name="Category" class="form-check-input required" data-type="radio" />  Image
+                                                        </div>
+                                                        <div class="form-check form-radio-primary position-relative mb-3">
+                                                            <input type="radio" id="documentRadio" name="Category" class="form-check-input required" data-type="radio" />  document
+                                                        </div>
+                                                        <div class="form-check form-radio-primary position-relative mb-3">
+                                                            <input type="radio" id="videoRadio" name="Category" class="form-check-input required" data-type="radio" />  Video
+                                                        </div>
+                                                        <div class="position-relative mb-3" id="imageField">
+                                                            <label for="Image" class="form-label">
+                                                                Image
+                                                                <span class="text-danger">*</span>
+                                                                <span class="text-danger"
+                                                                id="err_Image"></span>
+                                                            </label>
+                                                            <input type="file" class="form-control mb-3" style="resize: none"
+                                                            id="image" data-type="message">
+                                                        </div>
+                                                        <div class="position-relative mb-3" id="documentField">
+                                                            <label for="Document" class="form-label">
+                                                                Document
+                                                                <span class="text-danger">*</span>
+                                                                <span class="text-danger"
+                                                                id="err_Document"></span>
+                                                            </label>
+                                                            <input type="file" class="form-control mb-3" style="resize: none"
+                                                            id="document" data-type="message">
+                                                        </div>
+                                                        <div class="position-relative mb-3" id="videoField">
+                                                            <label for="Video" class="form-label">
+                                                                Video
+                                                                <span class="text-danger">*</span>
+                                                                <span class="text-danger"
+                                                                id="err_Video"></span>
+                                                            </label>
+                                                            <input type="file" class="form-control mb-3" style="resize: none"
+                                                            id="video" data-type="message">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-6">
+                                                        <h4 for="document_Body" class="form-label">
+                                                            Body
+                                                        </h4>
+                                                        <div class="mb-3">
+                                                            <textarea class="form-control" id="dynamicVariableField" rows="5" style="resize: none;"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <button class="btn btn-primary btn-load" id="addInputFieldButton">+ Add Field</button>
+                                                        </div>
+                                                        <div id="inputFieldsContainer">
+                                                            <!-- Input fields for the second button will be added here -->
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                      <h4 for="document_Footer" class="form-label">
+                                                        Footer
+                                                      </h4>
+                                                      <div class="mb-3">
+                                                        <input type="text" id="footertext" class="form-control pe-5 required"
+                                                        data-type="message">
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            
+                                        </div>
+                                    </div>
+                                    <!-- end tab content -->
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+          <!-- footer -->
+          <footer class="footer"></footer>
+        </div>
+      </div>
+    </div>
+
+    <!--start back-to-top-->
+    <button
+      onclick="topFunction()"
+      class="btn btn-danger btn-icon"
+      id="back-to-top"
+    >
+      <i class="ri-arrow-up-line"></i>
+    </button>
+    <!--end back-to-top-->
+
+    <!--preloader-->
+    <div id="preloader">
+      <div id="status">
+        <div class="spinner-border text-primary avatar-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="customizer-setting" id="chatbot">
+      <div class="btn-info btn-rounded shadow-lg btn btn-icon btn-lg p-2">
+        <i class="fa-solid fa-comment" id="iconchat"></i>
+      </div>
+    </div>
+
+    <div
+      class="email-chat-detail"
+      id="emailchat-detailElem"
+      style="display: none"
+    >
+      <div class="card mb-0">
+        <div
+          class="card-header align-items-center d-flex bg-primary text-white-50"
+        >
+          <div class="flex-grow-1">
+            <h5 class="fs-15 text-white mb-1 profile-username">
+              SwiftSend ChatBot
+            </h5>
+            <p class="mb-0 fs-12 lh-1">Ask here for help</p>
+          </div>
+          <div>
+            <i class="fa-brands fa-bots fs-1 text-white"></i>
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <div id="users-chat">
+            <div
+              class="chat-conversation p-3"
+              id="chat-conversation"
+              data-simplebar
+              style="height: 250px"
+            >
+              <ul
+                class="list-unstyled chat-conversation-list chat-sm"
+                id="conversation"
+              ></ul>
+            </div>
+          </div>
+
+          <div class="border-top border-top-dashed">
+            <div class="row g-2 mx-3 mt-2 mb-3">
+              <div class="col">
+                <div class="position-relative">
+                  <input
+                    type="text"
+                    class="form-control border-light bg-light message-input"
+                    placeholder="Enter Message..."
+                    id="input"
+                  />
+                </div>
+              </div>
+              <div class="col-auto">
+                <button class="btn btn-primary" id="sendbotmsg">
+                  <i class="mdi mdi-send"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="voice_input" class="modal zoomIn">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button> -->
+          </div>
+          <div class="modal-body">
+            <div class="fs-1 text-center" id="msg" style="resize: none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/chatbot.js"></script>
+    <script src="/assets/js/voiceRecognition.js"></script>
+    <script src="/assets/js/validate.js"></script>
+
+    <script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="/assets/libs/node-waves/waves.min.js"></script>
+    <script src="/assets/libs/feather-icons/feather.min.js"></script>
+    <script src="/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+    <!-- aos js -->
+    <script src="/assets/libs/aos/aos.js"></script>
+    <!-- prismjs plugin -->
+    <script src="/assets/libs/prismjs/prism.js"></script>
+    <!-- animation init -->
+    <script src="/assets/js/pages/animation-aos.init.js"></script>
+
+    <!-- App js -->
+    <script src="/assets/js/app.js"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="/assets/sweetalert2/sweet-alert.init.js"></script>
+    <script src="/assets/sweetalert2/sweetalert2.all.js"></script>
+
+    <!-- prismjs plugin -->
+    <script src="/assets/libs/prismjs/prism.js"></script>
+    <script src="/assets/libs/list.js/list.min.js"></script>
+    <script src="/assets/libs/list.pagination.js/list.pagination.min.js"></script>
+    <script src="/assets/js/pages/listjs.init.js"></script>
+
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="gapiLoaded()"
+    ></script>
+    <script
+      async
+      defer
+      src="https://accounts.google.com/gsi/client"
+      onload="gisLoaded()"
+    ></script>
+
+    <script>
+      $(document).ready(() => {
+        chkLogin();
+        // //dynamic variable field header
+        // const inputFieldsContainer1 = document.getElementById('yourInputFieldsContainer');
+        // const addInputFieldButton1 = document.getElementById('yourAddInputFieldButton');
+        // const dynamicVariableField1 = document.getElementById('yourDynamicVariableField');
+
+        // // Function to add input text field with specified variable name
+        // function addHeaderField(variableName) {
+        //     const inputFieldContainer = document.createElement('div');
+
+        //     // Create label for variable
+        //     const variableLabel = document.createElement('label');
+        //     variableLabel.textContent = '{{' + variableName + '}}';
+        //     inputFieldContainer.appendChild(variableLabel);
+
+        //     // Create input field
+        //     const inputField = document.createElement('input');
+        //     inputField.type = 'text';
+        //     inputField.name = 'yourDynamicInputField' + variableName; // Unique name for each input field
+        //     inputField.id = 'yourDynamicInputField' + variableName; // Unique ID for each input field
+        //     inputField.classList.add('form-control'); // Add the form-control class
+        //     inputFieldContainer.appendChild(inputField);
+
+        //     // Append {{1}} to the dynamic variable field value
+        //     dynamicVariableField1.value += '{{' + variableName + '}}';
+
+        //     // Disable the button
+        //     addInputFieldButton1.disabled = true;
+
+        //     // Append input field and {{1}} to the container
+        //     inputFieldsContainer1.appendChild(inputFieldContainer);
+        // }
+
+        // // Event listener for button click to add input field
+        // addInputFieldButton1.addEventListener('click', function() {
+        //     addHeaderField('1'); // Change 'your_variable_name' to any other variable name you want
+        // });
+
+        
+        const inputFieldsContainer1 = document.getElementById('yourInputFieldsContainer');
+        const addInputFieldButton1 = document.getElementById('yourAddInputFieldButton');
+        const dynamicVariableField1 = document.getElementById('yourDynamicVariableField');
+
+        // Function to add input text field with specified variable name
+        function addHeaderField(variableName) {
+            const inputFieldContainer = document.createElement('div');
+
+            // Create label for variable
+            const variableLabel = document.createElement('label');
+            variableLabel.textContent = '{{' + variableName + '}}';
+            inputFieldContainer.appendChild(variableLabel);
+
+            // Create input field
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.name = 'yourDynamicInputField' + variableName; // Unique name for each input field
+            inputField.id = 'yourDynamicInputField' + variableName; // Unique ID for each input field
+            inputField.classList.add('form-control'); // Add the form-control class
+            inputFieldContainer.appendChild(inputField);
+
+            // Append {{variableName}} to the dynamic variable field value
+            dynamicVariableField1.value += '{{' + variableName + '}}';
+
+            // Disable the button
+            addInputFieldButton1.disabled = true;
+
+            // Append input field and {{variableName}} to the container
+            inputFieldsContainer1.appendChild(inputFieldContainer);
+        }
+
+        // Function to enable add input field button
+        function enableAddInputFieldButton() {
+            addInputFieldButton1.disabled = false;
+        }
+
+        // Event listener for button click to add input field
+        addInputFieldButton1.addEventListener('click', function() {
+            addHeaderField('1'); // Change 'your_variable_name' to any other variable name you want
+        });
+
+        // Function to remove input text field and corresponding label
+        function removeInputField(inputFieldContainer) {
+            inputFieldContainer.remove(); // Remove input field container
+
+            // Check if there are any input fields left
+            if (inputFieldsContainer1.querySelectorAll('div').length === 0) {
+                enableAddInputFieldButton(); // If no input fields left, enable the button
+            }
+        }
+
+        // Event delegation for input field change
+        dynamicVariableField1.addEventListener('input', function() {
+            const dynamicVariableValue = dynamicVariableField.value;
+            const dynamicVariableRegex = /\{\{(\w+)\}\}/g;
+            const matches = dynamicVariableValue.match(dynamicVariableRegex);
+
+            // Remove existing input fields
+            inputFieldsContainer1.innerHTML = '';
+
+            if (matches) {
+                matches.forEach(match => {
+                    addHeaderField(match.substring(2, match.length - 2)); // Add input field for each match
+                });
+            } else {
+                enableAddInputFieldButton(); // If no matches found, enable the button
+            }
+        });
+
+        // Event delegation for remove button click
+        inputFieldsContainer1.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('removeInputFieldButton')) {
+                const inputFieldContainer = event.target.parentElement; // Get the container div
+
+                removeInputField(inputFieldContainer);
+            }
+        });
+
+
+
+        //dynamic fields for body
+        const inputFieldsContainer = document.getElementById('inputFieldsContainer');
+        const addInputFieldButton = document.getElementById('addInputFieldButton');
+        const dynamicVariableField = document.getElementById('dynamicVariableField');
+        let counter = 1; // To generate unique IDs for each input field
+
+        // Function to add input text field
+        function addInputField() {
+            const inputFieldContainer = document.createElement('div');
+            
+            // Create label element for variable
+            const variableLabel = document.createElement('label');
+            variableLabel.textContent = '{{' + counter + '}}';
+            inputFieldContainer.appendChild(variableLabel);
+            
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.name = 'dynamicInputField' + counter; // Unique name for each input field
+            inputField.id = 'dynamicInputField' + counter; // Unique ID for each input field
+            inputField.classList.add('form-control'); // Add the form-control class
+            
+            inputFieldContainer.appendChild(inputField);
+            inputFieldsContainer.appendChild(inputFieldContainer);
+            
+            inputFieldsContainer.appendChild(document.createElement('br')); // Add line break
+            
+            // Append {{1}} to the dynamic variable field value
+            dynamicVariableField.value += '{{' + counter + '}}';
+            
+            counter++;
+        }
+
+        // Event listener for button click to add input field
+        addInputFieldButton.addEventListener('click', addInputField);
+
+        // Event listener for changes in the dynamic variable field
+        dynamicVariableField.addEventListener('input', function() {
+            const dynamicVariableValue = dynamicVariableField.value;
+            const dynamicVariableRegex = /\{\{(\d+)\}\}/g;
+            const matches = dynamicVariableValue.match(dynamicVariableRegex);
+            
+            // Remove existing input fields
+            inputFieldsContainer.innerHTML = '';
+            
+            if (matches) {
+                matches.forEach(match => {
+                    const inputFieldContainer = document.createElement('div');
+                    
+                    // Create label element for variable
+                    const variableLabel = document.createElement('label');
+                    const matchIndex = match.substring(2, match.length - 2);
+                    variableLabel.textContent = match;
+                    inputFieldContainer.appendChild(variableLabel);
+                    
+                    const inputField = document.createElement('input');
+                    inputField.type = 'text';
+                    inputField.name = 'dynamicInputField' + matchIndex; // Unique name for each input field
+                    inputField.id = 'dynamicInputField' + matchIndex; // Unique ID for each input field
+                    inputField.classList.add('form-control'); // Add the form-control class
+                    
+                    inputFieldContainer.appendChild(inputField);
+                    inputFieldsContainer.appendChild(inputFieldContainer);
+                    inputFieldsContainer.appendChild(document.createElement('br')); // Add line break
+                });
+                // Update counter to the last index + 1
+                counter = parseInt(matches[matches.length - 1].substring(2, matches[matches.length - 1].length - 2)) + 1;
+            } else {
+                // If there are no matches, reset the counter to 1
+                counter = 1;
+            }
+        });
+
+        
+        $(document).on('change','#headertype',()=>{
+            if($("#headertype").val() === "Text"){
+                $('#headerMedia').addClass('d-none');
+                $('#headerText').removeClass('d-none');
+            }else if($("#headertype").val() === "Media"){
+                $('#headerText').addClass('d-none');
+                $('#headerMedia').removeClass('d-none');
+            }else if($("#headertype").val() === "None"){
+                $('#headerText').addClass('d-none');
+                $('#headerMedia').addClass('d-none');
+            }
+        })
+
+        $("#imageField, #documentField, #videoField").hide();
+
+    // Show respective file input field based on radio button selection
+    $('input[type=radio][name=Category]').change(function() {
+        $("#imageField, #documentField, #videoField").hide(); // Hide all fields
+
+        if (this.id === "imageRadio") {
+            $("#imageField").show(); // Show image field if Image radio is selected
+        } else if (this.id === "documentRadio") {
+            $("#documentField").show(); // Show document field if Document radio is selected
+        } else if (this.id === "videoRadio") {
+            $("#videoField").show(); // Show video field if Video radio is selected
+        }
+    });
+
+    $(document).ready(function() {
+    $('#switchToEditTemplateButton').on('click', function() {
+        // Switch the active tab to the one with id v-pills-bill-address
+        $('#v-pills-bill-address-tab').addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+        $('#v-pills-bill-info-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+        
+        // Show the content of the new active tab
+        $('#v-pills-bill-address').addClass('show active');
+        
+        // Hide the content of the previous active tab
+        $('#v-pills-bill-info').removeClass('show active');
+    });
+});
+
+        
+    })
+
+        </script>
+  </body>
+</html>
