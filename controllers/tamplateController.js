@@ -299,10 +299,70 @@ const deleteTemplateByID = async (req, res) => {
     });
   }
 };
+//-------------------------------------------- For media Template -------------------------------------------------
+const mediaForTemplate = async (req, res) => {
+
+  console.log("req file : ", req.files)
+  try {
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send("No files were uploaded.");
+    }
+
+    // Access uploaded file using the correct key
+    const uploadedFile = req.files.file;
+
+    // Handle the uploaded file as needed
+    const fileSize = uploadedFile.size;
+    const fileType = uploadedFile.mimetype;
+    const fileData = uploadedFile.data;
+
+    console.log("Uploaded file details:", uploadedFile);
+
+    const response1 = await axios.post(
+      `https://graph.facebook.com/${version}/1169917090689044/uploads?file_length=${fileSize}&file_type=${fileType}`,
+      fileData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": fileType, // Set content type explicitly
+        },
+      }
+    );
+
+    const secretKey = response1.data.id;
+
+    console.log("Secret Key:", secretKey);
+
+    // Make the second API call
+    const response2 = await axios.post(
+      `https://graph.facebook.com/${version}/${secretKey}`,
+      fileData, // Send the file data to the second API
+      {
+        headers: {
+          Authorization: `OAuth ${accessToken}`,
+          "Content-Type": fileType, // Set content type explicitly
+        },
+      }
+    );
+
+    console.log("Response from second API:", response2.data);
+
+    res
+      .status(200)
+      .json({ message: "Media uploaded successfully ", data: response2.data });
+  } catch (error) {
+    console.error("Error:", error.response.data);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
 
 module.exports = {
   getAllTemplate,
   getAllTemplateStatus,
   getAllTemplateID,
   deleteTemplateByID,
+  createTemplate,
+  mediaForTemplate
 };
