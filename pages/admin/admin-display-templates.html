@@ -7,8 +7,8 @@
     <meta charset="utf-8" />
     <title>Datatables | SwiftSend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Bulk message services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico" />
 
@@ -45,7 +45,7 @@
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
                             <a href="/" class="logo logo-light">
@@ -53,7 +53,7 @@
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
                         </div>
@@ -69,7 +69,7 @@
                         </button>
                     </div>
                     <div class="d-flex align-items-center">
-                        
+
 
                         <div class="ms-1 header-item">
                             <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
@@ -135,7 +135,7 @@
         </div>
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
-       <!--  <div class="vertical-overlay"></div>-->
+        <!--  <div class="vertical-overlay"></div>-->
 
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -205,105 +205,109 @@
         <!-- edit modal -->
         <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="modallbl">Edit Templates</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    id="close-modal"></button>
+                <div class="modal-content">
+                    <div class="modal-header bg-light p-3">
+                        <h5 class="modal-title" id="modallbl">Edit Templates</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            id="close-modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="customername-field" class="form-label">Template Name</label>
+                            <input type="text" id="template-name" class="form-control" placeholder="Enter Name"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone-field" class="form-label">Message</label>
+                            <textarea id="template-message" class="form-control" rows="5" cols="80"
+                                placeholder="Enter Message" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customername-field" class="form-label">User Fields</label>
+                            <input type="textarea" id="user-fields" class="form-control" placeholder="Enter User Fields"
+                                required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="hstack gap-2 justify-content-end">
+                            <button class="btn btn-success" id="edit-btn">Edit Plan</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                <div class="mb-3">
-                    <label for="customername-field" class="form-label">Template Name</label>
-                    <input type="text" id="template-name" class="form-control" placeholder="Enter Name" required />
-                </div>
-                <div class="mb-3">
-                    <label for="phone-field" class="form-label">Message</label>
-                    <textarea id="template-message" class="form-control" rows="5" cols="80" placeholder="Enter Message"
-                    required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="customername-field" class="form-label">User Fields</label>
-                    <input type="textarea" id="user-fields" class="form-control" placeholder="Enter User Fields" required />
-                </div>
-                </div>
-                <div class="modal-footer">
-                <div class="hstack gap-2 justify-content-end">
-                    <button class="btn btn-success" id="edit-btn">Edit Plan</button>
-                </div>
-                </div>
-            </div>
             </div>
         </div>
-    
+
         <!-- Insert modal -->
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="modallbl">Add Template</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    id="close-modal"></button>
+                <div class="modal-content">
+                    <div class="modal-header bg-light p-3">
+                        <h5 class="modal-title" id="modallbl">Add Template</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            id="close-modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="customername-field" class="form-label">Template Name</label>
+                            <input type="text" id="t-name" class="form-control" placeholder="Enter Name" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone-field" class="form-label">Message</label>
+                            <textarea id="t-message" rows="5" cols="80" class="form-control" placeholder="Enter Message"
+                                required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customername-field" class="form-label">User Fields</label>
+                            <input type="text" id="u-fields" class="form-control" placeholder="Enter User Fields"
+                                required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="hstack gap-2 justify-content-end">
+                            <button class="btn btn-success" id="add-btn">
+                                Add Template
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                <div class="mb-3">
-                    <label for="customername-field" class="form-label">Template Name</label>
-                    <input type="text" id="t-name" class="form-control" placeholder="Enter Name" required />
-                </div>
-                <div class="mb-3">
-                    <label for="phone-field" class="form-label">Message</label>
-                    <textarea id="t-message" rows="5" cols="80" class="form-control" placeholder="Enter Message"
-                    required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="customername-field" class="form-label">User Fields</label>
-                    <input type="text" id="u-fields" class="form-control" placeholder="Enter User Fields" required />
-                </div>
-                </div>
-                <div class="modal-footer">
-                <div class="hstack gap-2 justify-content-end">
-                    <button class="btn btn-success" id="add-btn">
-                    Add Template
-                    </button>
-                </div>
-                </div>
-            </div>
             </div>
         </div>
-  
+
         <!-- removeNotificationModal -->
         <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    id="NotificationModalbtn-close"></button>
-                </div>
-                <div class="modal-body">
-                <div class="mt-2 text-center">
-                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                    colors="primary:#f7b84b,secondary:#f06548" style="width: 100px; height: 100px"></lord-icon>
-                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                    <h4>Are you sure ?</h4>
-                    <p class="text-muted mx-4 mb-0">
-                        Are you sure you want to remove this Notification ?
-                    </p>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            id="NotificationModalbtn-close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mt-2 text-center">
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+                                colors="primary:#f7b84b,secondary:#f06548"
+                                style="width: 100px; height: 100px"></lord-icon>
+                            <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                <h4>Are you sure ?</h4>
+                                <p class="text-muted mx-4 mb-0">
+                                    Are you sure you want to remove this Notification ?
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" class="btn w-sm btn-danger" id="delete-notification">
+                                Yes, Delete It!
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                    <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">
-                    Close
-                    </button>
-                    <button type="button" class="btn w-sm btn-danger" id="delete-notification">
-                    Yes, Delete It!
-                    </button>
-                </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
+                <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal -->
+        </div>
+        <!-- /.modal -->
     </div>
     <!-- END layout-wrapper -->
 
@@ -1147,7 +1151,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -1155,24 +1159,24 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true
+                                );
                             }
                         },
                     });
@@ -1190,7 +1194,7 @@
                         success: function (result) {
                             // console.log("below data of search");
                             // console.log(result);
-                           if (result.status_code == "404") {
+                            if (result.status_code == "404") {
                                 $("#mycomplementry").html(`<div class="noresult py-5">
                                     <div class="text-center">
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -1201,25 +1205,25 @@
                                     </div>
                                 </div>`);
                             }
-                            
-                            else if(result.status_code == "500"){
+
+                            else if (result.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!result.status_code){
-                            
-                            displayAtBeginning(
-                                result,
-                                "previousSearchBtn",
-                                "mysearchbtn",
-                                "nextSearchBtn",
-                                paramstr
-                            );
+                            else if (!result.status_code) {
+
+                                displayAtBeginning(
+                                    result,
+                                    "previousSearchBtn",
+                                    "mysearchbtn",
+                                    "nextSearchBtn",
+                                    paramstr
+                                );
                             }
                         },
                     });
@@ -1273,7 +1277,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -1281,24 +1285,24 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true
+                                );
                             }
                         },
                     });
@@ -1324,34 +1328,34 @@
                                 },
                                 success: function (content) {
                                     // console.log(content);
-                                    if(content.status_code == "404"){
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(content.status_code == "500"){
-                                swal({
-                                    title: "Internal Server Error",
-                                    text:"Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(!content.status_code){
-                            
-                                    nextBtnDisplay(
-                                        content,
-                                        "previousSearchBtn",
-                                        "mysearchbtn",
-                                        "nextSearchBtn",
-                                        pn,
-                                        paramstr
-                                    );
-                            }
+                                    if (content.status_code == "404") {
+                                        swal({
+                                            title: "No such record found",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (content.status_code == "500") {
+                                        swal({
+                                            title: "Internal Server Error",
+                                            text: "Try again after some time",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (!content.status_code) {
+
+                                        nextBtnDisplay(
+                                            content,
+                                            "previousSearchBtn",
+                                            "mysearchbtn",
+                                            "nextSearchBtn",
+                                            pn,
+                                            paramstr
+                                        );
+                                    }
                                 },
                             });
                         }
@@ -1406,7 +1410,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -1414,24 +1418,24 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true
+                                );
                             }
                         },
                     });
@@ -1457,34 +1461,34 @@
                                 },
                                 success: function (content) {
                                     // console.log(content);
-                                    if(content.status_code == "404"){
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(content.status_code == "500"){
-                                swal({
-                                    title: "Internal Server Error",
-                                    text:"Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(!content.status_code){
-                            
-                                    previousBtnDisplay(
-                                        content,
-                                        "previousSearchBtn",
-                                        "mysearchbtn",
-                                        "nextSearchBtn",
-                                        pn,
-                                        paramstr
-                                    );
-                            }
+                                    if (content.status_code == "404") {
+                                        swal({
+                                            title: "No such record found",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (content.status_code == "500") {
+                                        swal({
+                                            title: "Internal Server Error",
+                                            text: "Try again after some time",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (!content.status_code) {
+
+                                        previousBtnDisplay(
+                                            content,
+                                            "previousSearchBtn",
+                                            "mysearchbtn",
+                                            "nextSearchBtn",
+                                            pn,
+                                            paramstr
+                                        );
+                                    }
                                 },
                             });
                         }
@@ -1533,7 +1537,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -1541,24 +1545,24 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true
+                                );
                             }
                         },
                     });
@@ -1578,7 +1582,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -1586,27 +1590,27 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            myBtnDisplay(
-                                content,
-                                "previousSearchBtn",
-                                "mysearchbtn",
-                                "nextSearchBtn",
-                                index,
-                                btnno,
-                                pgno,
-                                paramstr
-                            );
+                            else if (!content.status_code) {
+
+                                myBtnDisplay(
+                                    content,
+                                    "previousSearchBtn",
+                                    "mysearchbtn",
+                                    "nextSearchBtn",
+                                    index,
+                                    btnno,
+                                    pgno,
+                                    paramstr
+                                );
                             }
                         },
                     });

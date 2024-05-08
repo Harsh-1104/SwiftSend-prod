@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <title>Dashboard | SwiftSends</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Bulk message services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico" />
@@ -272,16 +272,6 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-modal"></button>
                                 </div>
-                                <!-- <div class="row mx-2">
-                                    <div class="col">
-                                        <input type="search" class="form-control" placeholder="Search contacts..." />
-                                    </div>
-                                    <div class="col-auto">
-                                        <button class="btn btn-soft-primary" id="checkAllContact">
-                                            <i class="ri-check-double-fill align-middle fs-5 me-2"></i>Check All
-                                        </button>
-                                    </div>
-                                </div> -->
                                 <div class="modal-body">
                                     <div data-simplebar data-simplebar-auto-hide="false" data-simplebar-track="primary"
                                         style="max-height: 300px;" class="mx-n3">
@@ -358,23 +348,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;">
-
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -1017,145 +990,6 @@
                     filterChannelContactResult(channel_id, Searchresult)
                 }
             })
-
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "add" && data[1] == "channel") {
-                        $("#addchannelmodalbtn").click();
-                    }
-                    else if (data[0] == "add" && data[1] == "contact" && data[2] == "to" && data[3] != "" && data[3] != undefined) {
-
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `channel`,
-                                    paramstr: `channelName='${data[3]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".addcontact").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".addcontact")[i].getAttribute("data-id") == data[0].channel_id) {
-                                        $(".addcontact")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if (data[0] == "import" && data[1] == "from" && data[2] == "Google" && data[3] == "sheet") {
-                        $("#gsheetimport").click();
-                    }
-                    else if (data[0] == "import" && data[1] == "from" && data[2] == "csv" && data[3] == "file") {
-                        $("#csvimport").click();
-                    }
-                    else if ((data[0] == "edit" || data[0] == "update") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `channel`,
-                                    paramstr: `channelName='${data[1]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".editBtn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".editBtn")[i].getAttribute("data-id") == data[0].channel_id) {
-                                        $(".editBtn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if ((data[0] == "delete" || data[0] == "remove") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `channel`,
-                                    paramstr: `channelName='${data[1]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".deleteChannel").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".deleteChannel")[i].getAttribute("data-id") == data[0].channel_id) {
-                                        $(".deleteChannel")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmessage" || (data[2] == "bulk" && data[3] == "message"))) {
-                        location.href = `/instance/${iid}/bulkmessage`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmail" || (data[2] == "bulk" && data[3] == "mail"))) {
-                        location.href = `/instance/${iid}/bulkmail`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "contacts" || (data[2] == "contact" && data[3] == "list"))) {
-                        location.href = `/instance/${iid}/contact-list`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "channel") {
-                        location.href = `/instance/${iid}/channel`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "chat") {
-                        location.href = `/instance/${iid}/chat`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "workflow") {
-                        location.href = `/instance/${iid}/workflow`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
-
-
         })
     </script>
 </body>

@@ -15,6 +15,11 @@
                 "icon": "bx bxs-message-detail"
             },
             {
+                "page": "Broadcast",
+                "link": "broadcast",
+                "icon": "bx bx-broadcast"
+            },
+            {
                 "page": "Contacts",
                 "link": "contact-list",
                 "icon": "bx bxs-contact"

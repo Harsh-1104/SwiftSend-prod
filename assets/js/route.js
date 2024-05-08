@@ -64,7 +64,7 @@ router.get("/template", (req, res) => {
   res.sendFile(`${path}/user/template.html`);
 });
 
-router.get("/template/createtemplate", (req, res) => {
+router.get("/template/create", (req, res) => {
   res.sendFile(`${path}/user/createtemplate.html`);
 });
 
