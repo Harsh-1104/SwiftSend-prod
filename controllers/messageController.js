@@ -48,20 +48,20 @@ const sendSimpleTextTemplate = async (req, res) => {
         };
 
         try {
-            // const response = await axios.post(
-            //     `https://graph.facebook.com/v18.0/287947604404901/messages`,
-            //     payload,
-            //     {
-            //         headers: {
-            //             Authorization: `Bearer ${bearerToken}`, // Fix the token format
-            //             "Content-Type": "application/json",
-            //         },
-            //     }
-            // );
-            // console.log("response : ", response.status === 200);
-            const response = {
-                status: 200
-            }
+            const response = await axios.post(
+                `https://graph.facebook.com/v18.0/287947604404901/messages`,
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${bearerToken}`, // Fix the token format
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            console.log("response : ", response.status === 200);
+            // const response = {
+            //     status: 200
+            // }
             if (response.status === 200) {
                 // If successful, return a success response
                 res.status(200).json({ success: true, message: "Message sent successfully" });

@@ -9,8 +9,8 @@
   <title>Contact-list</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta content="Bulk message services" name="description" />
-  <meta content="Gajjar Harsh" name="author" />
+  <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+  <meta content="Themesbrand" name="author" />
 
   <!-- App favicon -->
   <link rel="shortcut icon" href="/assets/images/favicon.ico" />
@@ -201,14 +201,15 @@
         <div class="container-fluid">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title mb-0">Vertical nav Steps</h4>
+              <h4 class="card-title mb-0">Template</h4>
             </div><!-- end card header -->
             <div class="card-body form-steps">
               <div class="vertical-navs-step">
                 <div class="row gy-5">
                   <div class="col-lg-3">
                     <div class="nav flex-column custom-nav nav-pills" role="tablist" aria-orientation="vertical">
-                      <button class="nav-link done" id="v-pills-bill-info-tab" data-bs-toggle="pill"
+                      <!-- data-bs-toggle="pill" -->
+                      <button class="nav-link done active" id="v-pills-bill-info-tab"
                         data-bs-target="#v-pills-bill-info" type="button" role="tab" aria-controls="v-pills-bill-info"
                         aria-selected="true">
                         <span class="step-title me-2">
@@ -216,9 +217,9 @@
                         </span>
                         Create Template
                       </button>
-                      <button class="nav-link active" id="v-pills-bill-address-tab" data-bs-toggle="pill"
-                        data-bs-target="#v-pills-bill-address" type="button" role="tab"
-                        aria-controls="v-pills-bill-address" aria-selected="false">
+                      <!-- data-bs-toggle="pill" -->
+                      <button class="nav-link" id="v-pills-bill-address-tab" data-bs-target="#v-pills-bill-address"
+                        type="button" role="tab" aria-controls="v-pills-bill-address" aria-selected="false">
                         <span class="step-title me-2">
                           <i class="ri-close-circle-fill step-icon me-2"></i> Step 2
                         </span>
@@ -230,7 +231,7 @@
                   <div class="col-lg-8">
                     <div class="px-lg-4">
                       <div class="tab-content">
-                        <div class="tab-pane fade" id="v-pills-bill-info" role="tabpanel"
+                        <div class="tab-pane fade show active" id="v-pills-bill-info" role="tabpanel"
                           aria-labelledby="v-pills-bill-info-tab">
 
                           <div class="card">
@@ -243,40 +244,60 @@
                                   <span class="text-danger" id="err_document_file"></span>
                                 </label>
                                 <div class="form-check form-radio-primary mb-3">
+                                  <label for="Marketing_radio" class="form-label">
+                                    Marketing
+                                  </label>
                                   <input type="radio" id="Marketing_radio" name="Category"
-                                    class="form-check-input required" data-type="radio" /> Marketing
+                                    class="form-check-input required" value="Marketing" data-type="radio" />
                                 </div>
                                 <div class="form-check form-radio-primary mb-3">
-                                  <input type="radio" id="Utility_radio" name="Category"
-                                    class="form-check-input required" data-type="radio" /> Utility
+                                  <label for="Utility_radio" class="form-label">
+                                    Utility
+                                  </label>
+                                  <input type="radio" id="Utility_radio" name="Category" value="Utility"
+                                    class="form-check-input required" data-type="radio" />
                                 </div>
                               </div>
                               <div class="mb-3">
                                 <label for="document_name" class="form-label">
                                   Template Name
+                                  <span class="text-danger">*</span>
+                                  <span class="text-danger" id="err_document_file"></span>
                                 </label>
                                 <div class="position-relative">
                                   <input type="text" id="document_Name" class="form-control pe-5 required"
                                     data-type="message">
                                 </div>
                               </div>
+
+                              <div class="mb-3">
+                                <label for="document_lang" class="form-label">
+                                  Language
+                                  <span class="text-danger">*</span>
+                                  <span class="text-danger" id="err_document_lang"></span>
+                                </label>
+                                <div class="position-relative" id="templatelang">
+                                  <!-- <input type="text" id="document_Name" class="form-control pe-5 required"
+                                    data-type="message"> -->
+                                </div>
+                              </div>
+
                               <div class="d-flex align-items-start gap-3 mt-4">
                                 <button type="button" id="switchToEditTemplateButton"
                                   class="btn btn-success btn-label right ms-auto nexttab nexttab"
                                   data-nexttab="v-pills-bill-address-tab"><i
-                                    class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Go
-                                  to Shipping</button>
+                                    class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Next</button>
                               </div>
                             </div>
                           </div>
 
                         </div>
                         <!-- end tab pane -->
-                        <div class="tab-pane fade show active" id="v-pills-bill-address" role="tabpanel"
+                        <div class="tab-pane fade show" id="v-pills-bill-address" role="tabpanel"
                           aria-labelledby="v-pills-bill-address-tab">
 
                           <div class="card">
-                            <h3 class="card-header text-center">Edit Template</h3>
+                            <h3 class="card-header text-center">Details of Template</h3>
                             <div class="card-body">
                               <div class="mb-3">
                                 <h4 for="document_Header" class="form-label">
@@ -297,7 +318,7 @@
                                   Header Text
                                 </label>
                                 <div class="position-relative mb-3 ">
-                                  <input type="text" id="yourDynamicVariableField" class="form-control pe-5 required"
+                                  <input type="text" id="Headermsg" class="form-control pe-5 required"
                                     data-type="message">
                                 </div>
                                 <div class="mb-3">
@@ -311,19 +332,30 @@
                               <div class="d-none" id="headerMedia">
                                 <label for="document_headermedia" class="form-label">
                                   Header Media
+                                  <span class="text-danger">*</span>
+                                  <span class="text-danger" id="err_document_headermedia"></span>
                                 </label>
                                 <div class="form-check form-radio-primary position-relative mb-3">
-                                  <input type="radio" id="imageRadio" name="Category" class="form-check-input required"
-                                    data-type="radio" /> Image
+                                  <label for="imageRadio" class="form-label">
+                                    Image
+                                  </label>
+                                  <input type="radio" id="imageRadio" name="MediaCategory"
+                                    class="form-check-input required" value="IMAGE" data-type="radio" />
                                 </div>
                                 <div class="form-check form-radio-primary position-relative mb-3">
-                                  <input type="radio" id="documentRadio" name="Category"
-                                    class="form-check-input required" data-type="radio" /> document
+                                  <label for="documentRadio" class="form-label">
+                                    document
+                                  </label>
+                                  <input type="radio" id="documentRadio" name="MediaCategory"
+                                    class="form-check-input required" value="DOCUMENT" data-type="radio" />
                                 </div>
-                                <div class="form-check form-radio-primary position-relative mb-3">
-                                  <input type="radio" id="videoRadio" name="Category" class="form-check-input required"
-                                    data-type="radio" /> Video
-                                </div>
+                                <!-- <div class="form-check form-radio-primary position-relative mb-3">
+                                  <label for="videoRadio" class="form-label">
+                                    Video
+                                  </label>
+                                  <input type="radio" id="videoRadio" name="MediaCategory"
+                                    class="form-check-input required" value="VIDEO" data-type="radio" />
+                                </div> -->
                                 <div class="position-relative mb-3" id="imageField">
                                   <label for="Image" class="form-label">
                                     Image
@@ -342,7 +374,7 @@
                                   <input type="file" class="form-control mb-3" style="resize: none" id="document"
                                     data-type="message">
                                 </div>
-                                <div class="position-relative mb-3" id="videoField">
+                                <!-- <div class="position-relative mb-3" id="videoField">
                                   <label for="Video" class="form-label">
                                     Video
                                     <span class="text-danger">*</span>
@@ -350,15 +382,16 @@
                                   </label>
                                   <input type="file" class="form-control mb-3" style="resize: none" id="video"
                                     data-type="message">
-                                </div>
+                                </div> -->
                               </div>
                               <div class="mb-6">
                                 <h4 for="document_Body" class="form-label">
                                   Body
+                                  <span class="badge bg-primary-subtle text-primary">Mandatory</span>
+                                  <span class="text-danger" id="err_Header"></span>
                                 </h4>
                                 <div class="mb-3">
-                                  <textarea class="form-control" id="dynamicVariableField" rows="5"
-                                    style="resize: none;"></textarea>
+                                  <textarea class="form-control" id="bodymsg" rows="5" style="resize: none;"></textarea>
                                 </div>
                                 <div class="mb-3">
                                   <button class="btn btn-primary btn-load" id="addInputFieldButton">+ Add Field</button>
@@ -370,11 +403,43 @@
                               <div>
                                 <h4 for="document_Footer" class="form-label">
                                   Footer
+                                  <span class="badge bg-primary-subtle text-primary">Optional</span>
+                                  <span class="text-danger" id="err_Header"></span>
                                 </h4>
                                 <div class="mb-3">
                                   <input type="text" id="footertext" class="form-control pe-5 required"
                                     data-type="message">
                                 </div>
+                              </div>
+                              <div class="mb-3">
+                                <!-- <button type="button" class="btn btn-warning bg-gradient waves-effect waves-light" id="addquickreply">Add Quick Reply</button> -->
+                                <button type="button" class="btn btn-warning bg-gradient waves-effect waves-light"
+                                  id="addphonenumber" data-type="PHONE_NUMER">Add Phone Number</button>
+                                <button type="button" class="btn btn-warning bg-gradient waves-effect waves-light"
+                                  id="addurl" data-type="URL">Add URL</button>
+                              </div>
+                              <!-- <div id="quickReplyContainer" class="mb-3">
+
+                              </div> -->
+                              <div class="container">
+                                <div id="phoneContainer" class="row mt-4 gap-1"></div>
+                              </div>
+                              <div class="container">
+
+                                <div id="urlContainer" class="row mt-4 gap-2"></div>
+                              </div>
+
+                              <div class="d-flex align-items-start gap-3 mt-4">
+                                <div class="d-flex align-items-start">
+                                  <button type="button" class="btn btn-success btn-label left ms-auto nexttab nexttab"
+                                    data-nexttab="v-pills-bill-info-tab" id="backButton">
+                                    <i class="ri-arrow-left-line label-icon align-middle fs-16"></i>Back</button>
+                                </div>
+                                <button type="button" id="submitforapproval"
+                                  class="btn btn-success btn-label right ms-auto nexttab nexttab"
+                                  data-nexttab="v-pills-bill-address-tab"><i
+                                    class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Submit for
+                                  Approval</button>
                               </div>
                             </div>
                           </div>
@@ -390,14 +455,6 @@
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
           <!-- footer -->
           <footer class="footer"></footer>
         </div>
@@ -517,47 +574,10 @@
     <script>
       $(document).ready(() => {
         chkLogin();
-        // //dynamic variable field header
-        // const inputFieldsContainer1 = document.getElementById('yourInputFieldsContainer');
-        // const addInputFieldButton1 = document.getElementById('yourAddInputFieldButton');
-        // const dynamicVariableField1 = document.getElementById('yourDynamicVariableField');
-
-        // // Function to add input text field with specified variable name
-        // function addHeaderField(variableName) {
-        //     const inputFieldContainer = document.createElement('div');
-
-        //     // Create label for variable
-        //     const variableLabel = document.createElement('label');
-        //     variableLabel.textContent = '{{' + variableName + '}}';
-        //     inputFieldContainer.appendChild(variableLabel);
-
-        //     // Create input field
-        //     const inputField = document.createElement('input');
-        //     inputField.type = 'text';
-        //     inputField.name = 'yourDynamicInputField' + variableName; // Unique name for each input field
-        //     inputField.id = 'yourDynamicInputField' + variableName; // Unique ID for each input field
-        //     inputField.classList.add('form-control'); // Add the form-control class
-        //     inputFieldContainer.appendChild(inputField);
-
-        //     // Append {{1}} to the dynamic variable field value
-        //     dynamicVariableField1.value += '{{' + variableName + '}}';
-
-        //     // Disable the button
-        //     addInputFieldButton1.disabled = true;
-
-        //     // Append input field and {{1}} to the container
-        //     inputFieldsContainer1.appendChild(inputFieldContainer);
-        // }
-
-        // // Event listener for button click to add input field
-        // addInputFieldButton1.addEventListener('click', function() {
-        //     addHeaderField('1'); // Change 'your_variable_name' to any other variable name you want
-        // });
-
 
         const inputFieldsContainer1 = document.getElementById('yourInputFieldsContainer');
         const addInputFieldButton1 = document.getElementById('yourAddInputFieldButton');
-        const dynamicVariableField1 = document.getElementById('yourDynamicVariableField');
+        const dynamicVariableField1 = document.getElementById('Headermsg');
 
         // Function to add input text field with specified variable name
         function addHeaderField(variableName) {
@@ -571,8 +591,8 @@
           // Create input field
           const inputField = document.createElement('input');
           inputField.type = 'text';
-          inputField.name = 'yourDynamicInputField' + variableName; // Unique name for each input field
-          inputField.id = 'yourDynamicInputField' + variableName; // Unique ID for each input field
+          inputField.name = 'Headerinput' + variableName; // Unique name for each input field
+          inputField.id = 'Headerinput' + variableName; // Unique ID for each input field
           inputField.classList.add('form-control'); // Add the form-control class
           inputFieldContainer.appendChild(inputField);
 
@@ -638,7 +658,7 @@
         //dynamic fields for body
         const inputFieldsContainer = document.getElementById('inputFieldsContainer');
         const addInputFieldButton = document.getElementById('addInputFieldButton');
-        const dynamicVariableField = document.getElementById('dynamicVariableField');
+        const dynamicVariableField = document.getElementById('bodymsg');
         let counter = 1; // To generate unique IDs for each input field
 
         // Function to add input text field
@@ -652,8 +672,8 @@
 
           const inputField = document.createElement('input');
           inputField.type = 'text';
-          inputField.name = 'dynamicInputField' + counter; // Unique name for each input field
-          inputField.id = 'dynamicInputField' + counter; // Unique ID for each input field
+          inputField.name = 'bodyinput' + counter; // Unique name for each input field
+          inputField.id = 'bodyinput' + counter; // Unique ID for each input field
           inputField.classList.add('form-control'); // Add the form-control class
 
           inputFieldContainer.appendChild(inputField);
@@ -691,8 +711,8 @@
 
               const inputField = document.createElement('input');
               inputField.type = 'text';
-              inputField.name = 'dynamicInputField' + matchIndex; // Unique name for each input field
-              inputField.id = 'dynamicInputField' + matchIndex; // Unique ID for each input field
+              inputField.name = 'bodyinput' + matchIndex; // Unique name for each input field
+              inputField.id = 'bodyinput' + matchIndex; // Unique ID for each input field
               inputField.classList.add('form-control'); // Add the form-control class
 
               inputFieldContainer.appendChild(inputField);
@@ -723,35 +743,538 @@
 
         $("#imageField, #documentField, #videoField").hide();
 
-        // Show respective file input field based on radio button selection
-        $('input[type=radio][name=Category]').change(function () {
-          $("#imageField, #documentField, #videoField").hide(); // Hide all fields
+
+        $('input[type=radio][name=MediaCategory]').change(function () {
+          $("#imageField, #documentField, #videoField").hide();
 
           if (this.id === "imageRadio") {
-            $("#imageField").show(); // Show image field if Image radio is selected
+            $("#imageField").show();
           } else if (this.id === "documentRadio") {
-            $("#documentField").show(); // Show document field if Document radio is selected
+            $("#documentField").show();
           } else if (this.id === "videoRadio") {
-            $("#videoField").show(); // Show video field if Video radio is selected
+            $("#videoField").show();
           }
         });
 
-        $(document).ready(function () {
-          $('#switchToEditTemplateButton').on('click', function () {
-            // Switch the active tab to the one with id v-pills-bill-address
-            $('#v-pills-bill-address-tab').addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
-            $('#v-pills-bill-info-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+        $('#switchToEditTemplateButton').on('click', function () {
 
-            // Show the content of the new active tab
-            $('#v-pills-bill-address').addClass('show active');
+          nullfield_validation(`document_Name`);
+          if (objFlag.flag_document_Name == 0) {
+            if (!$("input[name='Category']:checked").val()) {
+              // If no radio button is checked, show error message
+              $('#err_document_file').text("Please select a category.").addClass('text-danger');
+            } else {
+              // If a radio button is checked, remove any error message
+              $('#err_document_file').text("").removeClass('text-danger');
 
-            // Hide the content of the previous active tab
-            $('#v-pills-bill-info').removeClass('show active');
+              // Switch the active tab to the one with id v-pills-bill-address
+              $('#v-pills-bill-address-tab').addClass('done active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+              $('#v-pills-bill-info-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+
+              // Show the content of the new active tab
+              $('#v-pills-bill-address').addClass('show active');
+
+              // Hide the content of the previous active tab
+              $('#v-pills-bill-info').removeClass('show active');
+            }
+          }
+        });
+
+        $('#backButton').on('click', function () {
+          // Activate Step 1
+          $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
+          $('#v-pills-bill-info').addClass('show active');
+
+          // Deactivate Step 2
+          $('#v-pills-bill-address-tab').removeClass('done active').attr('aria-selected', 'false');
+          $('#v-pills-bill-address').removeClass('show active');
+        });
+
+        //   var replycounter = 1
+
+        //   $(document).on('click', "#addquickreply", () => {
+        //     // Check if the number of existing dynamic fields is less than 7
+        //     if ($('.quick-reply-input').length <= 7) {
+        //         // Generate unique ID for the new input field
+        //         const uniqueId = 'quickReplyField' + counter;
+
+        //         // Create a new label element
+        //         const label = $('<label>', {
+        //             for: uniqueId,
+        //             text: 'Quick Reply ' + ($('.quick-reply-input').length + 1)
+        //         });
+
+        //         // Create a new input field element
+        //         const newInputField = $('<input>', {
+        //             type: 'text',
+        //             class: 'mb-3 form-control quick-reply-input',
+        //             id: uniqueId,
+        //             placeholder: 'Quick Reply ' + ($('.quick-reply-input').length + 1)
+        //         });
+
+        //         // Create a remove button
+        //         const removeButton = $('<button>', {
+        //             type: 'button',
+        //             class: 'btn btn-danger btn-sm remove-quick-reply',
+        //             text: 'Remove',
+        //             click: function() {
+        //                 $(this).parent().remove(); // Remove the entire div containing label, input field, and remove button
+        //             }
+        //         });
+
+        //         // Create a div to wrap the label, input field, and remove button
+        //         const fieldWrapper = $('<div>', {
+        //             class: 'mb-3'
+        //         });
+
+        //         // Append the label, input field, and remove button to the field wrapper
+        //         fieldWrapper.append(label, newInputField, removeButton);
+
+        //         // Append the field wrapper to the container
+        //         $('#quickReplyContainer').append(fieldWrapper);
+        //     } else {
+        //         alert('You can only add up to 7 dynamic fields.');
+        //     }
+        // });
+
+        let phonebtn = false;
+
+        $(document).on('click', '#addphonenumber', () => {
+
+          // Check if the button has already been clicked
+          if (!phonebtn) {
+            // Set flag to true
+            phonebtn = true;
+
+            // Check if there is already a phone number field
+            if ($('#phoneContainer').children().length > 0) {
+              // Alert the user and return
+              alert('Only one phone number field is allowed');
+              return;
+            }
+
+            const label1 = $('<label>', {
+              class: 'form-label col-2',
+              text: 'Button Text:'
+            });
+            // Create first input field and label
+            const input1 = $('<input>', {
+              type: 'text',
+              class: 'col-3',
+              id: 'phone-btn-text',
+              placeholder: 'Button Text'
+            });
+
+            const label2 = $('<label>', {
+              class: 'form-label col-2',
+              text: 'Phone Number:'
+            });
+
+            // Create second input field and label
+            const input2 = $('<input>', {
+              type: 'text',
+              class: 'col-3',
+              id: 'phn-number',
+              placeholder: 'Phone Number'
+            });
+
+
+            // Create remove button
+            const removeBtn = $('<button>', {
+              class: 'btn btn-danger mr-2 col-2 mb-3',
+              text: 'Remove'
+            }).on('click', function () {
+              // Remove input fields, labels, and button
+              input1.remove();
+              input2.remove();
+              label1.remove();
+              label2.remove();
+              removeBtn.remove();
+
+              // Set flag back to false
+              phonebtn = false;
+            });
+
+            // Append elements to container
+            $('#phoneContainer').append(label1, input1, label2, input2, removeBtn);
+
+          }
+        });
+
+        let addUrlBtnClicked = false;
+
+        $(document).on('click', '#addurl', () => {
+          // Check if the button has already been clicked
+          if (addUrlBtnClicked) {
+            return;
+          }
+
+          // Set flag to true to indicate button has been clicked
+          addUrlBtnClicked = true;
+
+          // Create input fields, labels, and remove button
+          const label1 = $('<label>', {
+            class: 'col-form-label col-2 mb-3',
+            text: 'Button Text:'
           });
+          const input1 = $('<input>', {
+            type: 'text',
+            class: 'col-3 mb-3',
+            id: 'url-btn-text',
+            placeholder: 'Button Text'
+          });
+          const label2 = $('<label>', {
+            class: 'col-form-label col-2 mb-3',
+            text: 'URL:'
+          });
+          const input2 = $('<input>', {
+            type: 'text',
+            class: 'col-3 mb-3',
+            id: 'url',
+            placeholder: 'https://example.com'
+          });
+          const removeBtn = $('<button>', {
+            class: 'btn btn-danger mr-2 col-2 mb-3',
+            text: 'Remove'
+          }).on('click', function () {
+            // Remove input fields, labels, and button
+            input1.remove();
+            input2.remove();
+            label1.remove();
+            label2.remove();
+            removeBtn.remove();
+
+            // Reset flag to allow button click again
+            addUrlBtnClicked = false;
+          });
+          // Append elements to container
+          $('#urlContainer').append(label1, input1, label2, input2, removeBtn);
+
         });
 
 
-      })
+        var payload;
+        var headerPayload;
+        var bodyPayload;
+        var footerPayload;
+        var phonePayload;
+        var urlPayload;
+        var selectedCategory, selectedHeader, selectedMediaCategory;
+        var buttons = [];
+        var component = [];
+
+        $('#image').change(function () {
+          let data;
+          $.ajax({
+            url: "/api/template/mediaidfortemplate",
+            method: "post",
+            data: data,
+            success: function (value) {
+              console.log("id:", value);
+            }
+          })
+        })
+
+        $('input[name="Category"]').change(function () {
+          selectedCategory = $(this).val()
+        });
+
+        $('input[name="MediaCategory"]').change(function () {
+          selectedMediaCategory = $(this).val()
+        });
+
+        $('#headertype').change(function () {
+          selectedHeader = $(this).val()
+        });
+
+        $(document).on('change', '#phone-btn-text', function () {
+          console.log("hello", event.target.value);
+          nullfield_validation(`phone-btn-text`);
+          if (objFlag.flag_phone - btn - text == 0) {
+            phonePayload = {
+              "type": "PHONE_NUMBER",
+              "text": $('#phone-btn-text').val(),
+            }
+          }
+          console.log(phonePayload);
+        })
+
+        $(document).on('change', '#phn-number', function () {
+          console.log("hello", event.target.value);
+          nullfield_validation(`phn-number`);
+          if (objFlag.flag_phn - number == 0) {
+            phonePayload = {
+              "type": "PHONE_NUMBER",
+              "text": $('#phone-btn-text').val(),
+              "phone_number": $('#phn-number').val(),
+            }
+          }
+          console.log(phonePayload);
+          buttons.push(phonePayload);
+        })
+
+        $(document).on('change', '#url-btn-text', function () {
+          console.log("hello", event.target.value);
+          nullfield_validation(`url-btn-text`);
+          if (objFlag.flag_url - btn - text == 0) {
+            urlPayload = {
+              "type": "URL",
+              "text": $('#url-btn-text').val(),
+            }
+          }
+          console.log(urlPayload);
+        })
+
+        $(document).on('change', '#url', function () {
+          console.log("hello", event.target.value);
+          nullfield_validation(`url`);
+          if (objFlag.flag_url == 0) {
+            urlPayload = {
+              "type": "URL",
+              "text": $('#url-btn-text').val(),
+              "url": $('#url').val(),
+            }
+          }
+          console.log(urlPayload);
+          buttons.push(urlPayload);
+        })
+
+
+
+        $(document).on('click', '#submitforapproval', () => {
+
+          if (!$("input[name='MediaCategory']:checked").val()) {
+            $('#err_document_headermedia').text("Please select a Media category.").addClass('text-danger');
+          } else {
+            $('#err_document_headermedia').text("").removeClass('text-danger');
+          }
+
+          console.log("header input", $('#Headerinput1').val())
+          switch (selectedHeader) {
+            case "None":
+              headerPayload = {};
+              break;
+            case "Text":
+              nullfield_validation(`Headermsg`);
+              if (objFlag.flag_Headermsg == 0) {
+                headerPayload = {
+                  "type": "HEADER",
+                  "format": "TEXT",
+                  "text": $('#Headermsg').val(),
+                  "example": {
+                    "header_text": []
+                  }
+                };
+              }
+
+              // Find occurrences of '{{1}}' in the text
+              const regex = /\{\{1\}\}/g;
+              const matches = (headerPayload.text.match(regex) || []);
+
+              for (let i = 0; i < matches.length; i++) {
+                nullfield_validation(`Headerinput1`);
+                if (objFlag.flag_Headerinput1 == 0) {
+                  headerPayload.example.header_text.push($('#Headerinput1').val());
+                }
+              }
+              component.push(headerPayload);
+              console.log("component", component);
+              break;
+            case "Media":
+              switch (selectedMediaCategory) {
+                case "IMAGE":
+                  headerPayload = {};
+                  nullfield_validation(`image`);
+                  if (objFlag.flag_image == 0) {
+                    headerPayload = {
+                      "type": "HEADER",
+                      "format": "IMAGE",
+                      "text": $('#image').val(),
+                      "example": {
+                        "header_handle": "https://scontent.whatsapp.net/v/t61.29466-34/434007585_1096926948082717_7945202030500302155_n.jpg?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=H9Nij3AEvToQ7kNvgGOvE4a&_nc_oc=Adim5aUkRa3CBUqga_LtXXqAwf1xj-loCC2MRiWGxO4mx8z07LbTF4wDJUs2v3DRO4E&_nc_ht=scontent.whatsapp.net&edm=AIJs65cEAAAA&oh=01_Q5AaII2WwljagY1QevnbNjSdc8m86EDvh7RWS1ioOTui8U3O&oe=665C3829"
+                      }
+                    };
+                  }
+                  //headerPayload.example.header_handle.push($('#example').val());
+                  component.push(headerPayload);
+                  console.log("component", component);
+                  break;
+                case "DOCUMENT":
+                  headerPayload = {};
+                  nullfield_validation(`document`);
+                  if (objFlag.flag_document == 0) {
+                    headerPayload = {
+                      "type": "HEADER",
+                      "format": "DOCUMENT",
+                      "text": $('#document').val(),
+                      "example": {
+                        "header_handle": "https://scontent.whatsapp.net/v/t61.29466-34/430090826_331174693325498_8351415427016126668_n.pdf?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=CsKOuwe3G3oQ7kNvgE7b2Du&_nc_ht=scontent.whatsapp.net&edm=AIJs65cEAAAA&oh=01_Q5AaIEgQL2dnlEjL8N7O7t9XLu8YBKI6v-gTtFGy2XtoSdQU&oe=665C149F"
+                      }
+                    };
+                  }
+                  component.push(headerPayload);
+                  console.log("component", component);
+                  break;
+                case "VIDEO":
+                  break;
+              }
+              break;
+
+          }
+          console.log("headerPayload", headerPayload);
+          nullfield_validation(`bodymsg`);
+          if (objFlag.flag_bodymsg == 0) {
+            bodyPayload = {
+              "type": "BODY",
+              "text": $('#bodymsg').val(),
+              "example": {
+                "body_text": [],
+              }
+            };
+          }
+
+          // Find occurrences of '{{1}}', '{{2}}', '{{3}}', etc. in the text
+          const regex = /\{\{\d+\}\}/g;
+          const matches = (bodyPayload.text.match(regex) || []);
+
+          for (let i = 0; i < matches.length; i++) {
+            nullfield_validation(`bodyinput` + (i + 1));
+            if (objFlag.flag_bodyinput + (i + 1) == 0) {
+              bodyPayload.example.body_text.push($('#bodyinput' + (i + 1)).val());
+            }
+          }
+          component.push(bodyPayload);
+          console.log("bodypayload", bodyPayload);
+
+
+          footerPayload = {
+            "type": "FOOTER",
+            "text": $("#footertext").val(),
+          }
+          component.push(footerPayload);
+          console.log("footer", footerPayload);
+
+
+
+          payload = {
+            "name": $('#document_Name').val(),
+            "language": $("#selectedlang").val(),
+            "category": selectedCategory,
+            "components": component
+          };
+
+          nullfield_validation(`phone-btn-text`);
+          nullfield_validation(`phn-number`);
+          nullfield_validation(`url-btn-text`);
+          nullfield_validation(`url`);
+          if (objFlag.flag_url == 0 && objFlag.flag_url - btn - text == 0 && objFlag.flag_phn - number == 0 && objFlag.flag_phone - btn - text == 0) {
+            var buttonpayLoad = {
+              "type": "BUTTONS",
+              "buttons": buttons
+
+            }
+          }
+          component.push(buttonpayLoad);
+          console.log("payload", payload);
+
+          $.ajax({
+            url: "/api/template/createtemplate",
+            method: "post",
+            data: payload,
+            success: function (val) {
+              console.log("val", val);
+            }
+          })
+
+        })
+
+        const langarray = [
+          { code: 'af', language: 'Afrikaans' },
+          { code: 'sq', language: 'Albanian' },
+          { code: 'ar', language: 'Arabic' },
+          { code: 'az', language: 'Azerbaijani' },
+          { code: 'bn', language: 'Bengali' },
+          { code: 'bg', language: 'Bulgarian' },
+          { code: 'ca', language: 'Catalan' },
+          { code: 'zh_CN', language: 'Chinese (CHN)' },
+          { code: 'zh_HK', language: 'Chinese (HKG)' },
+          { code: 'zh_TW', language: 'Chinese (TAI)' },
+          { code: 'hr', language: 'Croatian' },
+          { code: 'cs', language: 'Czech' },
+          { code: 'da', language: 'Danish' },
+          { code: 'nl', language: 'Dutch' },
+          { code: 'en', language: 'English' },
+          { code: 'en_GB', language: 'English (UK)' },
+          { code: 'en_US', language: 'English (US)' },
+          { code: 'et', language: 'Estonian' },
+          { code: 'fil', language: 'Filipino' },
+          { code: 'fi', language: 'Finnish' },
+          { code: 'fr', language: 'French' },
+          { code: 'ka', language: 'Georgian' },
+          { code: 'de', language: 'German' },
+          { code: 'el', language: 'Greek' },
+          { code: 'gu', language: 'Gujarati' },
+          { code: 'ha', language: 'Hausa' },
+          { code: 'he', language: 'Hebrew' },
+          { code: 'hi', language: 'Hindi' },
+          { code: 'hu', language: 'Hungarian' },
+          { code: 'id', language: 'Indonesian' },
+          { code: 'ga', language: 'Irish' },
+          { code: 'it', language: 'Italian' },
+          { code: 'ja', language: 'Japanese' },
+          { code: 'kn', language: 'Kannada' },
+          { code: 'kk', language: 'Kazakh' },
+          { code: 'rw_RW', language: 'Kinyarwanda' },
+          { code: 'ko', language: 'Korean' },
+          { code: 'ky_KG', language: 'Kyrgyz (Kyrgyzstan)' },
+          { code: 'lo', language: 'Lao' },
+          { code: 'lv', language: 'Latvian' },
+          { code: 'lt', language: 'Lithuanian' },
+          { code: 'mk', language: 'Macedonian' },
+          { code: 'ms', language: 'Malay' },
+          { code: 'ml', language: 'Malayalam' },
+          { code: 'mr', language: 'Marathi' },
+          { code: 'nb', language: 'Norwegian' },
+          { code: 'fa', language: 'Persian' },
+          { code: 'pl', language: 'Polish' },
+          { code: 'pt_BR', language: 'Portuguese (BR)' },
+          { code: 'pt_PT', language: 'Portuguese (POR)' },
+          { code: 'pa', language: 'Punjabi' },
+          { code: 'ro', language: 'Romanian' },
+          { code: 'ru', language: 'Russian' },
+          { code: 'sr', language: 'Serbian' },
+          { code: 'sk', language: 'Slovak' },
+          { code: 'sl', language: 'Slovenian' },
+          { code: 'es', language: 'Spanish' },
+          { code: 'es_AR', language: 'Spanish (ARG)' },
+          { code: 'es_ES', language: 'Spanish (SPA)' },
+          { code: 'es_MX', language: 'Spanish (MEX)' },
+          { code: 'sw', language: 'Swahili' },
+          { code: 'sv', language: 'Swedish' },
+          { code: 'ta', language: 'Tamil' },
+          { code: 'te', language: 'Telugu' },
+          { code: 'th', language: 'Thai' },
+          { code: 'tr', language: 'Turkish' },
+          { code: 'uk', language: 'Ukrainian' },
+          { code: 'ur', language: 'Urdu' },
+          { code: 'uz', language: 'Uzbek' },
+          { code: 'vi', language: 'Vietnamese' },
+          { code: 'zu', language: 'Zulu' }
+        ]
+
+        function language() {
+          let data;
+          let output = `<select id="selectedlang" class="form-select">`;
+          for (let i = 0; i < langarray.length; i++) {
+            output += `<option value="${langarray[i].code}">${langarray[i].language}</option>`;
+          }
+          output += `</select>`;
+          $('#templatelang').html(output);
+        }
+        language();
+
+      });
+
 
     </script>
 </body>

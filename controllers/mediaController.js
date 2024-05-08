@@ -64,7 +64,7 @@ function deleteFolder(folderPath) {
 
 const uploadMedia = async (req, res) => {
     try {
-        // console.log("req.files : ", req.files);
+        console.log("req.files : ", req.files);
         if (!req.files) {
             // console.log("went wrong ", req.body);
 
