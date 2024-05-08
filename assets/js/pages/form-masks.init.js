@@ -32,6 +32,7 @@ document.querySelector("#cleave-date") && (cleaveDate = new Cleave("#cleave-date
     blocks: [6, 4, 4, 4],
     uppercase: !0
 })), document.querySelector("#phone") && (cleaveBlocks = new Cleave("#phone", {
-    delimiters: [""],
-    blocks: [10]
+    delimiters: [" "],
+    // blocks: [2, 5, 5],
+    blocks: [10],
 }));

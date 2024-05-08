@@ -14,8 +14,8 @@
     <meta charset="utf-8" />
     <title>Custom Template | SwiftSend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Bulk message services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
 
@@ -362,15 +362,15 @@
                     $('#template-list').removeClass('d-none');
                     for (var i in val) {
                         data += `
-                                <tr ${val[i].disable == "REJECTED " ? `class="opacity-50"` : ''}>
+                                <tr ${(val[i].status) == "REJECTED" ? `class="opacity-75"` : ''}>
                                     <td class="customer_name w-25 text-truncate" style="max-width: 120px;">${val[i].name}</td>
                                     <td class="customer_email w-25">
                                         ${val[i].category}
                                     </td>
                                     <td class="customer_email w-25">
                                         <h5>
-                                            <span class="badge border ${val[i].status == "PENDING" ? `border-warning text-warning` : `border-success text-success`}">
-                                                <i class="${val[i].status == "PENDING" ? `ri-time-line` : `ri-checkbox-circle-line`} align-middle me-1"></i>
+                                            <span class="badge border ${(val[i].status) == "PENDING" ? `border-warning text-warning` : (val[i].status) == "REJECTED" ? `border-danger text-danger` : `border-success text-success`}">
+                                                <i class="${(val[i].status) == "PENDING" ? `ri-time-line` : (val[i].status) == "REJECTED" ? `ri-close-circle-line` : `ri-checkbox-circle-line`} align-middle me-1"></i>
                                                 ${val[i].status}
                                             </span>
                                         </h5>
@@ -383,21 +383,21 @@
                                             <div class="show">
                                                 <button class="btn btn-sm btn-primary show-template-btn fs-12"
                                                     data-bs-toggle="modal" data-bs-target="#showModal" 
-                                                    data-id="${val[i].id}">
+                                                    data-id="${val[i].id}" ${(val[i].status) == "REJECTED" ? `disabled="true"` : ''}>
                                                     <i class="mdi mdi-eye align-bottom me-lg-1"></i>
                                                     <span class="d-none d-lg-inline-block">View</span>
                                                 </button>
                                             </div>
                                             <div class="edit">
                                                 <button class="btn btn-sm btn-success edit-item-btn fs-12"
-                                                    data-id="${val[i].id}">
+                                                    data-id="${val[i].id}" ${(val[i].status) == "REJECTED" ? `disabled="true"` : ''}>
                                                     <i class="mdi mdi-lead-pencil align-bottom me-lg-1"></i>
                                                     <span class="d-none d-lg-inline-block">Edit</span>
                                                 </button>
                                             </div>
                                             <div class="remove">
                                                 <button class="btn btn-sm btn-soft-danger remove-item-btn fs-12" 
-                                                    data-id="${val[i].id}"  data-name="${val[i].name}" data-bs-toggle="tooltip"
+                                                    data-id="${val[i].id}" data-name="${val[i].name}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="Delete">
                                                         <i class="mdi mdi-trash-can align-bottom me-lg-1"></i>
                                                         <span class="d-none d-lg-inline-block">Remove</span>
@@ -448,7 +448,8 @@
                 const template = template_list.find(x => x.id == id);
 
                 $('#modallbl').html(`${template.name}`);
-                let result = `<div class="bg-success text-light px-3 py-1 rounded-3 fw-semibold">
+                let result = `<div class="px-3 py-1 rounded-3 fw-semibold preview-text">
+                                    <i class="ri-information-fill align-middle fw-normal me-1"></i>
                                     Preview
                                 </div>
                                 <div class="message">`;

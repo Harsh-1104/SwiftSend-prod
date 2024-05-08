@@ -102,6 +102,7 @@ const port = (process.argv[2]) ? process.argv[2] : 8081;
 // Import routes
 const sampleRoutes = require("./routes/sendMessage");
 const templateRoutes = require("./routes/templateRoute");
+const mediaRoutes = require("./routes/mediaRoute");
 
 // Middleware
 function checkApi(req, res, next) {
@@ -109,14 +110,15 @@ function checkApi(req, res, next) {
 
     conn.query(`SELECT * FROM users WHERE apikey = '${apikey}'`, (error, results) => {
         if (error) return res.status(500).send(status.internalservererror());
-        if (results.length <= 0) res.status(401).send(status.unauthorized());;
+        if (results.length <= 0) return res.status(401).send(status.unauthorized());;
         next();
     });
 }
 
 // Use routes
-app.use("/api", checkApi, sampleRoutes);
+app.use("/api/message", checkApi, sampleRoutes);
 app.use("/api/template", checkApi, templateRoutes);
+app.use("/api/media", checkApi, mediaRoutes);
 
 
 async function checkAPIKey(apikey) {

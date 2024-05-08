@@ -7,7 +7,7 @@ const {
   getAllTemplateStatus,
   getAllTemplateID,
   deleteTemplateByID,
-} = require("../controllers/tamplateController");
+} = require("../controllers/templateController");
 
 // Rotues
 router.get("/gettemplate", getAllTemplate);

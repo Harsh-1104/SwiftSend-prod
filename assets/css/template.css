@@ -12,7 +12,6 @@
     float: left;
     font-family: sans-serif;
     width: 20vw;
-    box-shadow: 0px 15px 10px -10px #606060;
 }
 
 @media (min-width: 768px) and (max-width: 1200px) {
@@ -81,7 +80,7 @@
 
 .background-image {
     position: relative;
-    background-image: url('../../assets/images/whatsappbg.jpg');
+    background-image: url('../../assets/images/whatsappbg.png');
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -93,5 +92,16 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(201, 201, 201, 0.4);
+}
+
+.preview-text {
+    background-color: #d5f5f1;
+    color: #54656f;
+}
+
+#template-body {
+    flex-direction: column;
+    height: 55vh;
+    overflow-y: scroll;
+    padding: 1rem 0rem;
 }

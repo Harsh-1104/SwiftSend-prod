@@ -349,6 +349,7 @@ $(document).ready(function () {
 
             switch (page[5].split('?')[0]) {
                 case 'wba':
+                case 'broadcast':
                 case 'bulkmessage':
                 case 'contact-list':
                 case 'channel': {

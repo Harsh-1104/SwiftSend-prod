@@ -7,8 +7,8 @@
     <meta charset="utf-8" />
     <title>Datatables | SwiftSend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Bulk message services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico" />
 
@@ -45,7 +45,7 @@
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
                             <a href="/" class="logo logo-light">
@@ -53,7 +53,7 @@
                                     <img src="/assets/images/logo-sm.svg" alt="" height="60" />
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200"/>
+                                    <img src="/assets/images/logo-dark.svg" alt="" height="100" width="200" />
                                 </span>
                             </a>
                         </div>
@@ -69,7 +69,7 @@
                         </button>
                     </div>
                     <div class="d-flex align-items-center">
-                        
+
 
                         <div class="ms-1 header-item">
                             <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
@@ -135,7 +135,7 @@
         </div>
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
-       <!--  <div class="vertical-overlay"></div>-->
+        <!--  <div class="vertical-overlay"></div>-->
 
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -279,7 +279,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -287,25 +287,25 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true,
-                                table
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true,
+                                    table
+                                );
                             }
                         },
                     });
@@ -323,7 +323,7 @@
                         success: function (result) {
                             // console.log("below data of search");
                             // console.log(result);
-                           if (result.status_code == "404") {
+                            if (result.status_code == "404") {
                                 $("#mycomplementry").html(`<div class="noresult py-5">
                                     <div class="text-center">
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -334,26 +334,26 @@
                                     </div>
                                 </div>`);
                             }
-                            
-                            else if(result.status_code == "500"){
+
+                            else if (result.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!result.status_code){
-                            
-                            displayAtBeginning(
-                                result,
-                                "previousSearchBtn",
-                                "mysearchbtn",
-                                "nextSearchBtn",
-                                paramstr,
-                                table
-                            );
+                            else if (!result.status_code) {
+
+                                displayAtBeginning(
+                                    result,
+                                    "previousSearchBtn",
+                                    "mysearchbtn",
+                                    "nextSearchBtn",
+                                    paramstr,
+                                    table
+                                );
                             }
                         },
                     });
@@ -429,7 +429,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -437,25 +437,25 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true,
-                                table
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true,
+                                    table
+                                );
                             }
                         },
                     });
@@ -481,35 +481,35 @@
                                 },
                                 success: function (content) {
                                     // console.log(content);
-                                    if(content.status_code == "404"){
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(content.status_code == "500"){
-                                swal({
-                                    title: "Internal Server Error",
-                                    text:"Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(!content.status_code){
-                            
-                                    nextBtnDisplay(
-                                        content,
-                                        "previousSearchBtn",
-                                        "mysearchbtn",
-                                        "nextSearchBtn",
-                                        pn,
-                                        paramstr,
-                                        table
-                                    );
-                            }
+                                    if (content.status_code == "404") {
+                                        swal({
+                                            title: "No such record found",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (content.status_code == "500") {
+                                        swal({
+                                            title: "Internal Server Error",
+                                            text: "Try again after some time",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (!content.status_code) {
+
+                                        nextBtnDisplay(
+                                            content,
+                                            "previousSearchBtn",
+                                            "mysearchbtn",
+                                            "nextSearchBtn",
+                                            pn,
+                                            paramstr,
+                                            table
+                                        );
+                                    }
                                 },
                             });
                         }
@@ -565,7 +565,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -573,25 +573,25 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true,
-                                table
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true,
+                                    table
+                                );
                             }
                         },
                     });
@@ -617,35 +617,35 @@
                                 },
                                 success: function (content) {
                                     // console.log(content);
-                                    if(content.status_code == "404"){
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(content.status_code == "500"){
-                                swal({
-                                    title: "Internal Server Error",
-                                    text:"Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if(!content.status_code){
-                            
-                                    previousBtnDisplay(
-                                        content,
-                                        "previousSearchBtn",
-                                        "mysearchbtn",
-                                        "nextSearchBtn",
-                                        pn,
-                                        paramstr,
-                                        table
-                                    );
-                            }
+                                    if (content.status_code == "404") {
+                                        swal({
+                                            title: "No such record found",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (content.status_code == "500") {
+                                        swal({
+                                            title: "Internal Server Error",
+                                            text: "Try again after some time",
+                                            type: "error",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        });
+                                    }
+                                    else if (!content.status_code) {
+
+                                        previousBtnDisplay(
+                                            content,
+                                            "previousSearchBtn",
+                                            "mysearchbtn",
+                                            "nextSearchBtn",
+                                            pn,
+                                            paramstr,
+                                            table
+                                        );
+                                    }
                                 },
                             });
                         }
@@ -695,7 +695,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -703,25 +703,25 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            displayAtBeginning(
-                                content,
-                                "previousBtn",
-                                "mybtn",
-                                "nextBtn",
-                                true,
-                                table
-                            );
+                            else if (!content.status_code) {
+
+                                displayAtBeginning(
+                                    content,
+                                    "previousBtn",
+                                    "mybtn",
+                                    "nextBtn",
+                                    true,
+                                    table
+                                );
                             }
                         },
                     });
@@ -741,7 +741,7 @@
                         },
                         success: function (content) {
                             // console.log(content);
-                            if(content.status_code == "404"){
+                            if (content.status_code == "404") {
                                 swal({
                                     title: "No such record found",
                                     type: "error",
@@ -749,28 +749,28 @@
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(content.status_code == "500"){
+                            else if (content.status_code == "500") {
                                 swal({
                                     title: "Internal Server Error",
-                                    text:"Try again after some time",
+                                    text: "Try again after some time",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
                                 });
                             }
-                            else if(!content.status_code){
-                            
-                            myBtnDisplay(
-                                content,
-                                "previousSearchBtn",
-                                "mysearchbtn",
-                                "nextSearchBtn",
-                                index,
-                                btnno,
-                                pgno,
-                                paramstr,
-                                table
-                            );
+                            else if (!content.status_code) {
+
+                                myBtnDisplay(
+                                    content,
+                                    "previousSearchBtn",
+                                    "mysearchbtn",
+                                    "nextSearchBtn",
+                                    index,
+                                    btnno,
+                                    pgno,
+                                    paramstr,
+                                    table
+                                );
                             }
                         },
                     });
