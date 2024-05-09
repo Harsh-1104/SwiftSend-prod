@@ -473,11 +473,32 @@
                                     </span>`);
                         },
                         success: function (val) {
-                            $("#warning_lbl, #verify_email_div").removeClass("d-none");
-                            $("#sendOTP")
-                                .removeClass('btn-warning btn-success')
-                                .addClass('btn-primary')
-                                .html("Resend");
+                            switch (val.status_code) {
+                                case '409': {
+                                    document.getElementById('email').focus();
+                                    swal({
+                                        text: 'User with this email alerady exist',
+                                        type: 'error',
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    })
+                                    document.getElementById('email').classList.add('form-control-danger');
+                                    $("#sendOTP")
+                                        .removeClass('btn-warning btn-success')
+                                        .addClass('btn-primary')
+                                        .html("Send Code");
+                                    break;
+                                }
+
+                                case '200': {
+                                    $("#warning_lbl, #verify_email_div").removeClass("d-none");
+                                    $("#sendOTP")
+                                        .removeClass('btn-warning btn-success')
+                                        .addClass('btn-primary')
+                                        .html("Resend");
+                                    break;
+                                }
+                            }
                         }
                     })
                 }

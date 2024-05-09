@@ -196,7 +196,7 @@
                         <div class="d-flex justify-content-end col-8">
                             <a href="/template/create" class="btn btn-success">
                                 <i class="ri-add-circle-line align-middle me-lg-2"></i>
-                                <span class="d-none d-lg-inline-block">Create Template</span>
+                                <span class="d-none d-lg-inline-block d-md-inline-block">Create Template</span>
                             </a>
                         </div>
                     </div>
@@ -208,7 +208,7 @@
                                     <i class="ri-close-line align-middle text-light fs-22" data-bs-dismiss="modal"
                                         aria-label="Close" id="close-modal" style="cursor: pointer;"></i>
                                 </div>
-                                <div class="modal-body d-flex align-items-center justify-content-center background-image gap-2"
+                                <div class="modal-body d-flex align-items-center background-image gap-2 scrollbar-custom"
                                     id="template-body" style="flex-direction: column;">
                                 </div>
                             </div>
@@ -362,7 +362,7 @@
                     $('#template-list').removeClass('d-none');
                     for (var i in val) {
                         data += `
-                                <tr ${(val[i].status) == "REJECTED" ? `class="opacity-75"` : ''}>
+                                <tr ${(val[i].status) == "REJECTED" ? `class="opacity-50"` : ''}>
                                     <td class="customer_name w-25 text-truncate" style="max-width: 120px;">${val[i].name}</td>
                                     <td class="customer_email w-25">
                                         ${val[i].category}
@@ -370,7 +370,7 @@
                                     <td class="customer_email w-25">
                                         <h5>
                                             <span class="badge border ${(val[i].status) == "PENDING" ? `border-warning text-warning` : (val[i].status) == "REJECTED" ? `border-danger text-danger` : `border-success text-success`}">
-                                                <i class="${(val[i].status) == "PENDING" ? `ri-time-line` : (val[i].status) == "REJECTED" ? `ri-close-circle-line` : `ri-checkbox-circle-line`} align-middle me-1"></i>
+                                                <i class="${(val[i].status) == "PENDING" ? `ri-time-line` : (val[i].status) == "REJECTED" ? `ri-close-circle-line` : `ri-checkbox-circle-line`} align-middle me-1 fw-normal"></i>
                                                 ${val[i].status}
                                             </span>
                                         </h5>
@@ -388,13 +388,6 @@
                                                     <span class="d-none d-lg-inline-block">View</span>
                                                 </button>
                                             </div>
-                                            <div class="edit">
-                                                <button class="btn btn-sm btn-success edit-item-btn fs-12"
-                                                    data-id="${val[i].id}" ${(val[i].status) == "REJECTED" ? `disabled="true"` : ''}>
-                                                    <i class="mdi mdi-lead-pencil align-bottom me-lg-1"></i>
-                                                    <span class="d-none d-lg-inline-block">Edit</span>
-                                                </button>
-                                            </div>
                                             <div class="remove">
                                                 <button class="btn btn-sm btn-soft-danger remove-item-btn fs-12" 
                                                     data-id="${val[i].id}" data-name="${val[i].name}" data-bs-toggle="tooltip"
@@ -407,6 +400,13 @@
                                     </td>
                                 </tr>`;
                     }
+                    // <div class="edit">
+                    //     <button class="btn btn-sm btn-success edit-item-btn fs-12"
+                    //         data-id="${val[i].id}" ${(val[i].status) == "REJECTED" ? `disabled="true"` : ''}>
+                    //         <i class="mdi mdi-lead-pencil align-bottom me-lg-1"></i>
+                    //         <span class="d-none d-lg-inline-block">Edit</span>
+                    //     </button>
+                    // </div>
                     $("#template-list").html(data);
                 }
                 else {
@@ -417,7 +417,7 @@
                 }
             }
 
-            function temmplateDataDisplay() {
+            function GETTemplateAPI() {
                 $.ajax({
                     url: "/api/template/gettemplate",
                     method: "GET",
@@ -441,7 +441,7 @@
                     }
                 });
             };
-            temmplateDataDisplay();
+            GETTemplateAPI();
 
             $(document).on("click", ".show-template-btn", function () {
                 let id = $(this).attr("data-id");
@@ -455,6 +455,7 @@
                                 <div class="message">`;
 
                 const hasFooter = template.components.some(component => component.type === "FOOTER");
+                const hasHeader = template.components.some(component => component.type === "HEADER");
 
                 for (let i in template.components) {
                     if (template.components[i].type == "HEADER") {
@@ -483,9 +484,11 @@
                         }
                     }
                     if (template.components[i].type == "BODY") {
+                        (!hasHeader) ? result += `<div class="part-msg">` : result += ``;
                         result += `<div class="message-body">${template.components[i].text}</div>`;
 
-                        (!hasFooter ? result += `</div>` : result += ``)
+                        (!hasHeader) ? result += `</div>` : result += ``;
+                        (!hasFooter) ? result += `</div>` : result += ``;
                     }
                     if (template.components[i].type == "FOOTER") {
                         result += `<div class="message-footer">${template.components[i].text}</div>`;
@@ -578,7 +581,7 @@
                                         timer: 2000,
                                         showConfirmButton: false,
                                     }).then(function () {
-                                        temmplateDataDisplay()
+                                        GETTemplateAPI();
                                     });
                                 }
                                 switch (val.status_code) {
@@ -600,18 +603,42 @@
             $(document).on('input', '#searchtemplate', function () {
                 let val = $('#searchtemplate').val().trim();
 
-                if (val == null || val == "") {
-                    temmplateDataDisplay({
-                        table: "cstm_template",
-                        paramstr: `true`,
+                function search(query) {
+                    query = query.toLowerCase();
+                    return template_list.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
+                        }
+                        return false;
                     });
+                }
+
+                let Searchresult = search(val);
+
+                if (val == null || val == "") {
+                    TemplateDataDisplay(template_list)
                 }
                 else {
-                    temmplateDataDisplay({
-                        table: "cstm_template",
-                        paramstr: `cstm_name LIKE '%${val}%'`,
-                    });
+                    TemplateDataDisplay(Searchresult)
                 }
+
+                // if (val == null || val == "") {
+                //     TemplateDataDisplay({
+                //         table: "cstm_template",
+                //         paramstr: `true`,
+                //     });
+                // }
+                // else {
+                //     TemplateDataDisplay({
+                //         table: "cstm_template",
+                //         paramstr: `cstm_name LIKE '%${val}%'`,
+                //     });
+                // }
             })
         })
     </script>

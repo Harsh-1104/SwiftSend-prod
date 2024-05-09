@@ -17,16 +17,17 @@ function createfolder(foldername) {
         let currentDir = '';
 
         for (const dir of dirs) {
+            currentDir = path.join(currentDir, dir);
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
                 if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
-                    return status.ok().status_code;
+                    status.ok().status_code;
                 }
                 else {
-                    return status.nodatafound().status_code;
+                    status.nodatafound().status_code;
                 }
             }
             else {
-                return status.duplicateRecord().status_code;
+                status.duplicateRecord().status_code;
             }
         }
         return true;
@@ -64,23 +65,17 @@ function deleteFolder(folderPath) {
 
 const uploadMedia = async (req, res) => {
     try {
-        console.log("req.files : ", req.files);
-        if (!req.files) {
-            // console.log("went wrong ", req.body);
+        if (!req.files) return res.status(400).json({ error: "No file uploaded" });
+        const apikey = req.cookies.apikey;
+        createfolder(`wba/${apikey}/`);
 
-            return res.status(400).json({ error: "No file uploaded" });
-        }
-
-        let x = createfolder(`wba/`);
-        // console.log(x);
         const uploadedFile = req.files.image;
-        const uploadPath = `${toPath}/assets/upload/wba/${uploadedFile.name}`;
+        const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
 
         uploadedFile.mv(uploadPath, async function (err) {
-            if (err) return res.status(500).json({ error: "Internal server error" });
+            if (err) return res.status(500).json({ error: "Internal server error", message: err });
 
-            let filepath = `${toPath}/assets/upload/wba/${uploadedFile.name}`;
-            // console.log("filepath : ", filepath);
+            let filepath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
 
             const formData = new FormData();
             formData.append("messaging_product", "whatsapp");
@@ -97,7 +92,7 @@ const uploadMedia = async (req, res) => {
                 });
 
                 if (response.data.id) {
-                    // deleteFolder(`wba/`);
+                    deleteFolder(`wba/${apikey}/`);
                     return res.status(200).json({ success: true, message: "Media uploaded successfully", data: response.data });
                 }
             } catch (err) {
@@ -107,7 +102,7 @@ const uploadMedia = async (req, res) => {
         });
     } catch (error) {
         // Handle errors
-        // console.error("Error uploading media:", error.response.data);
+        console.error("Error uploading media:", error.response.data);
         return res.status(500).json({ error: "Internal server error" });
     }
 };
