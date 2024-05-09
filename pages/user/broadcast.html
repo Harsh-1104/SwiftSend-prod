@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Message | SwiftSends</title>
+    <title>Broadcast | SwiftSends</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="Bulk message services" name="description" />
     <meta content="Gajjar Harsh" name="author" />
@@ -413,6 +413,7 @@
             chkLogin();
             let template_list = [];
             const iid = document.URL.split("/")[4];
+            const apikey = getCookie('apikey');
             var output = "";
 
             $(document).on('change', 'input[name="usertype"]', function () {
@@ -833,10 +834,12 @@
                 if (e.target.id == "DOCUMENT") {
                     formData.append("image", document.getElementById('DOCUMENT').files[0]);
                     file_name = document.getElementById('DOCUMENT').files[0].name;
+                    previewFile(document.getElementById('DOCUMENT').files[0], "DOCUMENT");
                 }
                 if (e.target.id == "IMAGE") {
                     formData.append("image", document.getElementById('IMAGE').files[0]);
                     file_name = document.getElementById('IMAGE').files[0].name;
+                    previewFile(document.getElementById('IMAGE').files[0], "IMAGE");
                 }
                 $.ajax({
                     url: "/api/media/uploadMedia",
@@ -855,19 +858,6 @@
                     success: (result) => {
                         if (result.success) {
                             mediaID = result.data.id;
-
-                            if (e.target.id == "DOCUMENT") {
-                                $('#doc-preview')
-                                    .css('display', 'flex')
-                                    .css('height', 'auto')
-                                    .html(`<iframe  src="../../assets/upload/wba/${file_name}" class="img-fluid rounded-2"></iframe>`)
-                            }
-                            if (e.target.id == "IMAGE") {
-                                $('#media-preview')
-                                    .css('display', 'block')
-                                    .css('height', 'auto')
-                                    .html(`<img src="../../assets/upload/wba/${file_name}" class="img-fluid rounded-2" />`);
-                            }
                         }
                     },
                     error: (error) => {
