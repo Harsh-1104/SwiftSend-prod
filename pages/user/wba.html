@@ -417,6 +417,7 @@
                                 <div class="message">`;
 
                 const hasFooter = template.components.some(component => component.type === "FOOTER");
+                const hasHeader = template.components.some(component => component.type === "HEADER");
                 for (let i in template.components) {
                     if (template.components[i].type == "HEADER") {
                         let headerCode = ``;
@@ -489,6 +490,7 @@
                     if (template.components[i].type == "BODY") {
                         let bodyCode = ``;
                         let bodyfields = countPlaceholders(template.components[i].text || null);
+                        (!hasHeader) ? result += `<div class="part-msg">` : result += ``;
                         result += `<div class="message-body">${template.components[i].text}</div>`;
                         if (bodyfields > 0) {
                             bodyCode += `<hr class="my-1" />`;
@@ -503,7 +505,7 @@
                                             <input type="text" id="body${i}" class="form-control" placeholder="value for {{${i}}}"
                                                  ></div>`;
                         }
-
+                        (!hasHeader) ? result += `</div>` : result += ``;
                         $("#Bodydynamic").html(bodyCode);
                         (!hasFooter ? result += `</div>` : result += ``)
                     }
