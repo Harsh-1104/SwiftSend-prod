@@ -707,7 +707,7 @@
                                         <span class="text-danger">*</span>
                                                         <span class="text-danger" id="ere_col"></span>
                                                     </label>
-                                                <input type="file" id="IMAGE" class="form-control">
+                                                <input type="file" id="IMAGE" class="form-control" accept="image/*" />
                                                 </div>`;
                                 break;
                             }
@@ -744,7 +744,7 @@
                                                             <span class="text-danger">*</span>
                                                             <span class="text-danger" id="err_col"></span>
                                                         </label>
-                                                        <input type="file" id="DOCUMENT" class="form-control" />
+                                                        <input type="file" id="DOCUMENT" class="form-control" accept="application/*" />
                                                     </div>`;
                                 break;
                             }
@@ -832,60 +832,115 @@
                 $('#media-preview').css('display', 'flex').css('height', '10rem')
                 mediaID = "";
                 file_name = "";
-                let formData = new FormData();
+                let formData = new FormData(), validtypeMedia = false;
                 if (e.target.id == "DOCUMENT") {
                     formData.append("image", document.getElementById('DOCUMENT').files[0]);
                     file_name = document.getElementById('DOCUMENT').files[0].name;
-                    previewFile(document.getElementById('DOCUMENT').files[0], "DOCUMENT");
+                    if (document.getElementById('DOCUMENT').files[0].type.split("/")[0] == "application") {
+                        validtypeMedia = true;
+                    }
                 }
                 if (e.target.id == "IMAGE") {
                     formData.append("image", document.getElementById('IMAGE').files[0]);
                     file_name = document.getElementById('IMAGE').files[0].name;
-                    previewFile(document.getElementById('IMAGE').files[0], "IMAGE");
+                    if (document.getElementById('IMAGE').files[0].type.split("/")[0] == "image") {
+                        validtypeMedia = true;
+                    }
                 }
-                $.ajax({
-                    url: "/api/media/uploadMedia",
-                    method: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: () => {
-                        $('#media-preview').html(`<div class="spinner-border text-primary" role="status">
+                if (validtypeMedia) {
+                    $.ajax({
+                        url: "/api/media/uploadMedia",
+                        method: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: () => {
+                            $('#media-preview').html(`<div class="spinner-border text-primary" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>`);
-                        $('#doc-preview').html(`<div class="spinner-border text-primary" role="status">
+                            $('#doc-preview').html(`<div class="spinner-border text-primary" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>`);
-                    },
-                    success: (result) => {
-                        if (result.success) {
-                            mediaID = result.data.id;
-                        }
-                    },
-                    error: (error) => {
-                        if (error.status === 500) InternalServerError();
-                        if (error.status === 401) InvalidUser();
-                        if (error.status === 400) {
-                            if (!error.success) {
-                                swal({
-                                    title: "Invalid File Type.",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                }).then(function () {
-                                    if (e.target.id == "DOCUMENT") {
-                                        $('#DOCUMENT').removeClass('form-control-success');
-                                        $('#DOCUMENT').addClass('form-control-danger');
-                                    }
-                                    if (e.target.id == "IMAGE") {
-                                        $('#IMAGE').removeClass('form-control-success');
-                                        $('#IMAGE').addClass('form-control-danger');
-                                    }
-                                });
+                        },
+                        success: (result) => {
+                            if (result.success) {
+                                mediaID = result.data.id;
+                                if (e.target.id == "DOCUMENT") {
+                                    previewFile(document.getElementById('DOCUMENT').files[0], "DOCUMENT");
+                                }
+                                if (e.target.id == "IMAGE") {
+                                    previewFile(document.getElementById('IMAGE').files[0], "IMAGE");
+                                }
                             }
+                        },
+                        error: (error) => {
+                            if (error.status === 401) InvalidUser();
+                            if (error.status === 500) {
+                                if (!error.success) {
+                                    swal({
+                                        title: "Error in upload",
+                                        type: "error",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    }).then(function () {
+                                        if (e.target.id == "DOCUMENT") {
+                                            $('#DOCUMENT').removeClass('form-control-success');
+                                            $('#DOCUMENT').addClass('form-control-danger');
+                                        }
+                                        if (e.target.id == "IMAGE") {
+                                            $('#IMAGE').removeClass('form-control-success');
+                                            $('#IMAGE').addClass('form-control-danger');
+                                        }
+                                    });
+                                }
+                            }
+                            if (error.status === 400) {
+                                if (!error.success) {
+                                    swal({
+                                        title: "Invalid File Type.",
+                                        type: "error",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    }).then(function () {
+                                        if (e.target.id == "DOCUMENT") {
+                                            $('#DOCUMENT').removeClass('form-control-success');
+                                            $('#DOCUMENT').addClass('form-control-danger');
+                                        }
+                                        if (e.target.id == "IMAGE") {
+                                            $('#IMAGE').removeClass('form-control-success');
+                                            $('#IMAGE').addClass('form-control-danger');
+                                        }
+                                    });
+                                }
+                            }
+                        },
+                    });
+                }
+                else {
+                    swal({
+                        title: "Invalid File Type.",
+                        type: "error",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        if (e.target.id == "DOCUMENT") {
+                            $('#DOCUMENT').removeClass('form-control-success');
+                            $('#DOCUMENT').addClass('form-control-danger');
+                            $('#doc-preview')
+                                .css('display', 'flex')
+                                .css('height', '10rem')
+                                .html(`<i class="bx bxs-file-doc align-middle fs-2 text-primary"></i>`)
                         }
-                    },
-                });
+                        if (e.target.id == "IMAGE") {
+                            $('#IMAGE').removeClass('form-control-success');
+                            $('#IMAGE').addClass('form-control-danger');
+                            $('#media-preview')
+                                .css('display', 'flex')
+                                .css('height', '10rem')
+                                .html(`<i class="ri-image-2-fill align-middle fs-2 text-primary"></i>`);
+                        }
+                    });
+                }
             });
 
             $(document).on("input", "#phone", function () {
