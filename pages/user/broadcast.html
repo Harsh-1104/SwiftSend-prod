@@ -546,7 +546,6 @@
                             }
 
                             default: {
-                                console.log(val);
                                 let valid_channel_contact_list = val.filter(contact => String(contact.phone).length === 10);
                                 displayContactForSelect(valid_channel_contact_list);
                             }
@@ -900,6 +899,7 @@
                 if (objFlag.flag_template == 0) {
                     const templateID = $('#template').val();
                     const template = template_list.find(x => x.id == templateID);
+                    const hasHeader = template.components.some(component => component.type === "HEADER");
 
                     let validAllData = false;
                     let bodyFieldValid = false;
@@ -945,6 +945,10 @@
                                     break;
                                 }
                             }
+                        }
+
+                        if (!hasHeader) {
+                            validAllData = true;
                         }
 
                         if (x.type == "BODY") {
