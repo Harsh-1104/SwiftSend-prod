@@ -688,6 +688,7 @@
 
                         let validAllData = false;
                         let bodyFieldValid = false;
+                        const hasHeader = template.components.some(component => component.type === "HEADER");
 
                         template.components.forEach(x => {
                             if (x.type == "HEADER") {
@@ -731,6 +732,10 @@
                                     }
                                 }
                             }
+                            if (!hasHeader) {
+                                validAllData = true;
+                            }
+
 
                             if (x.type == "BODY") {
                                 let bodyfields = countPlaceholders(x.text || null);
@@ -754,6 +759,7 @@
                             }
                         });
 
+                        console.log(validAllData, bodyFieldValid)
                         if (validAllData && bodyFieldValid) {
                             let payload = {
                                 "to": `91${phone}`,
