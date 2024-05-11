@@ -19,7 +19,7 @@ function createfolder(foldername) {
 
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
-            console.log("currentDir : ", currentDir, `${toPath}/assets/upload/${currentDir}`)
+            console.log("currentDir : ", `${toPath}/assets/upload/${currentDir}`)
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
                 if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
                     console.log("ABC : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
@@ -70,11 +70,12 @@ const uploadMedia = async (req, res) => {
     try {
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
-        let x = createfolder(`wba/${apikey}`);
+        let x = createfolder(`wba/${apikey}/`);
         console.log("x : ", x)
         const uploadedFile = req.files.image;
         const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
-
+        console.log("uploadPath : ", uploadPath)
+        console.log("uploadedFile : ", uploadedFile)
         uploadedFile.mv(uploadPath, async function (err) {
             if (err) return res.status(500).json({ error: "Internal server error", message: err });
 
