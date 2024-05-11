@@ -19,10 +19,12 @@ function createfolder(foldername) {
 
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
-            console.log("currentDir : ", `${toPath}/assets/upload/${currentDir}`)
+            console.log("A : ", `${toPath}/assets/upload/${currentDir}`)
+            console.log("B  : ", !fs.existsSync(`${toPath}/assets/upload/${currentDir}`))
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
+                console.log("C  : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
                 if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
-                    console.log("ABC : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
+                    console.log("D : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
                     status.ok().status_code;
                 }
                 else {
