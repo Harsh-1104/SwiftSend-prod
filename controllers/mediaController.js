@@ -13,13 +13,16 @@ const accessToken = process.env.WABA_TOKEN;
 let toPath = __dirname.split('\\').slice(0, -1).join('/');
 function createfolder(foldername) {
     try {
+        console.log("foldername : ", foldername)
         const dirs = foldername.split('/');
         let currentDir = '';
 
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
+            console.log("currentDir : ", currentDir, `${toPath}/assets/upload/${currentDir}`)
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
                 if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
+                    console.log("ABC : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
                     status.ok().status_code;
                 }
                 else {
@@ -67,8 +70,8 @@ const uploadMedia = async (req, res) => {
     try {
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
-        createfolder(`wba/${apikey}/`);
-
+        let x = createfolder(`wba/${apikey}`);
+        console.log("x : ", x)
         const uploadedFile = req.files.image;
         const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
 
