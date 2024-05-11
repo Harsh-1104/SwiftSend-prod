@@ -35,7 +35,7 @@ function createfolder(foldername) {
         }
         return true;
     } catch (err) {
-        // console.log(err);
+        console.log("error : ", err);
         return false;
     }
 }
