@@ -9,8 +9,9 @@ const status = require("../assets/js/status");
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
 const accessToken = process.env.WABA_TOKEN;
+console.log("path.sep : ", path.sep)
 
-let toPath = __dirname.split('\\').slice(0, -1).join('/');
+let toPath = __dirname.split(`${path.sep}`).slice(0, -1).join('/');
 function createfolder(foldername) {
     try {
         console.log("foldername : ", foldername)
@@ -20,9 +21,9 @@ function createfolder(foldername) {
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
             console.log("1 : ", __dirname)
-            console.log("2 : ", __dirname.split('\\'))
-            console.log("3 : ", __dirname.split('\\').slice(0, -1))
-            console.log("4 : ", __dirname.split('\\').slice(0, -1).join('/'))
+            console.log("2 : ", __dirname.split(`${path.sep}`))
+            console.log("3 : ", __dirname.split(`${path.sep}`).slice(0, -1))
+            console.log("4 : ", __dirname.split(`${path.sep}`).slice(0, -1).join('/'))
             console.log("toPath : ", toPath)
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
                 console.log("C  : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
