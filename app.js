@@ -24,7 +24,6 @@ const cloudinary = require("cloudinary").v2;
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-const { GoogleSpreadsheet } = require("google-spreadsheet");
 const DomainName = require("./assets/js/url");
 let obj = [],
     apikey,
