@@ -9,30 +9,29 @@ const status = require("../assets/js/status");
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
 const accessToken = process.env.WABA_TOKEN;
-console.log("path.sep : ", path.sep)
 
 let toPath = __dirname.split(`${path.sep}`).slice(0, -1).join('/');
 function createfolder(foldername) {
     try {
         console.log("foldername : ", foldername)
         const dirs = foldername.split('/');
+        console.log("foldername : ", dirs)
         let currentDir = '';
 
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
-            console.log("1 : ", __dirname)
-            console.log("2 : ", __dirname.split(`${path.sep}`))
-            console.log("3 : ", __dirname.split(`${path.sep}`).slice(0, -1))
-            console.log("4 : ", __dirname.split(`${path.sep}`).slice(0, -1).join('/'))
-            console.log("toPath : ", toPath)
+            console.log("currentDir : ", currentDir)
+
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
-                console.log("C  : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
-                if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
-                    console.log("D : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
-                    status.ok().status_code;
-                }
-                else {
-                    status.nodatafound().status_code;
+                try {
+                    if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
+                        status.ok().status_code;
+                    }
+                    else {
+                        status.nodatafound().status_code;
+                    }
+                } catch (error) {
+                    console.log("E1 : ", error)
                 }
             }
             else {
@@ -76,12 +75,10 @@ const uploadMedia = async (req, res) => {
     try {
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
-        let x = createfolder(`wba/${apikey}/`);
+        let x = createfolder(`wba/${apikey}`);
         console.log("x : ", x)
         const uploadedFile = req.files.image;
         const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
-        console.log("uploadPath : ", uploadPath)
-        console.log("uploadedFile : ", uploadedFile)
         uploadedFile.mv(uploadPath, async function (err) {
             if (err) return res.status(500).json({ error: "Internal server error", message: err });
 
@@ -102,7 +99,7 @@ const uploadMedia = async (req, res) => {
                 });
 
                 if (response.data.id) {
-                    deleteFolder(`wba/${apikey}/`);
+                    deleteFolder(`wba/${apikey}`);
                     return res.status(200).json({ success: true, message: "Media uploaded successfully", data: response.data });
                 }
             } catch (err) {
