@@ -13,14 +13,11 @@ const accessToken = process.env.WABA_TOKEN;
 let toPath = __dirname.split(`${path.sep}`).slice(0, -1).join('/');
 function createfolder(foldername) {
     try {
-        console.log("foldername : ", foldername)
         const dirs = foldername.split('/');
-        console.log("foldername : ", dirs)
         let currentDir = '';
 
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
-            console.log("currentDir : ", currentDir)
 
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
                 try {
@@ -51,22 +48,17 @@ function deleteFolder(folderPath) {
             fs.readdirSync(`${toPath}/assets/upload/${folderPath}`).forEach((file) => {
                 const currentPath = path.join(`${toPath}/assets/upload/${folderPath}`, file);
                 if (fs.lstatSync(currentPath).isDirectory()) {
-                    // Recursively delete sub-folders and files
                     deleteFolder(currentPath);
                 } else {
-                    // Delete file
                     fs.unlinkSync(currentPath);
                 }
             });
-            // Delete the empty folder
             fs.rmdirSync(`${toPath}/assets/upload/${folderPath}`);
             return true;
         } else {
-            // Folder doesn't exist
             return false;
         }
     } catch (err) {
-        // console.log(err);
         return false;
     }
 }
@@ -76,7 +68,6 @@ const uploadMedia = async (req, res) => {
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
         let x = createfolder(`wba/${apikey}`);
-        console.log("x : ", x)
         const uploadedFile = req.files.image;
         const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
         uploadedFile.mv(uploadPath, async function (err) {
@@ -89,7 +80,6 @@ const uploadMedia = async (req, res) => {
             formData.append("file", fs.createReadStream(filepath));
 
             try {
-                // Make request to Facebook Graph API
                 const response = await axios.post(`https://graph.facebook.com/${version}/${wabaPhoneID}/media`,
                     formData, {
                     headers: {
@@ -108,7 +98,6 @@ const uploadMedia = async (req, res) => {
             }
         });
     } catch (error) {
-        // Handle errors
         console.error("Error uploading media:", error.response.data);
         return res.status(500).json({ error: "Internal server error" });
     }

@@ -17605,7 +17605,8 @@ span.flatpickr-weekday {
 .navbar-landing .navbar-nav .nav-item .nav-link.active,
 .navbar-landing .navbar-nav .nav-item .nav-link:focus,
 .navbar-landing .navbar-nav .nav-item .nav-link:hover {
-    color: #0ab39c !important
+    color: var(--vz-primary) !important;
+    font-weight: 800;
 }
 
 .navbar-landing.is-sticky {

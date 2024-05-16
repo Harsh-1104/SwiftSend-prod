@@ -189,10 +189,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8 col-md-6 col-sm-12 editor">
-                                <div style="height: 50vh;">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="col-lg-8 col-md-6 col-sm-12 editor px-lg-0 px-md-0">
+                                <div class="scrollbar-custom" style="max-height: 50vh; overflow-y: scroll;">
+                                    <div class="row mx-0">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 p-0 pe-1">
                                             <label for="template" class="form-label">
                                                 Templates
                                                 <span class="text-danger">*</span>
@@ -202,7 +202,7 @@
                                                 <option selected disabled value="null">Select Template</option>
                                             </select>
                                         </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 p-0 ps-1">
                                             <label for="phone" class="form-label">
                                                 Phone no
                                                 <span class="text-danger">*</span>
@@ -216,10 +216,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="Headerdynamic" class="mt-2"></div>
-                                    <div id="Bodydynamic" class="mt-2 row"></div>
+                                    <div id="Headerdynamic" class="mt-2 row m-0"></div>
+                                    <div id="Bodydynamic" class="mt-2 row m-0"></div>
                                 </div>
-                                <div class="btn-group dropup">
+                                <div class="sendmsgbtn ms-sm-1">
                                     <button id="sendmsg" class="btn btn-primary btn-load">
                                         <i class="mdi mdi-send me-lg-2 me-md-2"></i>
                                         <span class="d-none d-lg-inline-block d-md-inline-block">
@@ -423,7 +423,7 @@
                                             </div>`;
 
                                 headerCode += `<hr class="my-1" />`;
-                                headerCode += `<div class="col-12 mb-3">
+                                headerCode += `<div class="col-12 px-0 mb-3">
                                     <label for="IMAGE" class="form-label">
                                         IMAGE
                                         <span class="text-danger">*</span>
@@ -434,19 +434,19 @@
                                 break;
                             }
                             case "TEXT": {
-                                result += `<div class="message-header">${template.components[i].text}</div>`;
+                                result += `<div class="message-header">${replacePlaceholders(template.components[i].text, 1, "headerDfield")}</div>`;
                                 let headerfields = countPlaceholders(template.components[i].text || null);
 
                                 $("#Headerdynamic").html("");
                                 if (headerfields > 0) {
                                     headerCode += `<hr class="my-1" />`;
-                                    headerCode += `<div class="col-12 mb-3">
-                                        <label for="headerDfield" class="form-label">
+                                    headerCode += `<div class="col-12 px-0 mb-3">
+                                        <label for="headerDfield1" class="form-label">
                                                 HEADER Dynamic Value
                                                 <span class="text-danger">*</span>
-                                                <span class="text-danger" id="err_headerDfield"></span>
+                                                <span class="text-danger" id="err_headerDfield1"></span>
                                             </label>
-                                            <input type="text" id="headerDfield" class="form-control headerDfield" placeholder="Enter dynamic data">
+                                            <input type="text" id="headerDfield1" class="form-control headerDfield" placeholder="Enter dynamic data">
                                         </div>`;
                                 }
                                 break;
@@ -460,7 +460,7 @@
                                             </div>`;
 
                                 headerCode += `<hr class="my-1" />
-                                                    <div class="col-12 mb-3">
+                                                    <div class="col-12 px-0 mb-3">
                                                         <label for="DOCUMENT" class="form-label">
                                                             DOCUMENT
                                                             <span class="text-danger">*</span>
@@ -478,23 +478,27 @@
                         }
                         $("#Headerdynamic").html(headerCode);
                     }
+
                     if (template.components[i].type == "BODY") {
                         let bodyCode = ``;
                         let bodyfields = countPlaceholders(template.components[i].text || null);
+                        let modifiedString = template.components[i].text;
+                        for (let i = 1; i <= bodyfields; i++) {
+                            modifiedString = replacePlaceholders(modifiedString, i)
+                        }
                         (!hasHeader) ? result += `<div class="part-msg">` : result += ``;
-                        result += `<div class="message-body">${template.components[i].text}</div>`;
+                        result += `<div class="message-body">${modifiedString}</div>`;
                         if (bodyfields > 0) {
                             bodyCode += `<hr class="my-1" />`;
                         }
                         for (let i = 1; i <= bodyfields; i++) {
-                            bodyCode += `<div class="col-3 mb-3">
+                            bodyCode += `<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
                                             <label for="body${i}" class="form-label">
                                                 value {{${i}}}
                                                 <span class="text-danger">*</span>
                                                 <span class="text-danger" id="err_body${i}"></span>
                                             </label>
-                                            <input type="text" id="body${i}" class="form-control" placeholder="value for {{${i}}}"
-                                                 ></div>`;
+                                            <input type="text" id="body${i}" class="form-control dynamicbodyfield" placeholder="value for {{${i}}}"></div>`;
                         }
                         (!hasHeader) ? result += `</div>` : result += ``;
                         $("#Bodydynamic").html(bodyCode);
@@ -665,9 +669,18 @@
                 }
             });
 
+
+            $(document).on("keyup", ".dynamicbodyfield, .headerDfield", function () {
+                if ($(this).val() == "") {
+                    $(`#${$(this).attr('id')}_val`).html(`{{${$(this).attr('id').split("").pop()}}}`)
+                }
+                else {
+                    $(`#${$(this).attr('id')}_val`).html(`${$(this).val()}`)
+                }
+            })
+
             $(document).on("input", "#phone", function () {
                 oninput_validation('phone');
-                console.log($('#phone').val().trim().split(" ").join(""));
             })
 
             $(document).on("click", "#sendmsg", function () {
@@ -702,8 +715,8 @@
                                     case "TEXT": {
                                         let headerfields = countPlaceholders(x.text || null);
                                         if (headerfields > 0) {
-                                            nullfield_validation("headerDfield");
-                                            if (objFlag.flag_headerDfield != 0) {
+                                            nullfield_validation("headerDfield1");
+                                            if (objFlag.flag_headerDfield1 != 0) {
                                                 validAllData = false;
                                             }
                                             else {
@@ -754,9 +767,12 @@
                             }
                         });
 
+                        console.log(validAllData && bodyFieldValid, validAllData, bodyFieldValid)
+
                         if (validAllData && bodyFieldValid) {
                             let payload = {
                                 "to": `91${phone}`,
+                                "iid": iid,
                                 "languageCode": `${template.language}`,
                                 "templateName": `${template.name}`,
                                 "components": []
@@ -785,7 +801,7 @@
                                             let headerfields = countPlaceholders(x.text || null);
                                             if (headerfields > 0) {
                                                 paramOBJ.type = "text";
-                                                paramOBJ.text = `${$('#headerDfield').val()}`;
+                                                paramOBJ.text = `${$('#headerDfield1').val()}`;
                                                 headerOBJ.parameters.push(paramOBJ);
                                                 payload.components.push(headerOBJ);
                                             }

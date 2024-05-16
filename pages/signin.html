@@ -118,9 +118,8 @@
                                             <span class="text-danger" id="err_password"></span>
                                         </label>
                                         <div class="position-relative auth-pass-inputgroup">
-                                            <input type="password" class="form-control pe-5 password-input required"
-                                                name="password" placeholder="Enter password" id="password"
-                                                data-type="password" />
+                                            <input type="password" class="form-control pe-5 required" name="password"
+                                                placeholder="Enter password" id="password" data-type="password" />
                                             <button class="btn btn-link position-absolute end-0 top-0
                                                      text-decoration-none text-muted password-addon" type="button"
                                                 id="password-addon">
@@ -215,36 +214,39 @@
 
 <script>
     $(document).ready(() => {
-        $.ajax({
-            url: "/getData",
-            method: "POST",
-            data: {
-                obj: {
-                    table: `users`,
-                    paramstr: true
-                }
-            },
-            success: function (val) {
-                console.log(val);
-                if (val.length === 1) {
-                    location.href = "/dashboard";
-                }
-                else {
-                    switch (val.status_code) {
-                        case '401':
-                        case '404': {
-                            document.cookie = "apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                            document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                            break;
-                        }
-                        case '500': {
-                            InternalServerError();
-                            break;
+        if (getCookie('apikey') != "") {
+
+
+            $.ajax({
+                url: "/getData",
+                method: "POST",
+                data: {
+                    obj: {
+                        table: `users`,
+                        paramstr: true
+                    }
+                },
+                success: function (val) {
+                    if (val.length === 1) {
+                        location.href = "/dashboard";
+                    }
+                    else {
+                        switch (val.status_code) {
+                            case '401':
+                            case '404': {
+                                document.cookie = "apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                                document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                                break;
+                            }
+                            case '500': {
+                                InternalServerError();
+                                break;
+                            }
                         }
                     }
                 }
-            }
-        })
+            })
+        }
 
         var email = document.getElementById('email');
         var password = document.getElementById('password');

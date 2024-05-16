@@ -10,7 +10,6 @@ const bcrypt = require("bcrypt");
 const app = express();
 const router = require("./assets/js/route");
 const bodyParser = require("body-parser");
-const mysql = require("mysql");
 const nodemailer = require("nodemailer");
 const passport = require("passport");
 const country = require("country-list-with-dial-code-and-flag");
@@ -18,6 +17,7 @@ const status = require("./assets/js/status");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const cors = require("cors");
+const conn = require('./DB/connection');
 
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
@@ -25,34 +25,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const DomainName = require("./assets/js/url");
-let obj = [],
-    apikey,
-    userProfile;
-
-const conn = mysql.createConnection({
-    host: "164.52.208.110",
-    user: "qitsolution_tempuser",
-    password: "Qit123@#india",
-    database: "qitsolution_swiftsend",
-    charset: "utf8mb4",
-});
-
-//Db itentifier: swift-send-db-itentifier
-// username: admin
-// const conn = mysql.createConnection({
-//     host: process.env.HOST,
-//     user: process.env.USER,
-//     password: process.env.PASSWORD,
-//     database: process.env.DATABASE,
-// })
-
-conn.connect((err) => {
-    if (err) {
-        console.error("Error connecting to the database:", err);
-        return;
-    }
-    console.log("Connected to the database");
-});
+let obj = [], apikey, userProfile;
 
 cloudinary.config({
     // <--------------Old Config-------------->
@@ -75,10 +48,7 @@ app.use(fileUpload());
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
-app.use(
-    ["/docs/assets", "/instance/assets", "/assets"],
-    express.static("assets")
-);
+app.use(["/docs/assets", "/instance/assets", "/assets"], express.static("assets"));
 app.use("/", router);
 app.use(cors());
 
@@ -106,6 +76,7 @@ const port = process.argv[2] ? process.argv[2] : 8081;
 const sampleRoutes = require("./routes/sendMessage");
 const templateRoutes = require("./routes/templateRoute");
 const mediaRoutes = require("./routes/mediaRoute");
+const userDashboardRoutes = require("./routes/userDashboardRoute");
 
 // Middleware
 function checkApi(req, res, next) {
@@ -122,6 +93,7 @@ function checkApi(req, res, next) {
 app.use("/api/message", checkApi, sampleRoutes);
 app.use("/api/template", checkApi, templateRoutes);
 app.use("/api/media", checkApi, mediaRoutes);
+app.use("/api/dashboard", checkApi, userDashboardRoutes);
 
 async function checkAPIKey(apikey) {
     try {
@@ -1516,33 +1488,6 @@ app.post("/signin", (req, res) => {
     }
 });
 
-app.get("/message_summary", async (req, res) => {
-    apikey = req.cookies.apikey;
-
-    const isValidapikey = await checkAPIKey(apikey);
-    try {
-        if (isValidapikey) {
-            conn.query(
-                `SELECT m.instance_id AS iid, i.i_name AS i_name, 
-            COUNT(CASE WHEN m.msg_type = 'Single Message' THEN 1 END) AS single_message_count, 
-            COUNT(CASE WHEN m.msg_type like '%Document%' THEN 1 END) AS single_document_count, 
-            COUNT(CASE WHEN m.msg_type = 'Bulk Message Template' THEN 1 END) AS bulk_message_template_count,
-            COUNT(CASE WHEN m.msg_type = 'Bulk Message Custom' THEN 1 END) AS bulk_message_custom_count, 
-            COUNT(CASE WHEN m.msg_type = 'Bulk Message Channel' THEN 1 END) AS bulk_message_channel_count
-            FROM message m JOIN instance i ON m.instance_id = i.instance_id GROUP BY m.apikey, m.instance_id, i.i_name having apikey = '${apikey}'`,
-                function (err, result) {
-                    if (err) return res.send(status.internalservererror());
-                    if (result.length <= 0) return res.send(status.nodatafound());
-                    res.send(result);
-                }
-            );
-        } else res.send(status.unauthorized());
-    } catch (e) {
-        console.log(e);
-        res.send(status.unauthorized());
-    }
-});
-
 app.post("/message_filter", async (req, res) => {
     apikey = req.cookies.apikey;
     let start_date = req.body.startdate;
@@ -1717,7 +1662,7 @@ app.get("/userinfo", async (req, res) => {
 app.get("/get-landingpage-data", (req, res) => {
     try {
         conn.query(
-            `SELECT COUNT(*) AS total FROM users UNION ALL SELECT COUNT(*) FROM instance UNION ALL SELECT COUNT(*) FROM message UNION ALL SELECT COUNT(*) FROM email`,
+            `SELECT COUNT(*) AS total FROM users UNION ALL SELECT COUNT(*) FROM instance UNION ALL SELECT COUNT(*) FROM message_info`,
             (err, result) => {
                 if (err) return res.send(err);
                 if (result.length > 0) {
@@ -1942,14 +1887,10 @@ app.delete("/deleterecord", async (req, res) => {
     const isValidapikey = await checkAPIKey(apikey);
     try {
         if (isValidapikey) {
-            console.log(
-                `DELETE FROM ${req.body.obj.table} WHERE ${req.body.obj.paramstr}`
-            );
             conn.query(
                 `DELETE FROM ${req.body.obj.table} WHERE ${req.body.obj.paramstr}`,
                 (err, result) => {
-                    if (err || result.affectedRows <= 0)
-                        return res.send(status.internalservererror());
+                    if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
                     res.send(status.ok());
                 }
             );

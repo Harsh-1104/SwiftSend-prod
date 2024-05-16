@@ -253,6 +253,34 @@ function previewFile(file, target) {
     }
 }
 
+function replacePlaceholders(str, i, idname = "body") {
+
+    let p1 = new RegExp(`{{\\d+}}`, 'g');
+    let p2 = new RegExp(`\\*{{\\d+}}\\*`, 'g');
+    let p3 = new RegExp(`_\\*{{\\d+}}\\*_`, 'g');
+    let p4 = new RegExp(`_{{\\d+}}__`, 'g');
+
+    if (p1.test(str)) {
+        if (p2.test(str)) {
+            if (p3.test(str)) {
+                return str.replace(`_*{{${i}}}*_`, `<strong><i><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></i></strong>`);
+            }
+            return str.replace(`*{{${i}}}*`, `<strong><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></strong>`);
+        }
+
+        if (p4.test(str)) {
+            if (p3.test(str)) {
+                return str.replace(`_*{{${i}}}*_`, `<strong><i><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></i></strong>`);
+            }
+            return str.replace(`_{{${i}}}_`, `<i><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></i>`);
+        }
+
+        return str.replace(`{{${i}}}`, `<span id="${idname}${i}_val" class="text-primary">{{${i}}}</span>`);
+    }
+
+    return str;
+}
+
 $(document).ready(function () {
     $(document).on("click", ".copy", function () {
         var param = $(this).attr("id").substring(5);
