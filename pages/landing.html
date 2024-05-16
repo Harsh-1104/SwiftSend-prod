@@ -40,8 +40,8 @@
 </head>
 
 <style>
-    body {
-        cursor: url(../assets/images/logo-sm.svg), url(../assets/images/logo-sm.svg), url(../assets/images/logo-sm.svg), default;
+    .waviy {
+        word-break: keep-all !important;
     }
 
     .waviy span {
@@ -49,7 +49,7 @@
         position: relative;
         display: inline-block;
         color: #1fa1e0;
-        font-size: 60px;
+        font-size: 150%;
         text-transform: uppercase;
         animation: waviy 1.5s infinite ease-in-out reverse;
         animation-delay: calc(0.2s * var(--i));
@@ -72,17 +72,15 @@
     }
 </style>
 
-<body data-bs-spy="scroll" data-bs-target="#navbar-example">
-
-    <!-- Begin page -->
+<body>
     <div class="layout-wrapper landing">
         <nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar">
             <div class="container">
                 <a class="navbar-brand" href="/">
                     <img src="../assets/images/logo-dark.svg" class="card-logo card-logo-dark" alt="logo dark"
-                        height="80">
+                        height="60">
                     <img src="../assets/images/logo-dark.svg" class="card-logo card-logo-light" alt="logo light"
-                        height="80">
+                        height="60">
                 </a>
 
                 <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse"
@@ -204,24 +202,6 @@
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
                                     <div class="avatar-title bg-transparent text-success rounded-circle">
-                                        <i class="mdi mdi-email-check-outline fs-36"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fs-18">Send Emails</h5>
-                                <p class="text-muted my-3 ff-secondary">Elevate your email communication with our web
-                                    app - easily send customized and personalized emails</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-sm icon-effect">
-                                    <div class="avatar-title bg-transparent text-success rounded-circle">
                                         <i class="bx bxs-contact fs-36"></i>
                                     </div>
                                 </div>
@@ -277,44 +257,6 @@
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
                                     <div class="avatar-title bg-transparent text-success rounded-circle">
-                                        <i class="bx bxs-book fs-36"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fs-18">Exceptional documentation</h5>
-                                <p class="text-muted my-3 ff-secondary">Access comprehensive API documentation to
-                                    empower developers with clear request and response information, enabling seamless
-                                    integration with our web app.</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-sm icon-effect">
-                                    <div class="avatar-title bg-transparent text-success rounded-circle">
-                                        <i class="mdi mdi-arrow-decision fs-36"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fs-18">Automate Your Task</h5>
-                                <p class="text-muted my-3 ff-secondary">Experience powerful automation of APIs,
-                                    workflows and functionalities, streamlining processes and boosting efficiency, all
-                                    on our web app.</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-sm icon-effect">
-                                    <div class="avatar-title bg-transparent text-success rounded-circle">
                                         <i class="ri-pages-fill fs-36"></i>
                                     </div>
                                 </div>
@@ -323,25 +265,6 @@
                                 <h5 class="fs-18">Customized Templates</h5>
                                 <p class="text-muted my-3 ff-secondary">On our web app, you can effortlessly craft
                                     personalized message templates to suit your specific needs and preferences.</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
-                        <div class="d-flex p-3">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-sm icon-effect">
-                                    <div class="avatar-title bg-transparent text-success rounded-circle">
-                                        <i class=" bx bxs-microphone fs-36"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="fs-18">Voice Commands</h5>
-                                <p class="text-muted my-3 ff-secondary">Our web app has the capability to accurately
-                                    interpret and respond to voice commands, ensuring seamless functionality based on
-                                    your spoken instructions.</p>
 
                             </div>
                         </div>
@@ -409,7 +332,6 @@
             <!-- end container -->
         </section>
         <!-- start review -->
-
 
         <section class="section mb-2 bg-primary" id="reviews">
             <div class="bg-overlay bg-overlay-pattern"></div>
@@ -489,7 +411,7 @@
         <section class="py-5 position-relative bg-white">
             <div class="container">
                 <div class="row text-center gy-4">
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div>
                             <h2 class="mb-2">
                                 <span class="counter-value text-primary" data-target="" id="totaluser"></span>
@@ -497,7 +419,7 @@
                             <div class="text-muted">Total Users</div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div>
                             <h2 class="mb-2">
                                 <span class="counter-value text-primary" data-target="" id="totalinstance"></span>
@@ -505,20 +427,12 @@
                             <div class="text-muted">Total Instance</div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div>
                             <h2 class="mb-2">
                                 <span class="counter-value text-primary" data-target="" id="totalmessage"></span>
                             </h2>
                             <div class="text-muted">Total Message Sent</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
-                        <div>
-                            <h2 class="mb-2">
-                                <span class="counter-value text-primary" data-target="" id="totalemail"></span>
-                            </h2>
-                            <div class="text-muted">Total Email Sent</div>
                         </div>
                     </div>
                 </div>
@@ -527,24 +441,23 @@
             <!-- end container -->
         </section>
 
-
         <!-- start plan -->
-        <section class="section mb-0 bg-light" id="plans">
-            <div class="bg-overlay bg-overlay-pattern"></div>
-            <!-- <div class="container"> -->
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="text-center mb-5">
-                        <h3 class="mb-3 fw-semibold">Choose the plan that's right for you</h3>
-                        <p class="text-muted mb-4">Simple pricing. No hidden fees.</p>
+        <section class="section mb-0 bg-light d-none" id="plans">
+            <div class="container">
+                <div class="bg-overlay bg-overlay-pattern"></div>
+                <!-- <div class="container"> -->
+                <div class="d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-5">
+                            <h3 class="mb-3 fw-semibold">Choose the plan that's right for you</h3>
+                            <p class="text-muted mb-4">Simple pricing. No hidden fees.</p>
+                        </div>
                     </div>
+                    <!-- end col -->
                 </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
+                <!-- end row -->
 
-            <div class="row">
-                <div class="col-lg-8 m-auto">
+                <div class="m-auto">
                     <ul class="nav nav-pills justify-content-center arrow-navtabs nav-success mb-3" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#month" role="tab" id="month_tab">
@@ -561,10 +474,12 @@
                     <!-- Tab panes -->
                     <div class="tab-content text-muted">
                         <div class="tab-pane active" id="month" role="tabpanel">
-                            <div class="row mt-4 justify-content-center mx-sm-5 mx-lg-0 mx-md-3" id="month_data"></div>
+                            <div class="row mt-4 justify-content-center mx-sm-5 mx-lg-0 mx-md-3" id="month_data">
+                            </div>
                         </div>
                         <div class="tab-pane" id="year" role="tabpanel">
-                            <div class="row mt-4 justify-content-center mx-sm-5 mx-lg-0 mx-md-3" id="year_data"></div>
+                            <div class="row mt-4 justify-content-center mx-sm-5 mx-lg-0 mx-md-3" id="year_data">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -731,12 +646,10 @@
                     $('#totaluser').html(val[0].total);
                     $('#totalinstance').html(val[1].total);
                     $('#totalmessage').html(val[2].total);
-                    $('#totalemail').html(val[3].total);
 
                     $('#totaluser').attr('data-target', val[0].total);
                     $('#totalinstance').attr('data-target', val[1].total);
                     $('#totalmessage').attr('data-target', val[2].total);
-                    $('#totalemail').attr('data-target', val[3].total);
                 }
             })
 

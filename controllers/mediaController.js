@@ -9,30 +9,26 @@ const status = require("../assets/js/status");
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
 const accessToken = process.env.WABA_TOKEN;
-console.log("path.sep : ", path.sep)
 
 let toPath = __dirname.split(`${path.sep}`).slice(0, -1).join('/');
 function createfolder(foldername) {
     try {
-        console.log("foldername : ", foldername)
         const dirs = foldername.split('/');
         let currentDir = '';
 
         for (const dir of dirs) {
             currentDir = path.join(currentDir, dir);
-            console.log("1 : ", __dirname)
-            console.log("2 : ", __dirname.split(`${path.sep}`))
-            console.log("3 : ", __dirname.split(`${path.sep}`).slice(0, -1))
-            console.log("4 : ", __dirname.split(`${path.sep}`).slice(0, -1).join('/'))
-            console.log("toPath : ", toPath)
+
             if (!fs.existsSync(`${toPath}/assets/upload/${currentDir}`)) {
-                console.log("C  : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
-                if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
-                    console.log("D : ", fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`))
-                    status.ok().status_code;
-                }
-                else {
-                    status.nodatafound().status_code;
+                try {
+                    if (fs.mkdirSync(`${toPath}/assets/upload/${currentDir}`)) {
+                        status.ok().status_code;
+                    }
+                    else {
+                        status.nodatafound().status_code;
+                    }
+                } catch (error) {
+                    console.log("E1 : ", error)
                 }
             }
             else {
@@ -52,22 +48,17 @@ function deleteFolder(folderPath) {
             fs.readdirSync(`${toPath}/assets/upload/${folderPath}`).forEach((file) => {
                 const currentPath = path.join(`${toPath}/assets/upload/${folderPath}`, file);
                 if (fs.lstatSync(currentPath).isDirectory()) {
-                    // Recursively delete sub-folders and files
                     deleteFolder(currentPath);
                 } else {
-                    // Delete file
                     fs.unlinkSync(currentPath);
                 }
             });
-            // Delete the empty folder
             fs.rmdirSync(`${toPath}/assets/upload/${folderPath}`);
             return true;
         } else {
-            // Folder doesn't exist
             return false;
         }
     } catch (err) {
-        // console.log(err);
         return false;
     }
 }
@@ -76,12 +67,9 @@ const uploadMedia = async (req, res) => {
     try {
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
-        let x = createfolder(`wba/${apikey}/`);
-        console.log("x : ", x)
+        let x = createfolder(`wba/${apikey}`);
         const uploadedFile = req.files.image;
         const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
-        console.log("uploadPath : ", uploadPath)
-        console.log("uploadedFile : ", uploadedFile)
         uploadedFile.mv(uploadPath, async function (err) {
             if (err) return res.status(500).json({ error: "Internal server error", message: err });
 
@@ -92,7 +80,6 @@ const uploadMedia = async (req, res) => {
             formData.append("file", fs.createReadStream(filepath));
 
             try {
-                // Make request to Facebook Graph API
                 const response = await axios.post(`https://graph.facebook.com/${version}/${wabaPhoneID}/media`,
                     formData, {
                     headers: {
@@ -102,7 +89,7 @@ const uploadMedia = async (req, res) => {
                 });
 
                 if (response.data.id) {
-                    deleteFolder(`wba/${apikey}/`);
+                    deleteFolder(`wba/${apikey}`);
                     return res.status(200).json({ success: true, message: "Media uploaded successfully", data: response.data });
                 }
             } catch (err) {
@@ -111,7 +98,6 @@ const uploadMedia = async (req, res) => {
             }
         });
     } catch (error) {
-        // Handle errors
         console.error("Error uploading media:", error.response.data);
         return res.status(500).json({ error: "Internal server error" });
     }

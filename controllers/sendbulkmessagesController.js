@@ -1,26 +1,62 @@
 const axios = require("axios");
+const crypto = require("crypto");
+const conn = require('../DB/connection');
 
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
 const token = process.env.WABA_TOKEN;
 
-const sendBulkMessagesIn = async (req, res) => {
-    try {
-        const { numberList, templateName, components, languageCode } = req.body; // Extract values from req.body
+const insertIntoMessageInfo = async (data) => {
+    const query = `INSERT INTO message_info (waba_message_id, boardCast_id , reciver_number, message_type, status) VALUES ?`;
 
+    const values = data.map((item) => [
+        item.waba_message_id,
+        item.boardcast_id,
+        item.reciver_number,
+        item.message_type,
+        item.status,
+    ]);
+
+    return new Promise((resolve, reject) => {
+        conn.query(query, [values], (error, results, fields) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
+};
+
+const insertIntoBoardCaste = async (apikey, templateName, boardcast_id, iid) => {
+    const query = `INSERT INTO boardcast (boardcast_id, apikey, template_id, time, instance_id) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)`;
+    const values = [boardcast_id, apikey, templateName, iid];
+
+    return new Promise((resolve, reject) => {
+        conn.query(query, values, (error, results, fields) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(results.insertId);
+        });
+    });
+};
+
+const sendBulkMessagesIn = async (req, res) => {
+
+    try {
+        const apikey = req.cookies.apikey;
+        const boardCastId = crypto.randomBytes(16).toString("hex");
+        let success = true;
+
+        const { numberList, templateName, components, languageCode, iid } = req.body;
         const filteredComponents = components
             ? components.filter((component) => component !== null)
             : [];
-
         const bearerToken = token;
 
-        // Construct headers with the bearer token
-        const headers = {
-            Authorization: `Bearer ${bearerToken}`,
-            "Content-Type": "application/json",
-        };
-
-        let success = true;
+        const messageInfoData = []; // Array to store message info data
 
         // Use Promise.all to await all requests
         await Promise.all(
@@ -44,16 +80,28 @@ const sendBulkMessagesIn = async (req, res) => {
                         payload,
                         {
                             headers: {
-                                Authorization: `Bearer ${bearerToken}`, // Fix the token format
+                                Authorization: `Bearer ${bearerToken}`,
                                 "Content-Type": "application/json",
                             },
                         }
                     );
 
-                    console.log("response : ", response.status === 200);
-
                     if (response.status !== 200) {
                         success = false;
+                    } else {
+                        success = true;
+                        // Accumulate message info data
+                        const myData = response.data;
+                        const messageId = myData.messages[0].id;
+                        messageInfoData.push({
+                            // Push data into the array
+                            waba_message_id: messageId,
+                            boardcast_id: boardCastId,
+                            user_id: 1,
+                            reciver_number: item,
+                            message_type: "template", // Adjust as needed
+                            status: "sent",
+                        });
                     }
                 } catch (error) {
                     console.log("error ", error.response);
@@ -61,11 +109,18 @@ const sendBulkMessagesIn = async (req, res) => {
                 }
             })
         );
-        console.log(success);
+
         if (success) {
-            res.status(200).json({ success: true, message: "Messages sent successfully" });
-        }
-        else {
+            // Insert into boardcast table only if all messages are sent successfully
+            await insertIntoBoardCaste(apikey, templateName, boardCastId, iid);
+
+            // Bulk insertion into message_info table
+            await insertIntoMessageInfo(messageInfoData);
+
+            res
+                .status(200)
+                .json({ success: true, message: "Messages sent successfully" });
+        } else {
             res.status(500).json({
                 success: false,
                 message: "Failed to send one or more messages",
@@ -78,69 +133,6 @@ const sendBulkMessagesIn = async (req, res) => {
             message: "An error occurred while sending the messages",
         });
     }
-};
-
-// const sendBulkMessagesIn = async (req, res) => {
-//     try {
-//         const { numberList, templateName, components, languageCode } = req.body; // Extract values from req.body
-
-//         const bearerToken = token;
-
-//         const batchPayload = [];
-
-//         // Create batch payload containing individual requests
-//         numberList.forEach((item) => {
-//             const payload = {
-//                 messaging_product: "whatsapp",
-//                 to: item,
-//                 type: "template",
-//                 template: {
-//                     name: templateName,
-//                     language: {
-//                         code: languageCode,
-//                     },
-//                     components: components,
-//                 },
-//             };
-
-//             batchPayload.push(payload);
-//         });
-
-//         // Send batch request
-//         const response = await axios.post(
-//             `https://graph.facebook.com/v18.0/287947604404901/messages`,
-//             batchPayload,
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${bearerToken}`,
-//                     "Content-Type": "application/json",
-//                 },
-//             }
-//         );
-
-//         // Check if all requests were successful
-//         if (response.status === 200) {
-//             res.status(200).json({
-//                 success: true,
-//                 message: "Batch messages sent successfully",
-//             });
-//         } else {
-//             res.status(500).json({
-//                 success: false,
-//                 message: "Failed to send batch messages",
-//             });
-//         }
-//     } catch (error) {
-//         console.log("error", error.response.data);
-//         res.status(500).json({
-//             success: false,
-//             message: "An error occurred while sending batch messages",
-//         });
-//     }
-// };
-
-module.exports = {
-    sendBulkMessagesIn,
 };
 
 module.exports = {

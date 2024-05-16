@@ -5,9 +5,7 @@ const router = express.Router();
 // router.post("/sample", sampleController.createSampleData);
 
 const { sendSimpleTextTemplate } = require("../controllers/messageController");
-const {
-  sendBulkMessagesIn,
-} = require("../controllers/sendbulkmessagesController");
+const { sendBulkMessagesIn } = require("../controllers/sendbulkmessagesController");
 router.get("/hello", (req, res) => {
   res.send("Hello, world!");
 });
