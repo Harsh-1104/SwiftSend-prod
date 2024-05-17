@@ -28,18 +28,6 @@
 	<link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" />
 	<!-- custom Css-->
 	<link href="/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
-
-	<!-- Font Awesome Files -->
-	<link href="/assets/fontawesome/css/all.min.css" rel="stylesheet" />
-	<link href="/assets/fontawesome/css/solid.css" rel="stylesheet" />
-	<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" />
-	<link href="/assets/fontawesome/css/regular.css" rel="stylesheet" />
-	<link href="/assets/fontawesome/css/regular.min.css" rel="stylesheet" />
-	<link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
-	<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
-
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7096395024403516"
-		crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -210,7 +198,145 @@
 							<h3 class="text-center mb-0">Application stats</h3>
 						</div>
 					</div>
-					<div class="row mb-4">
+					<div class="row">
+						<div class="col-lg-3">
+							<div class="card card-height-100">
+								<div class="card-header align-items-center d-flex">
+									<h4 class="card-title mb-0 flex-grow-1">Daily Limit</h4>
+								</div>
+								<div class="card-body py-0">
+									<div class="list-group-item p-0 m-0" id="limit-graph"></div>
+									<ul class="list-group list-group-flush border-dashed mb-0">
+										<li class="list-group-item px-0">
+											<div class="d-flex align-items-center">
+												<div class="flex-shrink-0 avatar-xs">
+													<span class="avatar-title bg-light p-1 rounded-circle">
+														<i class="bx bxs-message-detail align-middle text-primary"></i>
+													</span>
+												</div>
+												<div class="flex-grow-1 ms-2">
+													<h6 class="mb-1 text-muted">Today's Single Message</h6>
+												</div>
+												<div class=" flex-shrink-0 text-end">
+													<p class="text-success fs-14 mb-0 fw-semibold" id="dailysinglemsg">
+													</p>
+												</div>
+											</div>
+										</li>
+										<li class="list-group-item px-0">
+											<div class="d-flex align-items-center">
+												<div class="flex-shrink-0 avatar-xs">
+													<span class="avatar-title bg-light p-1 rounded-circle">
+														<i class="bx bx-broadcast align-middle text-primary"></i>
+													</span>
+												</div>
+												<div class="flex-grow-1 ms-2">
+													<h6 class="mb-1 text-muted">Today's Broadcast</h6>
+												</div>
+												<div class="flex-shrink-0 text-end">
+													<p class="text-success fs-14 mb-0 fw-semibold" id="dailybroadcast">
+													</p>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-9">
+							<div class="d-flex flex-column h-100">
+								<div class="row h-100">
+									<div class="col-lg-4 col-md-6">
+										<div class="card">
+											<div class="card-body">
+												<div class="d-flex align-items-center">
+													<div class="avatar-sm flex-shrink-0">
+														<span
+															class="avatar-title bg-light text-primary rounded-circle fs-3">
+															<i class="ri-money-dollar-circle-fill align-middle"></i>
+														</span>
+													</div>
+													<div class="flex-grow-1 ms-3">
+														<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
+															Total Message
+														</p>
+														<h4 class=" mb-0">
+															<span class="counter-value" data-target=""
+																id="totalMsg">0</span>
+														</h4>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-6">
+										<div class="card">
+											<div class="card-body">
+												<div class="d-flex align-items-center">
+													<div class="avatar-sm flex-shrink-0">
+														<span
+															class="avatar-title bg-light text-primary rounded-circle fs-3">
+															<i class="ri-arrow-up-circle-fill align-middle"></i>
+														</span>
+													</div>
+													<div class="flex-grow-1 ms-3">
+														<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
+															Total Single Message
+														</p>
+														<h4 class=" mb-0">
+															<span class="counter-value" data-target=""
+																id="totalSingleMsg">0</span>
+														</h4>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-6">
+										<div class="card">
+											<div class="card-body">
+												<div class="d-flex align-items-center">
+													<div class="avatar-sm flex-shrink-0">
+														<span
+															class="avatar-title bg-light text-primary rounded-circle fs-3">
+															<i class="ri-arrow-down-circle-fill align-middle"></i>
+														</span>
+													</div>
+													<div class="flex-grow-1 ms-3">
+														<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
+															Total Broadcast
+														</p>
+														<h4 class=" mb-0">
+															<span class="counter-value" data-target=""
+																id="totalBroadcastMsg">0</span>
+														</h4>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xl-12">
+										<div class="card">
+											<div class="card-header border-0 align-items-center d-flex">
+												<h4 class="card-title mb-0 flex-grow-1">Template Graph</h4>
+											</div>
+											<div class="card-body p-0 pb-3">
+												<div class="card-body">
+													<div id="column_rotated_labels" data-colors='["--vz-primary"]'
+														class="apex-charts" dir="ltr"></div>
+												</div>
+											</div><!-- end cardbody -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="row mb-4">
 						<div class="col-6">
 							<div class="d-flex align-items-center justify-content-start gap-3">
 								<input type="text" id="time_period" class="form-control mr-3 w-100"
@@ -224,7 +350,7 @@
 								</button>
 							</div>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="tab-content text-muted">
 						<div class="tab-pane active show" id="whatsappcount" role="tabpanel">
@@ -255,7 +381,7 @@
 
 	<div class="customizer-setting" id="chatbot">
 		<div class="btn-info btn-rounded shadow-lg btn btn-icon btn-lg p-2">
-			<i class="fa-solid fa-comment" id="iconchat"></i>
+			<i class="mdi mdi-robot" id="iconchat"></i>
 		</div>
 	</div>
 
@@ -319,7 +445,6 @@
 	<script src="/assets/js/main.js"></script>
 	<script src="/assets/js/validate.js"></script>
 	<script src="/assets/js/chatbot.js"></script>
-	<script src="/assets/js/voiceRecognition.js"></script>
 
 	<script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="/assets/libs/simplebar/simplebar.min.js"></script>
@@ -328,40 +453,132 @@
 	<script src="/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
 	<script src="/assets/js/plugins.js"></script>
 
-	<!-- apexcharts -->
-	<script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
-
 	<!-- Sweet Alerts js -->
 	<script src="/assets/sweetalert2/sweet-alert.init.js"></script>
 	<script src="/assets/sweetalert2/sweetalert2.all.js"></script>
 
-	<!-- Vector map-->
-	<script src="/assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
-	<script src="/assets/libs/jsvectormap/maps/world-merc.js"></script>
-
-	<!--Swiper slider js-->
-	<script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
-
 	<!-- Dashboard init -->
 	<script src="/assets/js/pages/dashboard-ecommerce.init.js"></script>
 
+	<!-- apexcharts -->
+	<script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
+
 	<!-- App js -->
 	<script src="/assets/js/app.js"></script>
-
-	<!-- prismjs plugin -->
-	<script src="/assets/libs/prismjs/prism.js"></script>
 
 	<script>
 		$(document).ready(() => {
 			chkLogin();
 
-			function displayPieChart(count, id, type) {
+			let baroptions = {
+				series: [
+					{
+						name: "Servings", data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65, 35]
+					}
+				],
+				chart: {
+					height: 200, type: "bar", toolbar: { show: !1 }
+				},
+				plotOptions: {
+					bar: { borderRadius: 4, columnWidth: "30%" }
+				},
+				colors: getChartColorsArray("column_rotated_labels"),
+				xaxis: {
+					labels: { rotate: -45 },
+					categories: ["Apples", "Oranges", "Strawberries", "Pineapples", "Mangoes", "Bananas", "Blackberries", "Pears", "Watermelons", "Cherries", "Pomegranates", "Tangerines", "Papayas"],
+					tickPlacement: "on"
+				},
+				yaxis: {
+					title: { text: "Servings" }
+				},
+				fill: {
+					type: "gradient",
+				}
+			}
+			let chart = new ApexCharts(document.querySelector("#column_rotated_labels"), baroptions).render();
+
+			function DashboardData() {
+				// let obj = {};
+				$.ajax({
+					url: "/api/dashboard/getOverallReportData",
+					method: "GET",
+					success: function (val) {
+						if (val.success) {
+							let totalSingleMsg = 0, totalBroadcastMsg = 0, totalMsg = 0, output = ``, obj = {};
+
+							output += `<div class="row">`;
+							for (var i in val.data) {
+								totalSingleMsg += val.data[i].single_message_count;
+								totalBroadcastMsg += val.data[i].boardcast_count;
+								totalMsg += val.data[i].total_count;
+
+								var countmsgarray = new Array();
+
+								countmsgarray.push(val.data[i].single_message_count);
+								countmsgarray.push(val.data[i].boardcast_count);
+								obj[i] = countmsgarray;
+
+								output += `<div class="col-lg-4 col-md-6 col-sm-12">
+													<div class="card card-animate">
+														<div class="card-header">
+															<div class="fw-medium text-primary fs-14">
+																<span class="text-muted">Instance : </span>
+																${val.data[i].i_name}
+															</div>
+														</div>
+														<div id="id_${val.data[i].iid}" class="card-body">
+															<div class="p-0 text-dark fs-15">
+																<div id="message_chart_${i}" class="apex-charts" dir="ltr"></div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-primary align-middle"></i>
+																		Single Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val.data[i].single_message_count}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">
+																		<i class="ri-record-circle-fill text-warning align-middle"></i>	
+																		Bulk Message
+																	</span>
+																	<span class="text-primary fw-semibold">${val.data[i].boardcast_count}</span>
+																</div>
+																<hr />
+																<div class="d-flex justify-content-between">
+																	<span class="text-muted fw-medium">Total</span>
+																	<span class="text-primary fw-semibold">${val.data[i].total_count}</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>`;
+							}
+							output += `</div>`;
+
+							$('#record').html(output);
+							for (let i = 0; i < Object.keys(obj).length; i++) {
+								displayPieChart(obj[i], `message_chart_${i}`);
+							}
+
+							$('#totalSingleMsg').html(totalSingleMsg).prop('data-target', totalSingleMsg);
+							$('#totalBroadcastMsg').html(totalBroadcastMsg).prop('data-target', totalBroadcastMsg);
+							$('#totalMsg').html(totalMsg).prop('data-target', totalMsg);
+						}
+
+					}, error: (error) => {
+						if (error.status === 500) InternalServerError();
+					}
+				})
+			}
+			DashboardData();
+
+			function displayPieChart(count, id) {
 				let options = {
 					series: count,
 					chart: {
 						height: 250,
 						width: 250,
-						type: "pie",
+						type: "donut",
 					},
 					legend: {
 						show: false
@@ -371,141 +588,89 @@
 							enabled: 2
 						}
 					},
-					colors: ['#405189', '#f06548', '#f7b84b', '#299cdb', '#0ab39c', '#3577f1', '#6559cc']
-				}
-				switch (type) {
-					case 'whatsapp': {
-						options['labels'] = [
-							"Single Message",
-							"Document Message",
-							"Template Bulk Message",
-							"Custom Bulk Messages",
-							"Channel Bulk Message",
-						];
-						break;
-					}
-
-					case 'email': {
-						options['labels'] = [
-							"Template Bulk Mail",
-							"Custom Bulk Mail",
-							"Channel Bulk Mail",
-						];
-						break;
-					}
-
-					default: {
-						options['labels'] = []
+					labels: [
+						"Single Message",
+						"Broadcast Message",
+					],
+					colors: [
+						'#405189',
+						'#f7b84b'
+					],
+					plotOptions: {
+						pie: {
+							donut: {
+								size: '50%'
+							}
+						}
 					}
 				}
-				chart = new ApexCharts(document.querySelector("#" + id), options).render();
+				chart = new ApexCharts(document.querySelector(`#${id}`), options).render();
 			}
 
-			function message_summary() {
+			function getDailyReportData() {
 				$.ajax({
-					url: "/message_summary",
+					url: "/api/dashboard/getDailyReportData",
 					method: "GET",
 					success: function (val) {
-						let output = ``;
-						let obj = {};
-						switch (val.status_code) {
-							case '500': {
-								InternalServerError();
-								break;
-							}
-							case '404': {
-								output += `<div class="text-center">
-                                            <h5 class="p-3">
-												No Message sent from any instance / No Instance created
-                                            </h5>
-                                            <a class="btn btn-soft-success" href="/instance">
-                                                Create Instance
-                                            </a>
-                                        </div>`;
-								break;
+						if (val.success) {
+							let total_message = 0, dailySingleMsg = 0, dailyBroadcastMsg = 0;
+
+							for (let i = 0; i < val.data.length; i++) {
+								dailySingleMsg += val.data[i].single_message_count;
+								dailyBroadcastMsg += val.data[i].boardcast_count;
+								total_message += val.data[i].total_count;
 							}
 
-							default: {
-								output += `<div class="row">`;
+							$('#dailysinglemsg').html(dailySingleMsg);
+							$('#dailybroadcast').html(dailyBroadcastMsg);
 
-								for (let i = 0; i < val.length; i++) {
-									var countmsgarray = new Array();
-									countmsgarray.push(val[i].single_message_count);
-									countmsgarray.push(val[i].single_document_count);
-									countmsgarray.push(val[i].bulk_message_template_count);
-									countmsgarray.push(val[i].bulk_message_custom_count);
-									countmsgarray.push(val[i].bulk_message_channel_count);
-									obj[i] = countmsgarray;
-									const total =
-										val[i].single_message_count +
-										val[i].single_document_count +
-										val[i].bulk_message_template_count +
-										val[i].bulk_message_custom_count +
-										val[i].bulk_message_channel_count;
-									output += `<div class="col-lg-4 col-md-6 col-sm-12">
-													<div class="card card-animate">
-														<div class="card-header">
-															<div class="fw-medium text-primary fs-18">${val[i].i_name}</div>
-														</div>
-														<div id="id_${val[i].iid}" class="card-body">
-															<div class="p-0 text-dark fs-15">
-																<div id="message_chart_${i}" class="apex-charts" dir="ltr"></div>
-																<div class="d-flex justify-content-between">
-																	<span class="text-muted fw-medium">
-																		<i class="ri-record-circle-fill text-primary align-middle"></i>
-																		Single Message
-																	</span>
-																	<span class="text-primary fw-semibold">${val[i].single_message_count}</span>
-																</div>
-																<div class="d-flex justify-content-between">
-																	<span class="text-muted fw-medium">
-																		<i class="ri-record-circle-fill text-danger align-middle"></i>	
-																		Document Message
-																	</span>
-																	<span class="text-primary fw-semibold">${val[i].single_document_count}</span>
-																</div>
-																<div class="d-flex justify-content-between">
-																	<span class="text-muted fw-medium">
-																		<i class="ri-record-circle-fill text-warning align-middle"></i>	
-																		Template Bulk Message
-																	</span>
-																	<span class="text-primary fw-semibold">${val[i].bulk_message_template_count}</span>
-																</div>
-																<div class="d-flex justify-content-between">
-																	<span class="text-muted fw-medium">
-																		<i class="ri-record-circle-fill text-info align-middle"></i>	
-																		Custom Bulk Message
-																	</span>
-																	<span class="text-primary fw-semibold">${val[i].bulk_message_custom_count}</span>
-																</div>
-																<div class="d-flex justify-content-between">
-																	<span class="text-muted fw-medium">
-																		<i class="ri-record-circle-fill text-success align-middle"></i>	
-																		Channel Bulk Message
-																	</span>
-																	<span class="text-primary fw-semibold">${val[i].bulk_message_channel_count}</span>
-																</div>
-																<hr />
-																<div class="d-flex justify-content-between">
-																	<span class="text-muted fw-medium">Total</span>
-																	<span class="text-primary fw-semibold">${total}</span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>`;
-								}
-								output += `</div>`;
+							const percentage = (total_message * 100) / 1000;
+							let x = null;
+							if (percentage > 90) {
+								x = '["--vz-danger"]';
 							}
+							else if (percentage > 60 && percentage <= 90) {
+								x = '["--vz-warning"]';
+							}
+							else {
+								x = '["--vz-primary"]';
+							}
+
+							$('#limit-graph').html(`<div id="basic_radialbar" data-colors='${x}' class="apex-charts" dir="ltr"></div>`);
+
+							var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
+
+							var options = {
+								series: [percentage],
+								chart: {
+									height: 250,
+									type: "radialBar",
+								},
+								plotOptions: {
+									radialBar: {
+										startAngle: 0,
+										endAngle: 360,
+										hollow: {
+											size: '65%',
+										}
+									}
+								},
+								fill: {
+									type: 'gradient',
+								},
+								stroke: {
+									lineCap: 'round'
+								},
+								labels: [`(${total_message}/1000)`], colors: chartRadialbarBasicColors
+							}
+							chart = new ApexCharts(document.querySelector("#basic_radialbar"), options).render();
 						}
-						$('#record').html(output);
-						for (let i = 0; i < Object.keys(obj).length; i++) {
-							displayPieChart(obj[i], `message_chart_${i}`, "whatsapp");
-						}
+					}, error: (error) => {
+						if (error.status === 500) InternalServerError();
 					}
 				})
 			}
-			message_summary();
+			getDailyReportData();
 
 			function message_filter(startDate, endDate) {
 				$.ajax({

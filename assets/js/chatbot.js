@@ -1,7 +1,7 @@
 $(document).ready(() => {
   $(document).on("click", "#chatbot", () => {
     $("#emailchat-detailElem").toggle();
-    $("#iconchat").toggleClass("fa-solid fa-xmark fa-solid fa-comment");
+    $("#iconchat").toggleClass("ri-close-line mdi mdi-robot");
     $("#input").focus();
   });
 
