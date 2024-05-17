@@ -219,12 +219,12 @@ const createTemplate = async (req, res) => {
       } else {
         // If unsuccessful, return an error response
         res
-          .status(500)
+          .status(406)
           .json({ success: false, message: "Failed to create a Template" });
       }
     } catch (error) {
       console.log("error ", error.response.data);
-      res.status(500).json({
+      res.status(406).json({
         success: false,
         message: "An error occurred while creating the template",
       });
@@ -325,7 +325,7 @@ const mediaForTemplate = async (req, res) => {
       fileData,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": fileType, // Set content type explicitly
         },
       }
@@ -341,7 +341,7 @@ const mediaForTemplate = async (req, res) => {
       fileData, // Send the file data to the second API
       {
         headers: {
-          Authorization: `OAuth ${accessToken}`,
+          Authorization: `OAuth ${token}`,
           "Content-Type": fileType, // Set content type explicitly
         },
       }
@@ -351,9 +351,9 @@ const mediaForTemplate = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Media uploaded successfully ", data: response2.data });
+      .json({ success: true, message: "Media uploaded successfully ", data: response2.data });
   } catch (error) {
-    console.error("Error:", error.response.data);
+    console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };

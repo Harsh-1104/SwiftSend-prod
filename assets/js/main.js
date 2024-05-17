@@ -198,8 +198,8 @@ function previewFile(file, target) {
     function getFileType(mimeType) {
         if (mimeType.startsWith('image')) {
             return 'image';
-        } else if (mimeType === 'application/pdf') {
-            return 'pdf';
+        } else if (mimeType.startsWith('application')) {
+            return 'doc';
         } else {
             return 'other';
         }
@@ -213,7 +213,7 @@ function previewFile(file, target) {
                 .css('height', 'auto')
                 .html(`<img src="${e.target.result}" class="img-fluid rounded-2" />`);
         }
-        if (fileType === 'pdf') {
+        if (fileType === 'doc') {
             $('#doc-preview')
                 .css('display', 'flex')
                 .css('height', 'auto')
@@ -229,10 +229,20 @@ function previewFile(file, target) {
                 if (target == "DOCUMENT") {
                     $('#DOCUMENT').removeClass('form-control-success');
                     $('#DOCUMENT').addClass('form-control-danger');
+
+                    $('#doc-preview')
+                        .css('display', 'flex')
+                        .css('height', '10rem')
+                        .html(`<i class="bx bxs-file-doc align-middle fs-2 text-primary"></i>`)
                 }
                 if (target == "IMAGE") {
                     $('#IMAGE').removeClass('form-control-success');
                     $('#IMAGE').addClass('form-control-danger');
+
+                    $('#media-preview')
+                        .css('display', 'flex')
+                        .css('height', '10rem')
+                        .html(`<i class="ri-image-2-fill align-middle fs-2 text-primary"></i>`);
                 }
             });
         }

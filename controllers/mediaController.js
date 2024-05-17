@@ -67,7 +67,7 @@ const uploadMedia = async (req, res) => {
     try {
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
-        createfolder(`wba/${apikey}/`);
+        createfolder(`wba/${apikey}`);
 
         const uploadedFile = req.files.image;
         const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;

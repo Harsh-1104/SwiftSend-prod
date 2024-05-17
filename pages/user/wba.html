@@ -558,56 +558,6 @@
                 loadTemplatePreview(selectedID);
             });
 
-            function previewFile(file, target) {
-                const reader = new FileReader();
-
-                function getFileType(mimeType) {
-                    if (mimeType.startsWith('image')) {
-                        return 'image';
-                    } else if (mimeType === 'application/pdf') {
-                        return 'pdf';
-                    } else {
-                        return 'other';
-                    }
-                }
-
-                reader.onload = function (e) {
-                    const fileType = getFileType(file.type);
-                    if (fileType === 'image') {
-                        $('#media-preview')
-                            .css('display', 'block')
-                            .css('height', 'auto')
-                            .html(`<img src="${e.target.result}" class="img-fluid rounded-2" />`);
-                    }
-                    if (fileType === 'pdf') {
-                        $('#doc-preview')
-                            .css('display', 'flex')
-                            .css('height', 'auto')
-                            .html(`<iframe  src="${e.target.result}" class="img-fluid rounded-2"></iframe>`)
-                    }
-                    if (fileType === 'other') {
-                        swal({
-                            title: "Invalid File Type.",
-                            type: "error",
-                            timer: 2000,
-                            showConfirmButton: false,
-                        }).then(function () {
-                            if (target == "DOCUMENT") {
-                                $('#DOCUMENT').removeClass('form-control-success');
-                                $('#DOCUMENT').addClass('form-control-danger');
-                            }
-                            if (target == "IMAGE") {
-                                $('#IMAGE').removeClass('form-control-success');
-                                $('#IMAGE').addClass('form-control-danger');
-                            }
-                        });
-                    }
-                };
-
-                if (file) {
-                    reader.readAsDataURL(file);
-                }
-            }
 
             let mediaID = "", file_name = "";
             $(document).on("change", "#DOCUMENT, #IMAGE", (e) => {
