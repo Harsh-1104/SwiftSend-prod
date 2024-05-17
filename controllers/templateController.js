@@ -229,12 +229,26 @@ const createTemplate = async (req, res) => {
                 message: "An error occurred while creating the template",
             });
         }
+      );
+      console.log("response : ", response.status === 200);
+
+      if (response.status === 200) {
+        // If successful, return a success response
+        res
+          .status(200)
+          .json({ success: true, message: "Template created successfully" });
+      } else {
+        // If unsuccessful, return an error response
+        res
+          .status(406)
+          .json({ success: false, message: "Failed to create a Template" });
+      }
     } catch (error) {
-        console.log("this is my error", error.data);
-        res.status(500).json({
-            success: false,
-            message: "An error occurred while creating the templatee",
-        });
+      console.log("error ", error.response.data);
+      res.status(406).json({
+        success: false,
+        message: "An error occurred while creating the template",
+      });
     }
 };
 
@@ -348,14 +362,53 @@ const mediaForTemplate = async (req, res) => {
         );
 
         console.log("Response from second API:", response2.data);
+      
+    // Access uploaded file using the correct key
+    const uploadedFile = req.files.file;
 
-        res
-            .status(200)
-            .json({ message: "Media uploaded successfully ", data: response2.data });
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Internal Server Error");
-    }
+    // Handle the uploaded file as needed
+    const fileSize = uploadedFile.size;
+    const fileType = uploadedFile.mimetype;
+    const fileData = uploadedFile.data;
+
+    console.log("Uploaded file details:", uploadedFile);
+
+    const response1 = await axios.post(
+      `https://graph.facebook.com/${version}/1169917090689044/uploads?file_length=${fileSize}&file_type=${fileType}`,
+      fileData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": fileType, // Set content type explicitly
+        },
+      }
+    );
+
+    const secretKey = response1.data.id;
+
+    console.log("Secret Key:", secretKey);
+
+    // Make the second API call
+    const response2 = await axios.post(
+      `https://graph.facebook.com/${version}/${secretKey}`,
+      fileData, // Send the file data to the second API
+      {
+        headers: {
+          Authorization: `OAuth ${token}`,
+          "Content-Type": fileType, // Set content type explicitly
+        },
+      }
+    );
+
+    console.log("Response from second API:", response2.data);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Media uploaded successfully ", data: response2.data });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 
