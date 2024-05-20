@@ -1,7 +1,7 @@
 const axios = require("axios");
 const crypto = require("crypto");
 const conn = require('../DB/connection');
-
+const logAPI = require("../function/log");
 //Credentials
 
 const wabaPhoneID = process.env.WABA_PHONEID;
@@ -123,12 +123,19 @@ const sendSimpleTextTemplate = async (req, res) => {
                 console.log("this my my payload :  ", messageTypeInfo);
 
                 await insertIntoMessageInfo(messageTypeInfo);
+                console.log("url:", req.url);
+                console.log("apikey:", apikey);
+                console.log("iid:", iid);
+
+                logAPI(req.url, apikey, iid, "S");
                 res.status(200).json({ success: true, message: "Message sent successfully" });
             } else {
+                logAPI(req.url, apikey, iid, "E");
                 res.status(417).json({ success: false, message: "Failed to send message" });
             }
         } catch (error) {
             console.log("error ", error);
+            logAPI(req.url, apikey, iid, "E");
             res.status(417).json({
                 success: false,
                 message: error,
@@ -136,6 +143,7 @@ const sendSimpleTextTemplate = async (req, res) => {
         }
     } catch (error) {
         console.log("error", error);
+        logAPI(req.url, apikey, iid, "E");
         res.status(500).json({
             success: false,
             message: "An error occurred while sending the message",

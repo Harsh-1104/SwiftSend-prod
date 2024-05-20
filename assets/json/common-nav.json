@@ -33,6 +33,11 @@
                 "page": "Channel",
                 "link": "channel",
                 "icon": "mdi mdi-account-group"
+            },
+            {
+                "page": "Log Details",
+                "link": "logs",
+                "icon": "ri-list-check-2"
             }
         ]
     },

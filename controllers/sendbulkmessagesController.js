@@ -1,6 +1,7 @@
 const axios = require("axios");
 const crypto = require("crypto");
 const conn = require('../DB/connection');
+const logAPI = require("../function/log");
 
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
@@ -20,6 +21,7 @@ const insertIntoMessageInfo = async (data) => {
     return new Promise((resolve, reject) => {
         conn.query(query, [values], (error, results, fields) => {
             if (error) {
+                log.lo
                 reject(error);
                 return;
             }
@@ -90,6 +92,7 @@ const sendBulkMessagesIn = async (req, res) => {
                         success = false;
                     } else {
                         success = true;
+
                         // Accumulate message info data
                         const myData = response.data;
                         const messageId = myData.messages[0].id;
@@ -117,10 +120,12 @@ const sendBulkMessagesIn = async (req, res) => {
             // Bulk insertion into message_info table
             await insertIntoMessageInfo(messageInfoData);
 
+            logAPI(req.url, apikey, iid, "S");
             res
                 .status(200)
                 .json({ success: true, message: "Messages sent successfully" });
         } else {
+            logAPI(req.url, apikey, iid, "E");
             res.status(500).json({
                 success: false,
                 message: "Failed to send one or more messages",
@@ -128,6 +133,7 @@ const sendBulkMessagesIn = async (req, res) => {
         }
     } catch (error) {
         console.log("error", error);
+        logAPI(req.url, apikey, iid, "E");
         res.status(500).json({
             success: false,
             message: "An error occurred while sending the messages",
