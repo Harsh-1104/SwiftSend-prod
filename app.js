@@ -2749,6 +2749,41 @@ app.post("/getAdminData", function (req, res) {
     });
 });
 
+//log display
+app.get("/user/api/log/:iid", (req, res) => {
+    apikey = req.headers.apikey || req.cookies.apikey;
+    const isValidapikey = checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            let iid = req.params.iid;
+
+            var query = `select * from log where apikey='${apikey}'and instance_id='${iid}'`;
+
+            if (req.query.type && req.query.type != "null") {
+                query += ` AND type = '${req.query.type}'`;
+            }
+
+            if (req.query.api && req.query.api != "null") {
+                query += ` AND api = '/${req.query.api}'`;
+            }
+
+            query += `ORDER BY logtime DESC`;
+
+            conn.query(query,
+                function (err, ret) {
+                    if (err || ret.length < 0) return res.send(status.nodatafound());
+                    res.send(ret);
+                }
+            )
+        }
+    } catch {
+        res.status(404).send({
+            "Error Code": "404",
+            "Message": "Apikey is Invalid"
+        });
+    }
+});
+
 app.get("/ticket_users", (req, res) => {
     conn.query(
         `SELECT distinct s.apikey,u.uname FROM support_ticket s,users u where s.apikey=u.apikey`,
