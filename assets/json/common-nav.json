@@ -20,6 +20,11 @@
                 "icon": "bx bx-broadcast"
             },
             {
+                "page": "Broadcast status",
+                "link": "broadcastlist",
+                "icon": "mdi mdi-list-status"
+            },
+            {
                 "page": "Contacts",
                 "link": "contact-list",
                 "icon": "bx bxs-contact"

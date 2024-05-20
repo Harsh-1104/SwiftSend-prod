@@ -640,6 +640,7 @@
     <script>
         $(document).ready(() => {
             chkLogin();
+
             let result;
             let templatedata;
             function gettemplate() {
@@ -682,7 +683,7 @@
                     }
                 }
             });
-
+          
             $(`#Headermsg`).on('input', function () {
                 var originalValue = $(this).val();
 
@@ -1280,6 +1281,7 @@
                     id: 'url_btn_text',
                     placeholder: 'Button Text'
                 });
+              
                 const label2 = $('<label>', {
                     class: 'col-form-label col-2 mb-3',
                     text: 'URL:'
@@ -1290,6 +1292,7 @@
                     id: 'url',
                     placeholder: 'https://example.com'
                 });
+
                 const removeBtn = $('<button>', {
                     class: 'btn btn-danger mr-2 col-2 mb-3',
                     text: 'Remove'
@@ -1362,6 +1365,7 @@
             $(document).on('click', '#submitforapproval', () => {
 
                 component = [];
+              
                 if (!$("input[name='MediaCategory']:checked").val()) {
                     $('#err_document_headermedia').text("Please select a Media category.").addClass('text-danger');
                 } else {
@@ -1470,7 +1474,6 @@
 
                     if (sampleArr[i] == "Buttons") {
                         if (compare_object[`${sampleArr[i]}`].length > 0) {
-
                             for (let k = 0; k < compare_object[`${sampleArr[i]}`].length; k++) {
                                 if (compare_object[`${sampleArr[i]}`][k].type == "phone") {
                                     nullfield_validation(`phone_btn_text`);
@@ -1495,7 +1498,6 @@
                                     }
                                 }
                             }
-
                         }
                         else {
                             validButton = true
@@ -1603,6 +1605,7 @@
                                                     "body_text": [],
                                                 }
                                             }
+                                          
                                             const regex = /\{\{\d+\}\}/g;
                                             const matches = (bodyPayload.text.match(regex) || []);
                                             for (let i = 0; i < matches.length; i++) {
@@ -1670,6 +1673,7 @@
                                                         </span>
                                                     </span>`);
                         },
+
                         success: function (val) {
                             console.log("val", val);
                             if (val.success) {
@@ -1687,6 +1691,7 @@
                                                     <span class="d-none d-lg-inline-block d-md-inline-block">
                                                         submit for approval
                                                     </span>`);
+
                                     $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
                                     $('#v-pills-bill-info').addClass('show active');
 
