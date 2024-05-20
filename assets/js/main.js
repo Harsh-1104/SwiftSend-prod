@@ -192,6 +192,95 @@ function copy_api(id) {
     navigator.clipboard.writeText(copyText.value || copyText.textContent);
 }
 
+function previewFile(file, target) {
+    const reader = new FileReader();
+
+    function getFileType(mimeType) {
+        if (mimeType.startsWith('image')) {
+            return 'image';
+        } else if (mimeType.startsWith('application')) {
+            return 'doc';
+        } else {
+            return 'other';
+        }
+    }
+
+    reader.onload = function (e) {
+        const fileType = getFileType(file.type);
+        if (fileType === 'image') {
+            $('#media-preview')
+                .css('display', 'block')
+                .css('height', 'auto')
+                .html(`<img src="${e.target.result}" class="img-fluid rounded-2" />`);
+        }
+        if (fileType === 'doc') {
+            $('#doc-preview')
+                .css('display', 'flex')
+                .css('height', 'auto')
+                .html(`<iframe  src="${e.target.result}" class="img-fluid rounded-2"></iframe>`)
+        }
+        if (fileType === 'other') {
+            swal({
+                title: "Invalid File Type.",
+                type: "error",
+                timer: 2000,
+                showConfirmButton: false,
+            }).then(function () {
+                if (target == "DOCUMENT") {
+                    $('#DOCUMENT').removeClass('form-control-success');
+                    $('#DOCUMENT').addClass('form-control-danger');
+
+                    $('#doc-preview')
+                        .css('display', 'flex')
+                        .css('height', '10rem')
+                        .html(`<i class="bx bxs-file-doc align-middle fs-2 text-primary"></i>`)
+                }
+                if (target == "IMAGE") {
+                    $('#IMAGE').removeClass('form-control-success');
+                    $('#IMAGE').addClass('form-control-danger');
+
+                    $('#media-preview')
+                        .css('display', 'flex')
+                        .css('height', '10rem')
+                        .html(`<i class="ri-image-2-fill align-middle fs-2 text-primary"></i>`);
+                }
+            });
+        }
+    };
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
+
+function replacePlaceholders(str, i, idname = "body") {
+
+    let p1 = new RegExp(`{{\\d+}}`, 'g');
+    let p2 = new RegExp(`\\*{{\\d+}}\\*`, 'g');
+    let p3 = new RegExp(`_\\*{{\\d+}}\\*_`, 'g');
+    let p4 = new RegExp(`_{{\\d+}}__`, 'g');
+
+    if (p1.test(str)) {
+        if (p2.test(str)) {
+            if (p3.test(str)) {
+                return str.replace(`_*{{${i}}}*_`, `<strong><i><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></i></strong>`);
+            }
+            return str.replace(`*{{${i}}}*`, `<strong><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></strong>`);
+        }
+
+        if (p4.test(str)) {
+            if (p3.test(str)) {
+                return str.replace(`_*{{${i}}}*_`, `<strong><i><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></i></strong>`);
+            }
+            return str.replace(`_{{${i}}}_`, `<i><span id="${idname}${i}_val" class="text-primary">{{${i}}}</span></i>`);
+        }
+
+        return str.replace(`{{${i}}}`, `<span id="${idname}${i}_val" class="text-primary">{{${i}}}</span>`);
+    }
+
+    return str;
+}
+
 $(document).ready(function () {
     $(document).on("click", ".copy", function () {
         var param = $(this).attr("id").substring(5);
@@ -224,15 +313,13 @@ $(document).ready(function () {
     });
 
     switch (page[3]) {
-        case 'logs':
         case 'dashboard':
         case 'instance':
-        case 'customtemplate':
+        case 'template':
         case 'support-ticket':
         case 'updateprofile':
         case 'profile':
-        case 'subscription':
-        case 'addpasscode': {
+        case 'subscription': {
             fetch('../../assets/json/common-nav.json')
                 .then(response => response.json())
                 .then(data => {
@@ -350,14 +437,12 @@ $(document).ready(function () {
             })
 
             switch (page[5].split('?')[0]) {
-                case 'logs':
+                case 'wba':
+                case 'broadcast':
+                case 'broadcastlist':
                 case 'bulkmessage':
-                case 'bulkmail':
                 case 'contact-list':
-                case 'channel':
-                case 'individualworkflow':
-                case 'workflow':
-                case 'chat': {
+                case 'channel': {
                     fetch('../../assets/json/common-nav.json')
                         .then(response => response.json())
                         .then(data => {

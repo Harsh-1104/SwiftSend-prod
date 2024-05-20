@@ -9,8 +9,8 @@
     <title>Contact-list</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Bulk message services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
@@ -33,15 +33,6 @@
     <link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Font Awesome Files -->
-    <link href="/assets/fontawesome/css/all.min.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/solid.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/regular.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/regular.min.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
 </head>
 
 <body class="p-0">
@@ -244,10 +235,6 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end col-6">
-                            <button type="button" class="btn btn-soft-danger waves-effect waves-light fs-15 me-2"
-                                id="mic" data-bs-toggle="modal" data-bs-target="#voice_input">
-                                <i class="mdi mdi-microphone"></i>
-                            </button>
                             <button type="button" class="btn btn-success add-btn me-2" data-bs-toggle="modal"
                                 id="addcontactmodalbtn" data-bs-target="#showModal">
                                 <i class="ri-add-circle-line align-middle me-lg-2"></i>
@@ -258,7 +245,7 @@
                                 <i class="ri-delete-bin-2-line me-lg-2"></i>
                                 <span class="d-none d-lg-inline-block">Delete Selected</span>
                             </button>
-                            <div class="btn-group" data-bs-toggle="tooltip" data-bs-placement="top" title="Import">
+                            <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Import">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     <i class="bx bx-import me-lg-2"></i>
@@ -513,7 +500,7 @@
 
     <div class="customizer-setting" id="chatbot">
         <div class="btn-info btn-rounded shadow-lg btn btn-icon btn-lg p-2">
-            <i class="fa-solid fa-comment" id="iconchat"></i>
+            <i class="mdi mdi-robot" id="iconchat"></i>
         </div>
     </div>
 
@@ -1462,120 +1449,6 @@
                 }
             })
 
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "add" && data[1] == "contact") {
-                        $("#addcontactmodalbtn").click();
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if (data[0] == "import" && data[1] == "from" && data[2] == "Google" && data[3] == "sheet") {
-                        $("#gsheetimport").click();
-                    }
-                    else if (data[0] == "import" && data[1] == "from" && data[2] == "csv" && data[3] == "file") {
-                        $("#csvimport").click();
-                    }
-                    else if ((data[0] == "edit" || data[0] == "update") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `contact`,
-                                    paramstr: `name='${data[1]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".edit-item-btn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".edit-item-btn")[i].getAttribute("data-id") == data[0].contact_id) {
-                                        $(".edit-item-btn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if ((data[0] == "delete" || data[0] == "remove") && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `contact`,
-                                    paramstr: `name='${data[1]}' and instance_id='${iid}'`,
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let wfcount = $(".remove-item-btn").length;
-                                // alert($(".editBtn")[0].getAttribute("data-id"));
-                                for (let i = 0; i < wfcount; i++) {
-                                    if ($(".remove-item-btn")[i].getAttribute("data-id") == data[0].contact_id) {
-                                        $(".remove-item-btn")[i].click();
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmessage" || (data[2] == "bulk" && data[3] == "message"))) {
-                        location.href = `/instance/${iid}/bulkmessage`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmail" || (data[2] == "bulk" && data[3] == "mail"))) {
-                        location.href = `/instance/${iid}/bulkmail`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "contacts" || (data[2] == "contact" && data[3] == "list"))) {
-                        location.href = `/instance/${iid}/contact-list`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "channel") {
-                        location.href = `/instance/${iid}/channel`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "chat") {
-                        location.href = `/instance/${iid}/chat`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "workflow") {
-                        location.href = `/instance/${iid}/workflow`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
-
             $(document).on('click', ".switch-active", function () {
                 const cid = $(this).attr('id');
                 let cval = ($(`#${cid}:checked`).length === 0) ? 1 : 0;
@@ -1625,7 +1498,7 @@
                         text: "You can't send message / mail to this contact ..!!",
                         type: 'warning',
                         showCancelButton: true,
-                        confirmButtonText: 'Yes, delete it',
+                        confirmButtonText: 'Yes, Disable it',
                         cancelButtonText: 'No, cancel',
                         confirmButtonClass: 'btn btn-success mx-2',
                         cancelButtonClass: 'btn btn-outline-danger mx-2',
@@ -1693,7 +1566,6 @@
             })
         });
     </script>
-
 </body>
 
 </html>

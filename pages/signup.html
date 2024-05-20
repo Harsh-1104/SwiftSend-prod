@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <title>Sign Up | SwiftSend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Bulk message services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="../assets/images/favicon.ico">
 
@@ -26,14 +26,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-    <!-- Font Awesome Files -->
-    <link href="../assets/fontawesome/css/all.min.css" rel="stylesheet">
-    <link href="../assets/fontawesome/css/solid.css" rel="stylesheet">
-    <link href="../assets/fontawesome/css/solid.min.css" rel="stylesheet">
-    <link href="../assets/fontawesome/css/regular.css" rel="stylesheet">
-    <link href="../assets/fontawesome/css/regular.min.css" rel="stylesheet">
-    <link href="../assets/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-    <link href="../assets/fontawesome/css/fontawesome.css" rel="stylesheet">
 </head>
 
 <body>
@@ -248,7 +240,7 @@
                                                     </label>
                                                     <div class="position-relative auth-pass-inputgroup">
                                                         <input type="password"
-                                                            class="form-control pe-5 password-input required"
+                                                            class="form-control pe-5 password-input-hide-show required"
                                                             name="password" placeholder="Enter password" id="password"
                                                             data-type="password" autocomplete="on" />
                                                         <button
@@ -266,7 +258,8 @@
                                                         <span class="text-danger" id="err_cnfm_password"></span>
                                                     </label>
                                                     <div class="position-relative auth-pass-inputgroup">
-                                                        <input type="password" class="form-control pe-5 required"
+                                                        <input type="password"
+                                                            class="form-control pe-5 required password-input-hide-show"
                                                             name="password" placeholder="Enter password"
                                                             id="cnfm_password" data-type="password" autocomplete="on" />
                                                         <button
@@ -473,11 +466,32 @@
                                     </span>`);
                         },
                         success: function (val) {
-                            $("#warning_lbl, #verify_email_div").removeClass("d-none");
-                            $("#sendOTP")
-                                .removeClass('btn-warning btn-success')
-                                .addClass('btn-primary')
-                                .html("Resend");
+                            switch (val.status_code) {
+                                case '409': {
+                                    document.getElementById('email').focus();
+                                    swal({
+                                        text: 'User with this email alerady exist',
+                                        type: 'error',
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    })
+                                    document.getElementById('email').classList.add('form-control-danger');
+                                    $("#sendOTP")
+                                        .removeClass('btn-warning btn-success')
+                                        .addClass('btn-primary')
+                                        .html("Send Code");
+                                    break;
+                                }
+
+                                case '200': {
+                                    $("#warning_lbl, #verify_email_div").removeClass("d-none");
+                                    $("#sendOTP")
+                                        .removeClass('btn-warning btn-success')
+                                        .addClass('btn-primary')
+                                        .html("Resend");
+                                    break;
+                                }
+                            }
                         }
                     })
                 }
