@@ -127,7 +127,7 @@ const sendBulkMessagesIn = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log("error", error);
+        console.log("error", error.response.data);
         res.status(500).json({
             success: false,
             message: "An error occurred while sending the messages",

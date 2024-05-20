@@ -443,7 +443,8 @@
                                                                         selected.</span>
                                                                 </div>
                                                                 <div class="mb-3 position-relative">
-                                                                    <textarea class="form-control" id="bodymsg" rows="5"
+                                                                    <textarea class="form-control scrollbar-custom"
+                                                                        id="bodymsg" rows="5"
                                                                         style="resize: none;"></textarea>
                                                                     <div class="text-end mt-1 character-counter">
                                                                         <span id="BodycharacterCounter"></span>
@@ -500,11 +501,12 @@
                                                                             class="ri-arrow-left-line label-icon align-middle fs-16"></i>Back</button>
                                                                 </div>
                                                                 <button type="button" id="submitforapproval"
-                                                                    class="btn btn-success btn-label right ms-auto nexttab nexttab"
-                                                                    data-nexttab="v-pills-bill-address-tab"><i
-                                                                        class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Submit
-                                                                    for
-                                                                    Approval</button>
+                                                                    class="btn btn-primary btn-load right ms-auto nexttab nexttab"
+                                                                    data-nexttab="v-pills-bill-address-tab"> <i
+                                                                        class="mdi mdi-send me-lg-2 me-md-2"></i><span
+                                                                        class="d-none d-lg-inline-block d-md-inline-block">
+                                                                        Submit for approval
+                                                                    </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -638,9 +640,23 @@
     <script>
         $(document).ready(() => {
             chkLogin();
+            let result;
+            let templatedata;
+            function gettemplate() {
+                $.ajax({
+                    url: `/api/template/gettemplate`,
+                    method: `get`,
+                    data: result,
+                    success: function (result) {
+                        if (result.success) {
+                            templatedata = result.data;
+                        }
+                    }
 
-
-            $('#document_Name').on('input', function () {
+                })
+            }
+            gettemplate();
+            $(document).on('input', '#document_Name', function () {
                 var originalValue = $(this).val();
                 var lowercaseValue = originalValue.toLowerCase().replace(/\s/g, '_');
                 $(this).val(lowercaseValue);
@@ -654,6 +670,16 @@
                 if (currentLength >= maxLength) {
                     $(this).val(lowercaseValue.substr(0, (maxLength - 1)));
                     remainingLength = 0;
+                }
+                for (var i = 0; i < templatedata.length; i++) {
+                    if ($("#document_Name").val() == templatedata[i].name) {
+                        swal({
+                            title: "Template with same name already exist!!!",
+                            type: "warning",
+                            timer: 3000,
+                            showConfirmButton: false,
+                        })
+                    }
                 }
             });
 
@@ -863,7 +889,6 @@
             addInputFieldButton1.addEventListener('click', function () {
                 addHeaderField('1'); // Change 'your_variable_name' to any other variable name you want
                 compare_object.header.dfield = 1;
-                console.log(compare_object);
             });
 
             // Function to remove input text field and corresponding label
@@ -921,7 +946,6 @@
                     format: selectedHeader,
                     dfield: 0
                 }
-                console.log("compare_object : ", compare_object)
             })
 
             $("#imageField, #documentField, #videoField").hide();
@@ -937,7 +961,6 @@
                 }
                 selectedMediaCategory = $(this).val()
                 compare_object.header.type = selectedMediaCategory;
-                console.log(compare_object);
             });
 
             function getFileType(mimeType) {
@@ -955,10 +978,8 @@
             $(document).on('change', '#image , #document', (e) => {
                 let formData = new FormData();
                 let validfile = false;
-                //console.log("e", e.target.id);
 
                 if (e.target.id === 'image') {
-                    //console.log("image", document.getElementById('image').files[0].type);
                     if (getFileType(document.getElementById('image').files[0].type) == "image") {
                         validfile = true;
                         formData.append('file', document.getElementById('image').files[0]);
@@ -967,7 +988,6 @@
                     }
                 }
                 if (e.target.id === 'document') {
-                    //console.log("document", document.getElementById('document').files[0].type);
                     if (getFileType(document.getElementById('document').files[0].type) == "doc") {
                         validfile = true;
                         formData.append('file', document.getElementById('document').files[0]);
@@ -987,7 +1007,6 @@
                             if (value.success) {
                                 mediavalue = value.data.h;
                                 compare_object.header.Hmedia = mediavalue;
-                                console.log(compare_object);
                             }
                         },
                         error: function (error) {
@@ -1299,7 +1318,6 @@
             });
 
             $(document).on('change', '#phone_btn_text', function () {
-                //console.log("hello", event.target.value);
                 nullfield_validation(`phone_btn_text`);
                 if (objFlag[`flag_phone_btn_text`] == 0) {
                     phonePayload = {
@@ -1307,11 +1325,9 @@
                         "text": $('#phone_btn_text').val(),
                     }
                 }
-                console.log(phonePayload);
             })
 
             $(document).on('change', '#phn_number', function () {
-                //console.log("hello", event.target.value);
                 nullfield_validation(`phn_number`);
                 if (objFlag[`flag_phn_number`] == 0) {
                     phonePayload = {
@@ -1320,11 +1336,9 @@
                         "phone_number": $('#phn_number').val(),
                     }
                 }
-                console.log(phonePayload);
             })
 
             $(document).on('change', '#url_btn_text', function () {
-                //console.log("hello", event.target.value);
                 nullfield_validation(`url_btn_text`);
                 if (objFlag[`flag_url_btn_text`] == 0) {
                     urlPayload = {
@@ -1332,11 +1346,9 @@
                         "text": $('#url_btn_text').val(),
                     }
                 }
-                console.log(urlPayload);
             })
 
             $(document).on('change', '#url', function () {
-                console.log("hello", event.target.value);
                 nullfield_validation(`url`);
                 if (objFlag[`flag_url`] == 0) {
                     urlPayload = {
@@ -1345,14 +1357,11 @@
                         "url": $('#url').val(),
                     }
                 }
-                console.log(urlPayload);
-
             })
             var bodytext = "";
             $(document).on('click', '#submitforapproval', () => {
 
                 component = [];
-                console.log("compare_object final:", compare_object);
                 if (!$("input[name='MediaCategory']:checked").val()) {
                     $('#err_document_headermedia').text("Please select a Media category.").addClass('text-danger');
                 } else {
@@ -1362,10 +1371,8 @@
                 let validHeader = false, validBody = false, validFooter = false, validButton = false;
 
                 let sampleArr = Object.keys(compare_object);
-                console.log(sampleArr);
 
                 for (var i in sampleArr) {
-                    // console.log(i, sampleArr[i], compare_object[sampleArr[i]]);
                     if (sampleArr[i] === "header") {
                         if (compare_object[`${sampleArr[i]}`] != null) {
                             switch (selectedHeader) {
@@ -1463,7 +1470,6 @@
 
                     if (sampleArr[i] == "Buttons") {
                         if (compare_object[`${sampleArr[i]}`].length > 0) {
-                            console.log("Buttons", compare_object[`${sampleArr[i]}`]);
 
                             for (let k = 0; k < compare_object[`${sampleArr[i]}`].length; k++) {
                                 if (compare_object[`${sampleArr[i]}`][k].type == "phone") {
@@ -1495,22 +1501,14 @@
                             validButton = true
                         }
                     }
-
-
                 }
 
-                console.log("Flag body: ", validBody);
-                console.log("Flag header : ", validHeader);
-                console.log("Flag Button : ", validButton);
                 if (validHeader && validBody && validButton) {
-                    alert("success");
                     for (var i in sampleArr) {
                         if (sampleArr[i] === "header") {
                             switch (selectedHeader) {
                                 case "Text": {
-                                    console.log("paload header text:", compare_object[`${sampleArr[i]}`].dfield);
                                     if (compare_object[`${sampleArr[i]}`].dfield <= 0) {
-                                        console.log("inside dfields");
                                         headerPayload = {
                                             "type": "HEADER",
                                             "format": "TEXT",
@@ -1519,7 +1517,6 @@
                                                 "header_text": []
                                             }
                                         };
-                                        console.log("header payload", headerPayload);
                                         component.push(headerPayload);
                                     }
                                     else {
@@ -1552,7 +1549,6 @@
                                                 headerPayload = {
                                                     "type": "HEADER",
                                                     "format": "IMAGE",
-                                                    "text": $('#image').val(),
                                                     "example": {
                                                         "header_handle": mediavalue,
                                                     }
@@ -1566,7 +1562,6 @@
                                                 headerPayload = {
                                                     "type": "HEADER",
                                                     "format": "DOCUMENT",
-                                                    "text": $('#document').val(),
                                                     "example": {
                                                         "header_handle": mediavalue,
                                                     }
@@ -1584,7 +1579,6 @@
                                     break;
                                 }
                             }
-
                         }
 
                         if (sampleArr[i] === "body") {
@@ -1592,7 +1586,7 @@
                                 if (compare_object[`${sampleArr[i]}`].bfield <= 0) {
                                     bodyPayload = {
                                         "type": "BODY",
-                                        "text": $('#bodymsg').val().trim(),
+                                        "text": $("#bodymsg").val().trim(),
                                         "example": {
                                             "body_text": [],
                                         }
@@ -1604,12 +1598,11 @@
                                         if (objFlag[`flag_bodyinput${(j)}`] == 0) {
                                             bodyPayload = {
                                                 "type": "BODY",
-                                                "text": $('#bodymsg').val().trim(),
+                                                "text": $("#bodymsg").val().trim(),
                                                 "example": {
                                                     "body_text": [],
                                                 }
                                             }
-                                            console.log("bodyp:", bodyPayload);
                                             const regex = /\{\{\d+\}\}/g;
                                             const matches = (bodyPayload.text.match(regex) || []);
                                             for (let i = 0; i < matches.length; i++) {
@@ -1658,14 +1651,27 @@
                         "category": selectedCategory,
                         "components": component
                     };
-                    console.log("payload", payload);
 
                     $.ajax({
                         url: "/api/template/createtemplate",
                         method: "post",
                         data: payload,
+                        beforeSend: function () {
+                            $("#submitforapproval")
+                                .prop('disabled', true)
+                                .removeClass("btn-primary btn-success")
+                                .addClass("btn-warning")
+                                .html(`<span class= "d-flex align-items-center">
+                                                        <span class="flex-grow-1 me-2">
+                                                            Sending
+                                                        </span>
+                                                        <span class="spinner-border flex-shrink-0" role="status">
+                                                            <span class="visually-hidden"></span>
+                                                        </span>
+                                                    </span>`);
+                        },
                         success: function (val) {
-                            console.log("val", val);
+                            // console.log("val", val);
                             if (val.success) {
                                 swal({
                                     title: "Template Created Successfully!!!",
@@ -1673,6 +1679,14 @@
                                     timer: 2000,
                                     showConfirmButton: false,
                                 }).then(function () {
+                                    $("#submitforapproval")
+                                        .prop('disabled', false)
+                                        .removeClass("btn-warning btn-success")
+                                        .addClass("btn-primary")
+                                        .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                                                    <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                        submit for approval
+                                                    </span>`);
                                     $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
                                     $('#v-pills-bill-info').addClass('show active');
 
@@ -1687,7 +1701,7 @@
                                     mediavalue = "";
                                     $('#image').val("");
                                     $('#document').val("");
-                                    $('.ck-content').text("");
+                                    $('#bodymsg').text("");
                                     $("#footertext").val("");
 
                                     $('#phone_btn_text').val("");
