@@ -9,8 +9,8 @@
     <title>Create Template | SwiftSends</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Swiftsend Bulk Messaging services" name="description" />
+    <meta content="Gajjar Harsh" name="author" />
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="/assets/images/favicon.ico" />
@@ -513,12 +513,9 @@
 
                                                 </div>
                                             </div>
-                                            <!-- end tab content -->
                                         </div>
                                     </div>
-                                    <!-- end col -->
                                 </div>
-                                <!-- end row -->
                             </div>
                         </div>
                     </div>
@@ -588,20 +585,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="voice_input" class="modal zoomIn">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button> -->
-                    </div>
-                    <div class="modal-body">
-                        <div class="fs-1 text-center" id="msg" style="resize: none"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- JAVASCRIPT -->
@@ -609,7 +592,6 @@
     <script src="/assets/js/jquery.js"></script>
     <script src="/assets/js/main.js"></script>
     <script src="/assets/js/chatbot.js"></script>
-    <script src="/assets/js/voiceRecognition.js"></script>
     <script src="/assets/js/validate.js"></script>
 
     <script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -635,7 +617,6 @@
     <script src="/assets/libs/prismjs/prism.js"></script>
     <script src="/assets/libs/list.js/list.min.js"></script>
     <script src="/assets/libs/list.pagination.js/list.pagination.min.js"></script>
-    <!-- <script src="/assets/js/pages/listjs.init.js"></script> -->
 
     <script>
         $(document).ready(() => {
@@ -656,6 +637,7 @@
                 })
             }
             gettemplate();
+
             $(document).on('input', '#document_Name', function () {
                 var originalValue = $(this).val();
                 var lowercaseValue = originalValue.toLowerCase().replace(/\s/g, '_');
@@ -671,7 +653,7 @@
                     $(this).val(lowercaseValue.substr(0, (maxLength - 1)));
                     remainingLength = 0;
                 }
-                for (var i = 0; i < templatedata.length; i++) {
+                for (let i = 0; i <= templatedata.length; i++) {
                     if ($("#document_Name").val() == templatedata[i].name) {
                         swal({
                             title: "Template with same name already exist!!!",
@@ -800,7 +782,7 @@
             language();
 
 
-            $('#switchToEditTemplateButton').on('click', function () {
+            $(document).on('click', '#switchToEditTemplateButton', function () {
 
                 nullfield_validation(`document_Name`);
                 nullfield_validation(`selectedlang`);
@@ -823,7 +805,7 @@
                 }
             });
 
-            $('#backButton').on('click', function () {
+            $(document).on('click', '#backButton', function () {
                 // Activate Step 1
                 $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
                 $('#v-pills-bill-info').addClass('show active');
@@ -833,13 +815,7 @@
                 $('#v-pills-bill-address').removeClass('show active');
             });
 
-
-            var payload;
-            var headerPayload;
-            var bodyPayload;
-            var footerPayload;
-            var phonePayload;
-            var urlPayload;
+            var payload, headerPayload, bodyPayload, footerPayload, phonePayload, urlPayload;
             var selectedCategory, selectedHeader = null, selectedMediaCategory;
             var buttons = [];
             var component = [];
@@ -1671,7 +1647,6 @@
                                                     </span>`);
                         },
                         success: function (val) {
-                            // console.log("val", val);
                             if (val.success) {
                                 swal({
                                     title: "Template Created Successfully!!!",
@@ -1711,7 +1686,6 @@
                                 });
                             }
                         }, error: (error) => {
-                            console.log("error :", error)
                             if (error.status == "406") {
                                 swal({
                                     title: "Template not accepted!!!",
@@ -1729,14 +1703,9 @@
                             if (error.status == "500") { internalservererror(); }
                         }
                     })
-
                 }
-
             })
-
         });
-
-
     </script>
 </body>
 
