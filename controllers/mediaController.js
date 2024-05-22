@@ -4,6 +4,7 @@ const FormData = require("form-data");
 
 const path = require('path');
 const status = require("../assets/js/status");
+const { setWabaCred } = require("./userController");
 
 //Credentials
 const wabaPhoneID = process.env.WABA_PHONEID;
@@ -13,6 +14,7 @@ const accessToken = process.env.WABA_TOKEN;
 let toPath = __dirname.split(`${path.sep}`).slice(0, -1).join('/');
 function createfolder(foldername) {
     try {
+        
         const dirs = foldername.split('/');
         let currentDir = '';
 
@@ -65,6 +67,16 @@ function deleteFolder(folderPath) {
 
 const uploadMedia = async (req, res) => {
     try {
+        const email = req.cookies.email;
+        const apiKey = req.cookies.apikey;
+    
+        const wabaCred = await setWabaCred(apiKey, email);
+    
+        const token = wabaCred[0].permanentToken;
+        const wabaId = wabaCred[0].wabaID;
+        const phoneID = wabaCred[0].phoneID;
+        const appID = wabaCred[0].appID;
+    
         if (!req.files) return res.status(400).json({ error: "No file uploaded" });
         const apikey = req.cookies.apikey;
         let x = createfolder(`wba/${apikey}`);
