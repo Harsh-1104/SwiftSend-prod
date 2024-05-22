@@ -104,13 +104,9 @@ const sendSimpleTextTemplate = async (req, res) => {
                     iid
                 );
 
-                console.log("A : ", response)
-                console.log("B : ", response.data)
-
                 const myData = response.data;
                 // Insert into message_info table
                 const messageId = myData.messages[0].id;
-                console.log("contact : ", messageId);
                 const messageTypeInfo = {
                     waba_message_id: messageId,
                     single_id: Single_id,
@@ -120,12 +116,8 @@ const sendSimpleTextTemplate = async (req, res) => {
                     status: "sent",
                 };
 
-                console.log("this my my payload :  ", messageTypeInfo);
 
                 await insertIntoMessageInfo(messageTypeInfo);
-                console.log("url:", req.url);
-                console.log("apikey:", apikey);
-                console.log("iid:", iid);
 
                 logAPI(req.url, apikey, iid, "S");
                 res.status(200).json({ success: true, message: "Message sent successfully" });
