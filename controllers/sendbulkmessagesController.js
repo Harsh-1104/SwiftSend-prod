@@ -6,6 +6,7 @@ const logAPI = require("../function/log");
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
 const token = process.env.WABA_TOKEN;
+const wabaId = process.env.WABA_ID;
 
 const insertIntoMessageInfo = async (data) => {
     const query = `INSERT INTO message_info (waba_message_id, boardCast_id , reciver_number, message_type, status) VALUES ?`;
@@ -21,7 +22,6 @@ const insertIntoMessageInfo = async (data) => {
     return new Promise((resolve, reject) => {
         conn.query(query, [values], (error, results, fields) => {
             if (error) {
-                log.lo
                 reject(error);
                 return;
             }
@@ -78,15 +78,12 @@ const sendBulkMessagesIn = async (req, res) => {
 
                 try {
                     const response = await axios.post(
-                        `https://graph.facebook.com/v18.0/287947604404901/messages`,
-                        payload,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${bearerToken}`,
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
+                        `https://graph.facebook.com/${version}/${wabaId}/messages`, payload, {
+                        headers: {
+                            Authorization: `Bearer ${bearerToken}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
 
                     if (response.status !== 200) {
                         success = false;

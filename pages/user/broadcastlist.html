@@ -93,7 +93,7 @@
                             <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user profileimg" />
+                                    <div class="profileimg"></div>
                                     <span class="text-start ms-xl-2">
                                         <span
                                             class="d-none d-xl-inline-block ms-1 fw-medium user-name-text profilename"></span>
@@ -468,21 +468,7 @@
                             </div>
                         </div>
                         <div class="offcanvas-body">
-                            <div class="row">
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div id="sentgraph" data-colors='["--vz-primary"]' class="apex-charts" dir="ltr"></div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div id="deliveredgraph" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div id="failedgraph" data-colors='["--vz-danger"]' class="apex-charts" dir="ltr"></div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div id="basic_radialbar" data-colors='["--vz-danger"]' class="apex-charts" dir="ltr"></div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
+                            <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 130px)">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
@@ -524,40 +510,40 @@
 
                 $('#offcanvasRightstatus').html(output);
 
-                displayRadialbarGraph('sentgraph', 50)
-                displayRadialbarGraph('deliveredgraph', 50)
-                displayRadialbarGraph('failedgraph', 50)
-                displayRadialbarGraph('basic_radialbar', 50)
+                // displayRadialbarGraph('sentgraph', 50)
+                // displayRadialbarGraph('deliveredgraph', 50)
+                // displayRadialbarGraph('failedgraph', 50)
+                // displayRadialbarGraph('basic_radialbar', 50)
             })
 
-            function displayRadialbarGraph(id, percentage) {
-                var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
-                let options = {
-                    series: [percentage],
-                    chart: {
-                        height: 200,
-                        type: "radialBar",
-                    },
-                    plotOptions: {
-                        radialBar: {
-                            startAngle: 0,
-                            endAngle: 360,
-                            hollow: {
-                                size: '55%',
-                            }
-                        }
-                    },
-                    fill: {
-                        type: 'gradient',
-                    },
-                    stroke: {
-                        lineCap: 'round'
-                    },
-                    labels: [`${id.substring(0, id.length - 5)}`],
-                    color: chartRadialbarBasicColors
-                }
-                chart = new ApexCharts(document.querySelector(`#${id}`), options).render();
-            }
+            // function displayRadialbarGraph(id, percentage) {
+            //     var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
+            //     let options = {
+            //         series: [percentage],
+            //         chart: {
+            //             height: 200,
+            //             type: "radialBar",
+            //         },
+            //         plotOptions: {
+            //             radialBar: {
+            //                 startAngle: 0,
+            //                 endAngle: 360,
+            //                 hollow: {
+            //                     size: '55%',
+            //                 }
+            //             }
+            //         },
+            //         fill: {
+            //             type: 'gradient',
+            //         },
+            //         stroke: {
+            //             lineCap: 'round'
+            //         },
+            //         labels: [`${id.substring(0, id.length - 5)}`],
+            //         color: chartRadialbarBasicColors
+            //     }
+            //     chart = new ApexCharts(document.querySelector(`#${id}`), options).render();
+            // }
 
 
             // $(document).on('input', '#searchtemplate', function () {

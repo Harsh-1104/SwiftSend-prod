@@ -198,10 +198,7 @@ const tableData = (data, callback) => {
         const sql = `SELECT * FROM ${data.table} WHERE ${data.paramstr} AND apikey = '${data.apikey}'`;
         // console.log(sql);
         conn.query(sql, (err, result) => {
-            if (err)
-                return callback(
-                    Object.assign(status.internalservererror(), { error: err })
-                );
+            if (err) return callback(Object.assign(status.internalservererror(), { error: err }));
             // if (err) return callback(status.internalservererror());
             if (result.length == 0) return callback(status.nodatafound());
             return callback(result);
@@ -1265,12 +1262,9 @@ app.post("/sendEmailVerification", (req, res) => {
         const body = `<div class="u-row-container" style="padding: 0px;background-color: transparent"><div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;"><div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;"><div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"><div style="height: 100%;width: 100% !important;"><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"><div style="line-height: 140%; text-align: left; word-wrap: break-word;"><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">OTP to Verify your Email : </span><span style="font-size: 22px; color: #405189;">${otp}</span></p></div></td></tr></tbody></table>`;
 
         conn.query(`SELECT * FROM users WHERE email='${to}'`, function (err, result) {
-            console.log("err : ", err)
-            console.log("result : ", result)
             if (err) return res.send(status.internalservererror());
             if (result.length > 0) return res.send(status.duplicateRecord());
             conn.query(`select * from company`, function (err, result) {
-                console.log(result)
                 if (err || result.length <= 0) return res.send(status.internalservererror());
                 if (result.length > 0) {
                     const sender = {
