@@ -87,6 +87,8 @@ const templateRoutes = require("./routes/templateRoute");
 const mediaRoutes = require("./routes/mediaRoute");
 const userDashboardRoutes = require("./routes/userDashboardRoute");
 const signIn2 = require("./routes/authRotues");
+const broadcastRoutes = require("./routes/broadcastRoute");
+const instanceRoutes = require("./routes/instanceRoute");
 
 // Middleware
 function checkApi(req, res, next) {
@@ -108,6 +110,8 @@ app.use("/api/template", checkApi, templateRoutes);
 app.use("/api/media", checkApi, mediaRoutes);
 app.use("/api/dashboard", checkApi, userDashboardRoutes);
 app.use("/api/auth", signIn2);
+app.use("/api/broadcast", checkApi, broadcastRoutes);
+app.use("/api/instance", checkApi, instanceRoutes);
 
 async function checkAPIKey(apikey) {
   try {
@@ -1279,50 +1283,45 @@ app.post("/addinstance", async (req, res) => {
 
 let otp, token;
 app.post("/sendEmailVerification", (req, res) => {
-  const to = req.body.email;
-  if (to) {
-    otp = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
-    token = jwt.sign(
-      {
-        otp,
-        exp: Math.floor(Date.now() / 1000) + 59,
-      },
-      "ourSecretKey"
-    );
+    const to = req.body.email;
+    if (to) {
+        otp = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
+        token = jwt.sign(
+            {
+                otp,
+                exp: Math.floor(Date.now() / 1000) + 59,
+            },
+            "ourSecretKey"
+        );
 
-    const subject = `Verification Email From SwiftSend | Communication Service`;
-    const body = `<div class="u-row-container" style="padding: 0px;background-color: transparent"><div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;"><div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;"><div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"><div style="height: 100%;width: 100% !important;"><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"><div style="line-height: 140%; text-align: left; word-wrap: break-word;"><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">OTP to Verify your Email : </span><span style="font-size: 22px; color: #405189;">${otp}</span></p></div></td></tr></tbody></table>`;
+        const subject = `Verification Email From SwiftSend | Communication Service`;
+        const body = `<div class="u-row-container" style="padding: 0px;background-color: transparent"><div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;"><div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;"><div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"><div style="height: 100%;width: 100% !important;"><table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left"><div style="line-height: 140%; text-align: left; word-wrap: break-word;"><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello,</span></p><p style="font-size: 14px; line-height: 140%;"><span style="font-size: 18px; line-height: 25.2px; color: #666666;">OTP to Verify your Email : </span><span style="font-size: 22px; color: #405189;">${otp}</span></p></div></td></tr></tbody></table>`;
 
-    conn.query(
-      `SELECT * FROM users WHERE email='${to}'`,
-      function (err, result) {
-        if (err || result.length <= 0)
-          return res.send(status.internalservererror());
-        if (result.length > 0) return res.send(status.duplicateRecord());
-        conn.query(`select * from company`, function (err, result) {
-          if (err || result.length <= 0)
-            return res.send(status.internalservererror());
-          if (result.length > 0) {
-            const sender = {
-              hostname: `${result[0].hostname}`,
-              port: `${result[0].portnumber}`,
-              email: `${result[0].c_email}`,
-              passcode: `${result[0].passcode}`,
-            };
-            sendEmail(sender, { to: to, bcc: "" }, subject, body)
-              .then(() => {
-                return res.send(status.ok());
-              })
-              .catch((error) => {
-                return res.send(status.badRequest());
-              });
-          }
+        conn.query(`SELECT * FROM users WHERE email='${to}'`, function (err, result) {
+            if (err) return res.send(status.internalservererror());
+            if (result.length > 0) return res.send(status.duplicateRecord());
+            conn.query(`select * from company`, function (err, result) {
+                if (err || result.length <= 0) return res.send(status.internalservererror());
+                if (result.length > 0) {
+                    const sender = {
+                        hostname: `${result[0].hostname}`,
+                        port: `${result[0].portnumber}`,
+                        email: `${result[0].c_email}`,
+                        passcode: `${result[0].passcode}`,
+                    };
+                    sendEmail(sender, { to: to, bcc: "" }, subject, body)
+                        .then(() => {
+                            return res.send(status.ok());
+                        })
+                        .catch((error) => {
+                            return res.send(status.badRequest());
+                        });
+                }
+            });
         });
-      }
-    );
-  } else {
-    return res.send(status.notAccepted());
-  }
+    } else {
+        return res.send(status.notAccepted());
+    }
 });
 
 app.post("/verifyOTP", (req, res) => {
@@ -2793,6 +2792,41 @@ app.post("/getAdminData", function (req, res) {
     if (err) return res.send(status.internalservererror());
     res.send(result);
   });
+});
+
+//log display
+app.get("/user/api/log/:iid", (req, res) => {
+    apikey = req.headers.apikey || req.cookies.apikey;
+    const isValidapikey = checkAPIKey(apikey);
+    try {
+        if (isValidapikey) {
+            let iid = req.params.iid;
+
+            var query = `select * from log where apikey='${apikey}'and instance_id='${iid}'`;
+
+            if (req.query.type && req.query.type != "null") {
+                query += ` AND type = '${req.query.type}'`;
+            }
+
+            if (req.query.api && req.query.api != "null") {
+                query += ` AND api = '/${req.query.api}'`;
+            }
+
+            query += `ORDER BY logtime DESC`;
+
+            conn.query(query,
+                function (err, ret) {
+                    if (err || ret.length < 0) return res.send(status.nodatafound());
+                    res.send(ret);
+                }
+            )
+        }
+    } catch {
+        res.status(404).send({
+            "Error Code": "404",
+            "Message": "Apikey is Invalid"
+        });
+    }
 });
 
 app.get("/ticket_users", (req, res) => {

@@ -1,156 +1,143 @@
 const axios = require("axios");
 const crypto = require("crypto");
-const conn = require("../DB/connection");
-const { setWabaCred } = require("./userController");
+const conn = require('../DB/connection');
+const logAPI = require("../function/log");
 
-
+const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
-
+const token = process.env.WABA_TOKEN;
+const wabaId = process.env.WABA_ID;
 
 const insertIntoMessageInfo = async (data) => {
-  const query = `INSERT INTO message_info (waba_message_id, boardCast_id , reciver_number, message_type, status) VALUES ?`;
+    const query = `INSERT INTO message_info (waba_message_id, boardCast_id , reciver_number, message_type, status) VALUES ?`;
 
-  const values = data.map((item) => [
-    item.waba_message_id,
-    item.boardcast_id,
-    item.reciver_number,
-    item.message_type,
-    item.status,
-  ]);
+    const values = data.map((item) => [
+        item.waba_message_id,
+        item.boardcast_id,
+        item.reciver_number,
+        item.message_type,
+        item.status,
+    ]);
 
-  return new Promise((resolve, reject) => {
-    conn.query(query, [values], (error, results, fields) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
+    return new Promise((resolve, reject) => {
+        conn.query(query, [values], (error, results, fields) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
     });
-  });
 };
 
-const insertIntoBoardCaste = async (
-  apikey,
-  templateName,
-  boardcast_id,
-  iid
-) => {
-  const query = `INSERT INTO boardcast (boardcast_id, apikey, template_id, time, instance_id) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)`;
-  const values = [boardcast_id, apikey, templateName, iid];
+const insertIntoBoardCaste = async (apikey, templateName, boardcast_id, iid) => {
+    const query = `INSERT INTO boardcast (boardcast_id, apikey, template_id, time, instance_id) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)`;
+    const values = [boardcast_id, apikey, templateName, iid];
 
-  return new Promise((resolve, reject) => {
-    conn.query(query, values, (error, results, fields) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve(results.insertId);
+    return new Promise((resolve, reject) => {
+        conn.query(query, values, (error, results, fields) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(results.insertId);
+        });
     });
-  });
 };
 
 const sendBulkMessagesIn = async (req, res) => {
-  try {
-    const email = req.cookies.email;
-    const apiKey = req.cookies.apikey;
 
-    const wabaCred = await setWabaCred(apiKey, email);
+    try {
+        const apikey = req.cookies.apikey;
+        const boardCastId = crypto.randomBytes(16).toString("hex");
+        let success = true;
 
-    const token = wabaCred[0].permanentToken;
-    const wabaId = wabaCred[0].wabaID;
-    const phoneID = wabaCred[0].phoneID;
-    const appID = wabaCred[0].appID;
+        const { numberList, templateName, components, languageCode, iid } = req.body;
+        const filteredComponents = components
+            ? components.filter((component) => component !== null)
+            : [];
+        const bearerToken = token;
 
-    const apikey = req.cookies.apikey;
-    const boardCastId = crypto.randomBytes(16).toString("hex");
-    let success = true;
+        const messageInfoData = []; // Array to store message info data
 
-    const { numberList, templateName, components, languageCode, iid } =
-      req.body;
-    const filteredComponents = components
-      ? components.filter((component) => component !== null)
-      : [];
-    const bearerToken = token;
+        // Use Promise.all to await all requests
+        await Promise.all(
+            numberList.map(async (item) => {
+                const payload = {
+                    messaging_product: "whatsapp",
+                    to: item,
+                    type: "template",
+                    template: {
+                        name: templateName,
+                        language: {
+                            code: languageCode,
+                        },
+                        components: filteredComponents,
+                    },
+                };
 
-    const messageInfoData = []; // Array to store message info data
+                try {
+                    const response = await axios.post(
+                        `https://graph.facebook.com/${version}/${wabaId}/messages`, payload, {
+                        headers: {
+                            Authorization: `Bearer ${bearerToken}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
 
-    // Use Promise.all to await all requests
-    await Promise.all(
-      numberList.map(async (item) => {
-        const payload = {
-          messaging_product: "whatsapp",
-          to: item,
-          type: "template",
-          template: {
-            name: templateName,
-            language: {
-              code: languageCode,
-            },
-            components: filteredComponents,
-          },
-        };
+                    if (response.status !== 200) {
+                        success = false;
+                    } else {
+                        success = true;
 
-        try {
-          const response = await axios.post(
-            `https://graph.facebook.com/v18.0/${phoneID}/messages`,
-            payload,
-            {
-              headers: {
-                Authorization: `Bearer ${bearerToken}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
+                        // Accumulate message info data
+                        const myData = response.data;
+                        const messageId = myData.messages[0].id;
+                        messageInfoData.push({
+                            // Push data into the array
+                            waba_message_id: messageId,
+                            boardcast_id: boardCastId,
+                            user_id: 1,
+                            reciver_number: item,
+                            message_type: "template", // Adjust as needed
+                            status: "sent",
+                        });
+                    }
+                } catch (error) {
+                    console.log("error ", error.response);
+                    success = false;
+                }
+            })
+        );
 
-          if (response.status !== 200) {
-            success = false;
-          } else {
-            success = true;
-            // Accumulate message info data
-            const myData = response.data;
-            const messageId = myData.messages[0].id;
-            messageInfoData.push({
-              // Push data into the array
-              waba_message_id: messageId,
-              boardcast_id: boardCastId,
-              user_id: 1,
-              reciver_number: item,
-              message_type: "template", // Adjust as needed
-              status: "sent",
+        if (success) {
+            // Insert into boardcast table only if all messages are sent successfully
+            await insertIntoBoardCaste(apikey, templateName, boardCastId, iid);
+
+            // Bulk insertion into message_info table
+            await insertIntoMessageInfo(messageInfoData);
+
+            logAPI(req.url, apikey, iid, "S");
+            res
+                .status(200)
+                .json({ success: true, message: "Messages sent successfully" });
+        } else {
+            logAPI(req.url, apikey, iid, "E");
+            res.status(500).json({
+                success: false,
+                message: "Failed to send one or more messages",
             });
-          }
-        } catch (error) {
-          console.log("error ", error.response);
-          success = false;
         }
-      })
-    );
-
-    if (success) {
-      // Insert into boardcast table only if all messages are sent successfully
-      await insertIntoBoardCaste(apikey, templateName, boardCastId, iid);
-
-      // Bulk insertion into message_info table
-      await insertIntoMessageInfo(messageInfoData);
-
-      res
-        .status(200)
-        .json({ success: true, message: "Messages sent successfully" });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: "Failed to send one or more messages",
-      });
+    } catch (error) {
+        console.log("error", error);
+        logAPI(req.url, apikey, iid, "E");
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while sending the messages",
+        });
     }
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).json({
-      success: false,
-      message: "An error occurred while sending the messages",
-    });
-  }
 };
 
 module.exports = {
-  sendBulkMessagesIn,
+    sendBulkMessagesIn,
 };
