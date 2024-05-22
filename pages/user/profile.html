@@ -109,7 +109,7 @@
                             <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user profileimg" />
+                                    <div class="profileimg"></div>
                                     <span class="text-start ms-xl-2">
                                         <span
                                             class="d-none d-xl-inline-block ms-1 fw-medium user-name-text profilename"></span>
@@ -194,19 +194,12 @@
                     <div class="mb-4 pt-3">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-center">
-                                <div class="avatar-lg">
-                                    <img alt="user-img"
-                                        class="rounded-circle avatar-lg user-profile-image rounded-circle profileimg img-thumbnail" />
+                                <div
+                                    class="profileimg bg-light rounded-circle avatar-sm user-profile-image d-flex align-items-center justify-content-center">
                                 </div>
                                 <h3 class="text-white profilename ps-3"></h3>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 d-flex justify-content-end align-items-center">
-                                <span>
-                                    <button type="button" class="btn btn-danger waves-effect waves-light fs-15 me-2"
-                                        id="mic" data-bs-toggle="modal" data-bs-target="#voice_input">
-                                        <i class="mdi mdi-microphone"></i>
-                                    </button>
-                                </span>
                                 <a href="/updateprofile" class="btn btn-success">
                                     <i class="ri-edit-box-line align-middle me-lg-2"></i>
                                     <span class="d-none d-lg-inline-block">Edit Profile</span>
@@ -346,23 +339,6 @@
         </div>
     </div>
 
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
 
     <!-- JAVASCRIPT -->
     <script src="/assets/js/jquery.js"></script>
@@ -407,8 +383,6 @@
 
     <!-- Firebase -->
     <script>
-
-
         $(document).ready(function () {
             chkLogin();
 
@@ -509,70 +483,6 @@
                 var param = $(this).attr("id").substring(5);
                 copy_api(param);
             });
-
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if ((data[0] == "edit" || data[0] == "update") && data[1] == "profile") {
-                        location.href = "/updateprofile";
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmessage" || (data[2] == "bulk" && data[3] == "message"))) {
-                        location.href = `/instance/${iid}/bulkmessage`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "bulkmail" || (data[2] == "bulk" && data[3] == "mail"))) {
-                        location.href = `/instance/${iid}/bulkmail`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "contacts" || (data[2] == "contact" && data[3] == "list"))) {
-                        location.href = `/instance/${iid}/contact-list`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "channel") {
-                        location.href = `/instance/${iid}/channel`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "chat") {
-                        location.href = `/instance/${iid}/chat`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "workflow") {
-                        location.href = `/instance/${iid}/workflow`;
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
         })
     </script>
 </body>

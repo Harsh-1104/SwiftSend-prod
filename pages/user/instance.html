@@ -107,7 +107,7 @@
                             <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user profileimg" />
+                                    <div class="profileimg"></div>
                                     <span class="text-start ms-xl-2">
                                         <span
                                             class="d-none d-xl-inline-block ms-1 fw-medium user-name-text profilename"></span>
@@ -215,17 +215,49 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <label for="instance_name" class="form-label">
-                                        Instance name
-                                        <span class="text-danger">*</span>
-                                        <span class="text-danger" id="err_instance_name"></span>
-                                    </label>
-                                    <input type="text" class="form-control required" id="instance_name"
-                                        name="instance_name" placeholder="Enter Instance name" />
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <label for="instance_name" class="form-label">
+                                                Instance name
+                                                <span class="text-danger">*</span>
+                                                <span class="text-danger" id="err_instance_name"></span>
+                                            </label>
+                                            <input type="text" class="form-control required" id="instance_name"
+                                                name="instance_name" placeholder="Enter Instance name" />
+                                        </div>
+                                        <div class="col-12 mb-2">
+                                            <label for="phone" class="form-label">
+                                                Phone
+                                                <span class="text-danger">*</span>
+                                                <span class="text-danger" id="err_phone"></span>
+                                            </label>
+                                            <input type="text" class="form-control required" id="phone" name="phone"
+                                                placeholder="Enter Phone name" />
+                                        </div>
+                                        <div class="col-12 mb-2">
+                                            <label for="uname" class="form-label">
+                                                Username
+                                                <span class="text-danger">*</span>
+                                                <span class="text-danger" id="err_uname"></span>
+                                            </label>
+                                            <input type="text" class="form-control required" id="uname" name="uname"
+                                                placeholder="Enter Username name" />
+                                        </div>
+                                        <div class="col-12 mb-2">
+                                            <label for="pwd" class="form-label">
+                                                Password
+                                                <span class="text-danger">*</span>
+                                                <span class="text-danger" id="err_pwd"></span>
+                                            </label>
+                                            <input type="text" class="form-control required" id="pwd" name="pwd"
+                                                placeholder="Enter Password name" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="create" data-bs-dismiss="modal">
-                                        Create
+                                    <button type="button" class="btn btn-primary" id="create">
+                                        <i class="mdi mdi-send-clock align-middle"></i>
+                                        <span>Request</span>
                                     </button>
                                 </div>
                             </div>
@@ -325,24 +357,6 @@
         </div>
     </div>
 
-
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-            </button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <!-- JAVASCRIPT -->
     <script src="/assets/js/jquery.js"></script>
     <script src="/assets/js/main.js"></script>
@@ -377,6 +391,7 @@
         $(document).ready(function () {
             chkLogin();
             var datasource = null;
+            // $('#add_instance_btn').click()
 
             function filterResult(val) {
                 $('#instance_data').addClass('d-none');
@@ -675,17 +690,13 @@
 
             function instance_data() {
                 $.ajax({
-                    url: "/getData",
-                    method: "POST",
-                    data: {
-                        obj: {
-                            "table": "instance",
-                            "paramstr": true
-                        }
-                    },
+                    url: "/api/instance/getallInstance",
+                    method: "GET",
                     success: function (val) {
-                        datasource = val;
-                        filterResult(val);
+                        if (val.success) {
+                            datasource = val.data;
+                            filterResult(val.data);
+                        }
                     }
                 })
             }
@@ -699,7 +710,7 @@
                 nullfield_validation($(this).attr('id'));
             });
 
-            $('#instance_name').keypress((e) => {
+            $('#pwd').keypress((e) => {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
                     $('#create').click();
@@ -707,14 +718,19 @@
             })
 
             $(document).on('click', '#create', () => {
-                var instance_name = document.getElementById('instance_name');
                 nullfield_validation('instance_name');
-                if (objFlag.flag_instance_name == 0) {
+                nullfield_validation('phone');
+                nullfield_validation('uname');
+                nullfield_validation('pwd');
+                if (objFlag.flag_instance_name == 0 && objFlag.flag_phone == 0 && objFlag.flag_uname == 0 && objFlag.flag_pwd == 0) {
                     $.ajax({
-                        url: "/addinstance",
+                        url: "/api/instance/createInstance",
                         method: "POST",
                         data: {
-                            "instance_name": $('#instance_name').val().trim()
+                            "instance_name": $('#instance_name').val().trim(),
+                            "phone": $('#phone').val().trim(),
+                            "uname": $('#uname').val().trim(),
+                            "pwd": $('#pwd').val().trim()
                         },
                         success: function (val) {
                             display_ribbon_days();
@@ -734,7 +750,7 @@
                                     break;
                                 }
                                 case "403": {
-                                    instance_name.value = "";
+                                    $('#instance_name').val("")
                                     swal({
                                         title: `Instance limit exceeded`,
                                         text: `You can\'t create instance`,
@@ -745,7 +761,7 @@
                                     break;
                                 }
                                 case "409": {
-                                    instance_name.value = "";
+                                    $('#instance_name').val("")
                                     swal({
                                         title: 'Instance alerady exist',
                                         type: 'warning',

@@ -89,7 +89,7 @@
                             <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user profileimg" />
+                                    <div class="profileimg"></div>
                                     <span class="text-start ms-xl-2">
                                         <span
                                             class="d-none d-xl-inline-block ms-1 fw-medium user-name-text profilename"></span>
@@ -251,73 +251,73 @@
                             </div>
                         </div>
                     </div>
-                    <footer class="footer"></footer>
+                </div>
+                <footer class="footer"></footer>
+            </div>
+        </div>
+        <!-- END layout-wrapper -->
+
+        <!--start back-to-top-->
+        <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
+            <i class="ri-arrow-up-line"></i>
+        </button>
+        <!--end back-to-top-->
+
+        <!--preloader-->
+        <div id="preloader">
+            <div id="status">
+                <div class="spinner-border text-primary avatar-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <!-- END layout-wrapper -->
+        </div>
 
-            <!--start back-to-top-->
-            <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
-                <i class="ri-arrow-up-line"></i>
-            </button>
-            <!--end back-to-top-->
+        <div class="customizer-setting" id="chatbot">
+            <div class="btn-info btn-rounded shadow-lg btn btn-icon btn-lg p-2">
+                <i class="mdi mdi-robot" id="iconchat"></i>
+            </div>
+        </div>
 
-            <!--preloader-->
-            <div id="preloader">
-                <div id="status">
-                    <div class="spinner-border text-primary avatar-sm" role="status">
-                        <span class="visually-hidden">Loading...</span>
+        <div class="email-chat-detail" id="emailchat-detailElem" style="display: none">
+            <div class="card mb-0">
+                <div class="card-header align-items-center d-flex bg-primary text-white-50">
+                    <div class="flex-grow-1">
+                        <h5 class="fs-15 text-white mb-1 profile-username">
+                            SwiftSend ChatBot
+                        </h5>
+                        <p class="mb-0 fs-12 lh-1">Ask here for help</p>
+                    </div>
+                    <div>
+                        <i class="fa-brands fa-bots fs-1 text-white"></i>
                     </div>
                 </div>
-            </div>
 
-            <div class="customizer-setting" id="chatbot">
-                <div class="btn-info btn-rounded shadow-lg btn btn-icon btn-lg p-2">
-                    <i class="mdi mdi-robot" id="iconchat"></i>
-                </div>
-            </div>
-
-            <div class="email-chat-detail" id="emailchat-detailElem" style="display: none">
-                <div class="card mb-0">
-                    <div class="card-header align-items-center d-flex bg-primary text-white-50">
-                        <div class="flex-grow-1">
-                            <h5 class="fs-15 text-white mb-1 profile-username">
-                                SwiftSend ChatBot
-                            </h5>
-                            <p class="mb-0 fs-12 lh-1">Ask here for help</p>
-                        </div>
-                        <div>
-                            <i class="fa-brands fa-bots fs-1 text-white"></i>
+                <div class="card-body p-0">
+                    <div id="users-chat">
+                        <div class="chat-conversation p-3" id="chat-conversation" data-simplebar style="height: 250px">
+                            <ul class="list-unstyled chat-conversation-list chat-sm" id="conversation"></ul>
                         </div>
                     </div>
 
-                    <div class="card-body p-0">
-                        <div id="users-chat">
-                            <div class="chat-conversation p-3" id="chat-conversation" data-simplebar
-                                style="height: 250px">
-                                <ul class="list-unstyled chat-conversation-list chat-sm" id="conversation"></ul>
+                    <div class="border-top border-top-dashed">
+                        <div class="row g-2 mx-3 mt-2 mb-3">
+                            <div class="col">
+                                <div class="position-relative">
+                                    <input type="text" class="form-control border-light bg-light message-input"
+                                        placeholder="Enter Message..." id="input" />
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="border-top border-top-dashed">
-                            <div class="row g-2 mx-3 mt-2 mb-3">
-                                <div class="col">
-                                    <div class="position-relative">
-                                        <input type="text" class="form-control border-light bg-light message-input"
-                                            placeholder="Enter Message..." id="input" />
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-info" id="sendbotmsg">
-                                        <i class="mdi mdi-send"></i>
-                                    </button>
-                                </div>
+                            <div class="col-auto">
+                                <button class="btn btn-info" id="sendbotmsg">
+                                    <i class="mdi mdi-send"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- JAVASCRIPT -->
     <script src="/assets/js/jquery.js"></script>

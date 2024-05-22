@@ -155,14 +155,14 @@ function userinfo() {
                     }
                     if (val.length == 1) {
                         if (Obj.image == null || Obj.image == "") {
-                            $('.profileimg').attr('src', `../assets/images/users/user-dummy-img.jpg`);
+                            $('.profileimg').html(`<i class="mdi mdi-alpha-${Obj.uname[0].toLowerCase()}-circle text-primary rounded-circle" style="font-size: 2.5rem;"></i>`);
                         }
                         else {
                             if ((Obj.image).startsWith('http') || (Obj.image).startsWith('https')) {
-                                $('.profileimg').attr('src', `${Obj.image}`);
+                                $('.profileimg').html(`<img class="rounded-circle header-profile-user profileimg" src="${Obj.image}" />`);
                             }
                             else {
-                                $('.profileimg').attr('src', `../assets/upload/profile/${apikey}/${Obj.image}`);
+                                $('.profileimg').html(`<i class="mdi mdi-alpha-f-circle text-primary"></i>`);
                             }
                         }
 

@@ -1,6 +1,6 @@
 const status = require("../assets/js/status");
-const crypto = require('crypto');  // Ensure crypto is required if it's not already
-const conn = require('../DB/connection');  // Ensure you require your database connection module
+const crypto = require('crypto');
+const conn = require('../DB/connection');
 
 //log INSERT
 function logAPI(api, apikey, iid, type) {
