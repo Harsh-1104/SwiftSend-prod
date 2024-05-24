@@ -155,6 +155,10 @@ router.get("/customtemplate", (req, res) => {
 router.get("/agentsData", (req, res) => {
   res.sendFile(`${path}/admin/admin-display-agents.html`);
 });
+
+router.get("/swiftsend/admin/login", (req, res) => {
+  res.sendFile(`${path}/admin/admin_login.html`);
+});
 /*---------------------------------------------------*/
 
 /*--------------------[ Support ]--------------------*/

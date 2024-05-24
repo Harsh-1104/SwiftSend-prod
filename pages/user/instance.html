@@ -120,14 +120,6 @@
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
                                 <h6 class="dropdown-header">Welcome <span class="profilename"></span></h6>
-                                <a class="dropdown-item" href="/profile">
-                                    <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Profile</span>
-                                </a>
-                                <a class="dropdown-item" href="/subscription">
-                                    <i class="mdi mdi-credit-card-chip text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Pay</span>
-                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" id="logout">
                                     <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
@@ -274,7 +266,7 @@
                                 <table class="table align-middle table-nowrap">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="col w-20">INSTANCE ID</th>
+                                            <th class="col w-20">Number</th>
                                             <th class="col w-20">NAME</th>
                                             <th class="col w-20">CREATE DATE</th>
                                             <th class="col w-20">Status</th>
@@ -399,11 +391,16 @@
                 if (val.length > 0) {
                     let data = ``;
                     $('#instance_data').removeClass('d-none');
+                    console.log(val)
 
                     for (let r of val) {
                         var cdate = new Date(r.create_date).toLocaleDateString();
-                        data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : ''}>
-                                    <td class="instance_id">${r.instance_id}</td>
+                        data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : ''}
+                                    ${r.isRoot == 1 ? `class="bg-soft-info"` : ''}>
+                                    <td class="instance_id fw-semibold" style="font-family: monospace;">
+                                        <img src="/assets/images/w_icon.svg" height="20" width="20" />
+                                        ${(r.phone != "") ? r.phone : '-'}
+                                    </td>
                                     <td class="instance_name">${r.i_name}</td>
                                     <td class="date">${cdate}</td>
                                     <td class="status">
@@ -418,16 +415,6 @@
                                             ${r.disabled == 1 ? `disabled="true"` : ''}>
                                                 Manage
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ${r.disabled == 1 ? `disabled="true"` : ''}>
-                                                <i class="fa-solid fa-ellipsis-vertical fs-6"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end" style="width: 100px;">
-                                                <button class="dropdown-item deleteChannel fs-14" data-id="${r.instance_id}">
-                                                    <span class="text-end text-primary">
-                                                        <i class="mdi mdi-lead-pencil me-2"></i>Edit
-                                                    </span>
-                                                </button>
-                                            </div>
                                         </div>
                                     </td>
                                 </tr>`;

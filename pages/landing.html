@@ -100,13 +100,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#reviews">Reviews</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="#plans">Plans</a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Contact</a>
                         </li>
                     </ul>
 
-                    <a href="/signin" class="btn btn-link fw-medium text-decoration-none text-dark">Sign in</a>
-                    <a href="/signup" class="btn btn-primary">Sign Up</a>
+                    <a href="/signin" class="btn btn-primary">Sign in</a>
+                    <!-- <a href="/signup" class="btn btn-primary">Sign Up</a> -->
                 </div>
 
             </div>
@@ -116,7 +119,8 @@
 
         <!-- start hero section -->
         <section class="section mb-2 hero-section" id="hero">
-            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="bg-overlay bg-overlay-pattern" style="background-image: url(/assets/images/bg-pattern.png);">
+            </div>
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-sm-10">
@@ -137,13 +141,13 @@
                                 </div>
                             </h1>
 
-                            <div class="d-flex gap-4 justify-content-center mt-2">
+                            <!-- <div class="d-flex gap-4 justify-content-center mt-2">
                                 <a href="/signup" class="btn btn-primary fs-16">Get Started
                                     <i class="ri-arrow-right-line align-middle ms-1"></i>
                                 </a>
-                            </div>
+                            </div> -->
                             <h4 class="mt-5 fw-semibold">
-                                <img src="https://11za.com/wp-content/themes/one-1za/assets/images/hero/wapp_iocn.svg">
+                                <img src="/assets/images/w_icon.svg" />
                                 Official WhatsApp Business API
                             </h4>
                         </div>
@@ -178,7 +182,7 @@
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -197,7 +201,7 @@
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -216,7 +220,7 @@
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -234,7 +238,7 @@
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -252,7 +256,7 @@
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -270,7 +274,7 @@
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -283,14 +287,14 @@
                                 <h5 class="fs-18">Awesome Support</h5>
                                 <p class="text-muted my-3 ff-secondary">Awesome Support is the most versatile and
                                     feature-rich support plugin for all version.Solve your problems and get instant
-                                    support with our WhatsApp bot or generate support tickets for seamless issue
+                                    support by generate support tickets for seamless issue
                                     resolution.</p>
 
                             </div>
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -308,7 +312,7 @@
                         </div>
                     </div>
                     <!-- end col -->
-                    <div class="col-lg-4" data-aos="fade-right">
+                    <div class="col-lg-4" data-aos="zoom-in">
                         <div class="d-flex p-3">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm icon-effect">
@@ -333,7 +337,7 @@
         </section>
         <!-- start review -->
 
-        <section class="section mb-2 bg-primary" id="reviews">
+        <section class="section bg-primary" id="reviews">
             <div class="bg-overlay bg-overlay-pattern"></div>
             <div class="container">
                 <div class="row justify-content-center">
@@ -408,7 +412,7 @@
         </section>
         <!-- end review -->
 
-        <section class="py-5 position-relative bg-white">
+        <section class="py-5 position-relative bg-light">
             <div class="container">
                 <div class="row text-center gy-4">
                     <div class="col-lg-4 col-md-6 col-sm-12">
@@ -488,115 +492,106 @@
         </section>
         <!-- end plan -->
 
+        <!-- start contact -->
+        <section class="section" id="contact">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-5">
+                            <h3 class="mb-3 fw-semibold">Get In Touch</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row gy-4">
+                    <div class="col-lg-4">
+                        <div>
+                            <div class="mt-4">
+                                <h5 class="fs-13 text-muted text-uppercase">Office Address</h5>
+                                <div class="ff-secondary fw-semibold">Shop No : 218, Sovereign Shoppers,
+                                    <br /> Anand Mahal Rd,beside Sindhu Seva Samiti School, nr. Gangeshwar Mahadev
+                                    Temple, Honey Park,<br />
+                                    Adajan Gam, Adajan, Surat, Gujarat - 395009
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h5 class="fs-13 text-muted text-uppercase">Working Hours:</h5>
+                                <div class="ff-secondary fw-semibold">11:00 AM to 6:00 PM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                    <div class="col-lg-8">
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label for="name" class="form-label fs-13">Name</label>
+                                        <input name="name" id="name" type="text"
+                                            class="form-control bg-light border-light" placeholder="Your name*">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label for="email" class="form-label fs-13">Email</label>
+                                        <input name="email" id="email" type="email"
+                                            class="form-control bg-light border-light" placeholder="Your email*">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-4">
+                                        <label for="subject" class="form-label fs-13">Subject</label>
+                                        <input type="text" class="form-control bg-light border-light" id="subject"
+                                            name="subject" placeholder="Your Subject.." />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="comments" class="form-label fs-13">Message</label>
+                                        <textarea name="comments" id="comments" rows="10"
+                                            class="form-control bg-light border-light"
+                                            placeholder="Your message..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 text-end">
+                                    <input type="submit" id="submit" name="send" class="submitBnt btn btn-primary"
+                                        value="Send Message">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </section>
+
         <!-- Start footer -->
-        <footer class="custom-footer bg-dark py-5 position-relative">
+        <footer class="custom-footer py-3 bg-dark">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 mt-4">
-                        <div>
+                    <div class="col-sm-6">
+                        <div class="copy-rights mb-0 d-flex align-items-center gap-1">
                             <div>
-                                <img src="../assets/images/logo-dark.svg" alt="logo light" height="90">
+                                <img src="/assets/images/logo-sm.svg" class="mt-n1 me-n1" height="22" />
+                                <span class="text-primary fw-semibold">
+                                    SwiftSend
+                                </span>
                             </div>
-                            <div class="mt-4 fs-13">
-                                <p>Premium Multipurpose Bulk Messaging System</p>
-                                <p class="ff-secondary">
-                                    Our groundbreaking web app effortlessly sends personalized bulk WhatsApp messages
-                                    and emails while seamlessly integrating with Google Sheets, CSV files, or contact
-                                    groups. With task automation, scheduling capabilities, and voice command
-                                    functionality, communication becomes streamlined and efficient.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-7 ms-lg-auto">
-                        <div class="row">
-                            <div class="col-sm-4 mt-4">
-                                <h5 class="text-white mb-0">Company</h5>
-                                <div class="text-muted mt-3">
-                                    <ul class="list-unstyled ff-secondary footer-list">
-                                        <li><a href="#hero">About Us</a></li>
-                                        <li><a href="#services">Services</a></li>
-                                        <li><a href="#reviews">Reviews</a></li>
-                                        <li><a href="#plans">Plans</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 mt-4">
-                                <h5 class="text-white mb-0">Apps Pages</h5>
-                                <div class="text-muted mt-3">
-                                    <ul class="list-unstyled ff-secondary footer-list">
-                                        <li><a href="/signin">Bulk Message</a></li>
-                                        <li><a href="/signin">Bulk Mail</a></li>
-                                        <li><a href="/signin">Contacts</a></li>
-                                        <li><a href="/signin">Channel</a></li>
-                                        <li><a href="/signin">Chat</a></li>
-                                        <li><a href="/signin">Workflow</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 mt-4">
-                                <h5 class="text-white mb-0">Support</h5>
-                                <div class="text-muted mt-3">
-                                    <ul class="list-unstyled ff-secondary footer-list">
-                                        <li><a href="">FAQ</a></li>
-                                        <li><a href="">Contact</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row text-center text-sm-start align-items-center mt-5">
-                    <div class="col-sm-6">
-
-                        <div>
-                            <p class="copy-rights mb-0">
-                                <script> document.write(new Date().getFullYear()) </script> © SwiftSend
-                            </p>
+                            <span>&#169;</span>
+                            <script> document.write(new Date().getFullYear()) </script>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="text-sm-end mt-3 mt-sm-0">
-                            <ul class="list-inline mb-0 footer-social-link">
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-facebook-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-github-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-linkedin-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-google-fill"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript: void(0);" class="avatar-xs d-block">
-                                        <div class="avatar-title rounded-circle">
-                                            <i class="ri-dribbble-line"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
+                        <div class="text-sm-end d-none d-sm-block">
+                            Developed by <span class="text-primary fw-semibold">Quantum IT Solution</span>
                         </div>
                     </div>
                 </div>

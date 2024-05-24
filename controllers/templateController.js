@@ -23,14 +23,16 @@ const getAllTemplate = async (req, res) => {
   try {
     const email = req.cookies.email;
     const apiKey = req.cookies.apikey;
-
-    const wabaCred = await setWabaCred(apiKey, email);
+    const iid = req.params.iid;
+    const wabaCred = await setWabaCred(apiKey, iid);
 
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;
     const phoneID = wabaCred[0].phoneID;
     const appID = wabaCred[0].appID;
 
+
+    console.log(`https://graph.facebook.com/${version}/${wabaId}/message_templates`)
     const response = await axios.get(
       `https://graph.facebook.com/${version}/${wabaId}/message_templates`,
       {
@@ -202,10 +204,10 @@ const getAllTemplateID = async (req, res) => {
 
 const createTemplate = async (req, res) => {
   try {
-    const email = req.cookies.email;
     const apiKey = req.cookies.apikey;
+    const { name, language, category, components, iid } = req.body;
 
-    const wabaCred = await setWabaCred(apiKey, email);
+    const wabaCred = await setWabaCred(apiKey, iid);
 
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;
@@ -213,7 +215,6 @@ const createTemplate = async (req, res) => {
     const appID = wabaCred[0].appID;
 
     // Extract data from the request body
-    const { name, language, category, components } = req.body;
 
     const filteredComponents = components
       ? components.filter((component) => component !== null)
@@ -353,8 +354,9 @@ const deleteTemplateByID = async (req, res) => {
 const mediaForTemplate = async (req, res) => {
   const email = req.cookies.email;
   const apiKey = req.cookies.apikey;
+  const iid = req.body.iid;
 
-  const wabaCred = await setWabaCred(apiKey, email);
+  const wabaCred = await setWabaCred(apiKey, iid);
 
   const token = wabaCred[0].permanentToken;
   const wabaId = wabaCred[0].wabaID;

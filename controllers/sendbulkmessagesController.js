@@ -2,6 +2,7 @@ const axios = require("axios");
 const crypto = require("crypto");
 const conn = require('../DB/connection');
 const logAPI = require("../function/log");
+const { setWabaCred } = require("./userController");
 
 const wabaPhoneID = process.env.WABA_PHONEID;
 const version = process.env.WABA_VERSION;
@@ -48,11 +49,20 @@ const insertIntoBoardCaste = async (apikey, templateName, boardcast_id, iid) => 
 const sendBulkMessagesIn = async (req, res) => {
 
     try {
+        const apiKey = req.cookies.apikey;
+        const { numberList, templateName, components, languageCode, iid } = req.body;
+
+        const wabaCred = await setWabaCred(apiKey, iid);
+
+        const token = wabaCred[0].permanentToken;
+        const wabaId = wabaCred[0].wabaID;
+        const phoneID = wabaCred[0].phoneID;
+        const appID = wabaCred[0].appID;
+
         const apikey = req.cookies.apikey;
         const boardCastId = crypto.randomBytes(16).toString("hex");
         let success = true;
 
-        const { numberList, templateName, components, languageCode, iid } = req.body;
         const filteredComponents = components
             ? components.filter((component) => component !== null)
             : [];
@@ -78,7 +88,7 @@ const sendBulkMessagesIn = async (req, res) => {
 
                 try {
                     const response = await axios.post(
-                        `https://graph.facebook.com/${version}/${wabaId}/messages`, payload, {
+                        `https://graph.facebook.com/${version}/${phoneID}/messages`, payload, {
                         headers: {
                             Authorization: `Bearer ${bearerToken}`,
                             "Content-Type": "application/json",

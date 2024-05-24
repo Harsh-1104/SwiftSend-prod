@@ -10,6 +10,11 @@
         "icon": "ri-apps-2-line",
         "submenu": [
             {
+                "page": "Template",
+                "link": "template",
+                "icon": "ri-pages-fill"
+            },
+            {
                 "page": "Message",
                 "link": "wba",
                 "icon": "bx bxs-message-detail"
@@ -42,11 +47,6 @@
         ]
     },
     {
-        "page": "Template",
-        "link": "template",
-        "icon": "ri-pages-fill"
-    },
-    {
         "page": "Support Ticket",
         "link": "support-ticket",
         "icon": "mdi mdi-ticket-account"
@@ -55,5 +55,10 @@
         "page": "Pricing",
         "link": "subscription",
         "icon": "ri-price-tag-3-fill"
+    },
+    {
+        "page": "Profile",
+        "link": "profile",
+        "icon": "ri-profile-line"
     }
 ]
