@@ -6,7 +6,8 @@ const tableData = require("../function/commonQuery");
 const getallInstance = async (req, res) => {
     try {
         const apikey = req.cookies.apikey;
-        const q1 = `SELECT * from instance where apikey = '${apikey}' and disabled = 0`;
+        const q1 = `SELECT * from instance where apikey = '${apikey}'`;
+        // const q1 = `SELECT * from instance where apikey = '${apikey}' and disabled = 0`;
 
         conn.query(q1, function (err, result) {
             if (err) return res.status(500).send(status.internalservererror());

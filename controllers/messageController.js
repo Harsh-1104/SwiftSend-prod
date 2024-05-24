@@ -2,6 +2,7 @@ const axios = require("axios");
 const crypto = require("crypto");
 const conn = require('../DB/connection');
 const logAPI = require("../function/log");
+const { setWabaCred } = require("./userController");
 //Credentials
 
 const wabaPhoneID = process.env.WABA_PHONEID;
@@ -48,10 +49,21 @@ const insertIntoMessageInfo = async (data) => {
 
 const sendSimpleTextTemplate = async (req, res) => {
     try {
+
+        const apiKey = req.cookies.apikey;
+        const { to, templateName, components, languageCode, iid } = req.body;
+
+        const wabaCred = await setWabaCred(apiKey, iid);
+
+        const token = wabaCred[0].permanentToken;
+        const wabaId = wabaCred[0].wabaID;
+        const phoneID = wabaCred[0].phoneID;
+        const appID = wabaCred[0].appID;
+
+
         const Single_id = crypto.randomBytes(16).toString("hex");
         const apikey = req.cookies.apikey;
         // Extract data from the request body
-        const { to, templateName, components, languageCode, iid } = req.body;
 
         const filteredComponents = components
             ? components.filter((component) => component !== null)
@@ -82,7 +94,7 @@ const sendSimpleTextTemplate = async (req, res) => {
 
         try {
             const response = await axios.post(
-                `https://graph.facebook.com/v18.0/287947604404901/messages`,
+                `https://graph.facebook.com/v18.0/${phoneID}/messages`,
                 payload,
                 {
                     headers: {

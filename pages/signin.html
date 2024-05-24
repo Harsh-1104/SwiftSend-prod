@@ -217,8 +217,6 @@
 <script>
     $(document).ready(() => {
         if (getCookie('apikey') != "") {
-
-
             $.ajax({
                 url: "/getData",
                 method: "POST",
@@ -230,7 +228,12 @@
                 },
                 success: function (val) {
                     if (val.length === 1) {
-                        location.href = "/dashboard";
+                        if (getCookie('iid') != "") {
+                            location.href = `/iuser/${getCookie('iid')}/template`;
+                        }
+                        else {
+                            location.href = "/dashboard";
+                        }
                     }
                     else {
                         switch (val.status_code) {
@@ -314,7 +317,7 @@
                 }
 
                 $.ajax({
-                    url: "/signin",
+                    url: "api/auth/signin",
                     method: "POST",
                     data: {
                         "type": type,
@@ -362,7 +365,13 @@
                                     }
 
                                     case 'users': {
-                                        location.href = "/dashboard";
+                                        if (val.data.isRoot == 0) {
+                                            document.cookie = `iid=${val.data.iid}; path=/;`;
+                                            location.href = `/iuser/${val.data.iid}/template`;
+                                        }
+                                        else {
+                                            location.href = "/dashboard";
+                                        }
                                         break;
                                     }
                                 }

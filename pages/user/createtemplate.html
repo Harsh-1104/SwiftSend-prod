@@ -142,12 +142,7 @@
                                 <!-- item-->
                                 <h6 class="dropdown-header">
                                     Welcome <span class="profilename"></span>
-                                </h6>
-                                <a class="dropdown-item" href="/profile">
-                                    <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Profile</span>
-                                </a>
-                                <a class="dropdown-item" href="/subscription">
+                                </h6><a class="dropdown-item" href="/subscription">
                                     <i class="mdi mdi-credit-card-chip text-muted fs-16 align-middle me-1"></i>
                                     <span class="align-middle">Pay</span>
                                 </a>
@@ -621,19 +616,21 @@
     <script>
         $(document).ready(() => {
             chkLogin();
+
+            const iid = document.URL.split("/")[4];
+
             let result;
             let templatedata;
             function gettemplate() {
                 $.ajax({
-                    url: `/api/template/gettemplate`,
-                    method: `get`,
+                    url: `/api/template/gettemplate/${iid}`,
+                    method: `GET`,
                     data: result,
                     success: function (result) {
                         if (result.success) {
                             templatedata = result.data;
                         }
                     }
-
                 })
             }
             gettemplate();
@@ -972,6 +969,7 @@
                     }
                 }
 
+                formData.append('iid', iid);
                 if (validfile) {
                     $.ajax({
                         url: "/api/template/mediaidfortemplate",
@@ -1622,6 +1620,7 @@
                     }
 
                     payload = {
+                        "iid": iid,
                         "name": $('#document_Name').val(),
                         "language": $("#selectedlang").val(),
                         "category": selectedCategory,

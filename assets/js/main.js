@@ -286,8 +286,21 @@ $(document).ready(function () {
         var param = $(this).attr("id").substring(5);
         copy_api(param);
     });
-
     let page = document.URL.split("/");
+
+    if (document.referrer.split("/")[3] === "iuser" || document.referrer.split("/")[0] == "") {
+        const iid = getCookie('iid');
+        switch (page[3]) {
+            case 'dashboard':
+            case 'instance':
+            case 'support-ticket':
+            case 'updateprofile':
+            case 'profile':
+            case 'subscription': {
+                location.href = `/iuser/${iid}/template`
+            }
+        }
+    }
 
     sessionStorage.setItem(`data-preloader`, `enable`);
 
@@ -307,6 +320,7 @@ $(document).ready(function () {
                         </div>`);
     $(document).on('click', '#logout', function () {
         document.cookie = "apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "iid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         sessionStorage.removeItem("apikey");
         sessionStorage.removeItem("iid");
         location.href = "/signin";
@@ -315,7 +329,6 @@ $(document).ready(function () {
     switch (page[3]) {
         case 'dashboard':
         case 'instance':
-        case 'template':
         case 'support-ticket':
         case 'updateprofile':
         case 'profile':
@@ -437,6 +450,8 @@ $(document).ready(function () {
             })
 
             switch (page[5].split('?')[0]) {
+                case 'template':
+                case 'createtemplate':
                 case 'wba':
                 case 'broadcast':
                 case 'broadcastlist':
@@ -536,6 +551,107 @@ $(document).ready(function () {
                                         }
                                     }
                                     data += `</div></div>`
+                                    $('#i_name').html(data);
+                                }
+                            }
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
+    if (page[3] === 'iuser') {
+        if (page[5]) {
+            $.ajax({
+                url: "/getData",
+                method: "POST",
+                data: {
+                    obj: {
+                        "table": "instance",
+                        "paramstr": `instance_id = '${page[4]}'`
+                    }
+                },
+                success: function (val) {
+                    if (val[0] && val[0].disabled == 1) {
+
+                        swal({
+                            title: "Instance blocked",
+                            text: "Contact admin regarding reactivation.",
+                            type: 'error',
+                            timer: 4000,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.href = "/instance";
+                        });
+                    }
+                }
+            })
+
+            switch (page[5].split('?')[0]) {
+                case 'template':
+                case 'createtemplate':
+                case 'wba':
+                case 'broadcast':
+                case 'broadcastlist':
+                case 'bulkmessage':
+                case 'contact-list':
+                case 'logs':
+                case 'channel': {
+                    fetch('../../assets/json/common-nav.json')
+                        .then(response => (response.json())).then((resultData) => {
+                            let data = resultData[1].submenu;
+
+                            let result = ``;
+                            for (var i in data) {
+                                result += `
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="/iuser/${document.URL.split("/")[4]}/${data[i].link}" data-page="${data[i].link}">
+                                <i class="${data[i].icon}"></i>
+                                <span data-key="t-dashboards">${data[i].page}</span>
+                            </a>
+                        </li>`;
+                            }
+                            $('#navbar-nav').html(result);
+                            $(`a[data-page='${page[5]}']`).addClass('active');
+
+                        })
+                    $.ajax({
+                        url: "/getData",
+                        method: "POST",
+                        data: {
+                            obj: {
+                                table: "instance",
+                                // paramstr: `disabled = 0`,
+                                paramstr: `true`,
+                            }
+                        },
+                        success: function (val) {
+                            const iid = document.URL.split("/")[4];
+                            var data = "";
+                            switch (val.status_code) {
+                                case '401': {
+                                    InvalidUser();
+                                    break;
+                                }
+
+                                case '500': {
+                                    InternalServerError();
+                                    break;
+                                }
+                                case '404': {
+                                    break;
+                                }
+
+                                default: {
+                                    data += `<div class="btn-group">`;
+                                    for (i in val) {
+                                        if (val[i].instance_id == iid) {
+                                            data += `<button class="btn btn-sm btn-white m-0 p-0 text-primary"><strong>${val[i].i_name}<strong></button>`;
+                                        }
+                                    }
+
                                     $('#i_name').html(data);
                                 }
                             }

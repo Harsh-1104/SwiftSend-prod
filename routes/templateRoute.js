@@ -13,9 +13,9 @@ const {
 
 // Rotues
 router.post("/createtemplate", createTemplate);
-router.get("/gettemplate", getAllTemplate);
-router.get("/getTemplateStatus", getAllTemplateStatus);
-router.get("/getTemplateByID/:id", getAllTemplateID);
+router.get("/gettemplate/:iid", getAllTemplate);
+// router.get("/getTemplateStatus", getAllTemplateStatus);
+// router.get("/getTemplateByID/:id", getAllTemplateID);
 router.delete("/deleteTemplateByID/:id/:name", deleteTemplateByID);
 router.post("/mediaidfortemplate", mediaForTemplate);
 

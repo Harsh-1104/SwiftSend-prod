@@ -35,15 +35,10 @@
     <link href="/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
 </head>
 
-<style>
-
-</style>
-
 <body>
 
     <!-- Begin page -->
     <div id="layout-wrapper">
-
         <header id="page-topbar">
             <div class="layout-width">
                 <div class="navbar-header">
@@ -113,10 +108,6 @@
                                 <h6 class="dropdown-header">
                                     Welcome <span class="profilename"></span>
                                 </h6>
-                                <a class="dropdown-item" href="/profile">
-                                    <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Profile</span>
-                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" id="logout">
                                     <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
@@ -178,6 +169,17 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <div class="page-title">
+                            <ol class="breadcrumb m-0" id="api_path">
+                                <li class="breadcrumb-item">
+                                    <span>Instance</span>
+                                </li>
+                                <li class="breadcrumb-item" id="i_name"></li>
+                                <li class="breadcrumb-item active">Message</li>
+                            </ol>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <div class="search-box col-4">
                             <input type="text" class="form-control" id="searchtemplate"
@@ -185,10 +187,10 @@
                             <i class="bx bx-search-alt-2 align-middle fs-4 search-icon ms-3"></i>
                         </div>
                         <div class="d-flex justify-content-end col-8">
-                            <a href="/template/create" class="btn btn-success">
+                            <div class="btn btn-success" id="redirecttocreate">
                                 <i class="ri-add-circle-line align-middle me-lg-2"></i>
                                 <span class="d-none d-lg-inline-block d-md-inline-block">Create Template</span>
-                            </a>
+                            </div>
                         </div>
                     </div>
                     <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="" aria-hidden="true">
@@ -343,6 +345,7 @@
         $(document).ready(function () {
             chkLogin();
 
+            const iid = document.URL.split("/")[4];
             let template_list = [];
 
             function TemplateDataDisplay(val) {
@@ -410,7 +413,7 @@
 
             function GETTemplateAPI() {
                 $.ajax({
-                    url: "/api/template/gettemplate",
+                    url: `/api/template/gettemplate/${iid}`,
                     method: "GET",
                     beforeSend: () => {
                         $("#template-list").html(`<tr class="">
@@ -630,6 +633,10 @@
                 //         paramstr: `cstm_name LIKE '%${val}%'`,
                 //     });
                 // }
+            })
+
+            $(document).on('click', '#redirecttocreate', () => {
+                location.href = '/instance/3894da600df5b1c5/createtemplate'
             })
         })
     </script>
