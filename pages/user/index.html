@@ -195,12 +195,98 @@
 				<div class="container-fluid">
 					<div class="page-title-box d-sm-flex align-items-center justify-content-between">
 						<div class="page-title">
-							<h3 class="text-center mb-0">Application stats</h3>
+							<h4 class="text-center mb-0">Application stats</h4>
 						</div>
 					</div>
+
 					<div class="row">
-						<div class="col-lg-3">
-							<div class="card card-height-100">
+						<div class="col-lg-4 col-md-4 col-sm-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="avatar-sm flex-shrink-0">
+											<span class="avatar-title bg-light text-primary rounded-circle fs-3">
+												<i class="ri-copper-coin-fill align-middle"></i>
+											</span>
+										</div>
+										<div class="flex-grow-1 ms-3">
+											<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
+												Total Message
+											</p>
+											<h4 class=" mb-0">
+												<span class="counter-value" data-target="" id="totalMsg">0</span>
+											</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="avatar-sm flex-shrink-0">
+											<span class="avatar-title bg-light text-primary rounded-circle fs-3">
+												<i class="ri-message-2-fill align-middle"></i>
+											</span>
+										</div>
+										<div class="flex-grow-1 ms-3">
+											<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
+												Total Single Message
+											</p>
+											<h4 class=" mb-0">
+												<span class="counter-value" data-target="" id="totalSingleMsg">0</span>
+											</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="avatar-sm flex-shrink-0">
+											<span class="avatar-title bg-light text-primary rounded-circle fs-3">
+												<i class="bx bx-broadcast align-middle"></i>
+											</span>
+										</div>
+										<div class="flex-grow-1 ms-3">
+											<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
+												Total Broadcast
+											</p>
+											<h4 class=" mb-0">
+												<span class="counter-value" data-target=""
+													id="totalBroadcastMsg">0</span>
+											</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-lg-8 h-100">
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="card">
+										<div class="card-header border-0 align-items-center d-flex">
+											<h4 class="card-title mb-0 flex-grow-1">Template Graph</h4>
+										</div>
+										<div class="card-body p-0 pb-3">
+											<div class="card-body">
+												<div id="column_rotated_labels" data-colors='["--vz-primary"]'
+													class="apex-charts" dir="ltr">
+												</div>
+											</div>
+										</div><!-- end cardbody -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 h-100">
+							<div class="card">
 								<div class="card-header align-items-center d-flex">
 									<h4 class="card-title mb-0 flex-grow-1">Daily Limit</h4>
 								</div>
@@ -243,115 +329,8 @@
 								</div>
 							</div>
 						</div>
-
-						<div class="col-lg-9">
-							<div class="d-flex flex-column h-100">
-								<div class="row h-100">
-									<div class="col-lg-4 col-md-6">
-										<div class="card">
-											<div class="card-body">
-												<div class="d-flex align-items-center">
-													<div class="avatar-sm flex-shrink-0">
-														<span
-															class="avatar-title bg-light text-primary rounded-circle fs-3">
-															<i class="ri-money-dollar-circle-fill align-middle"></i>
-														</span>
-													</div>
-													<div class="flex-grow-1 ms-3">
-														<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
-															Total Message
-														</p>
-														<h4 class=" mb-0">
-															<span class="counter-value" data-target=""
-																id="totalMsg">0</span>
-														</h4>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6">
-										<div class="card">
-											<div class="card-body">
-												<div class="d-flex align-items-center">
-													<div class="avatar-sm flex-shrink-0">
-														<span
-															class="avatar-title bg-light text-primary rounded-circle fs-3">
-															<i class="ri-arrow-up-circle-fill align-middle"></i>
-														</span>
-													</div>
-													<div class="flex-grow-1 ms-3">
-														<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
-															Total Single Message
-														</p>
-														<h4 class=" mb-0">
-															<span class="counter-value" data-target=""
-																id="totalSingleMsg">0</span>
-														</h4>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6">
-										<div class="card">
-											<div class="card-body">
-												<div class="d-flex align-items-center">
-													<div class="avatar-sm flex-shrink-0">
-														<span
-															class="avatar-title bg-light text-primary rounded-circle fs-3">
-															<i class="ri-arrow-down-circle-fill align-middle"></i>
-														</span>
-													</div>
-													<div class="flex-grow-1 ms-3">
-														<p class="text-uppercase fw-semibold fs-12 text-muted mb-1">
-															Total Broadcast
-														</p>
-														<h4 class=" mb-0">
-															<span class="counter-value" data-target=""
-																id="totalBroadcastMsg">0</span>
-														</h4>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-xl-12">
-										<div class="card">
-											<div class="card-header border-0 align-items-center d-flex">
-												<h4 class="card-title mb-0 flex-grow-1">Template Graph</h4>
-											</div>
-											<div class="card-body p-0 pb-3">
-												<div class="card-body">
-													<div id="column_rotated_labels" data-colors='["--vz-primary"]'
-														class="apex-charts" dir="ltr"></div>
-												</div>
-											</div><!-- end cardbody -->
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
 					</div>
-					<!-- <div class="row mb-4">
-						<div class="col-6">
-							<div class="d-flex align-items-center justify-content-start gap-3">
-								<input type="text" id="time_period" class="form-control mr-3 w-100"
-									data-provider="flatpickr" data-date-format="Y-m-d" data-range-date="true"
-									placeholder="Select date Range">
-								<button type="button" class="btn btn-primary" id="Filter">
-									<i class="bx bx-search-alt-2 align-middle fs-5"></i>
-								</button>
-								<button class="btn btn-soft-danger w-20 d-none" type="button" id="clrfilter">
-									<i class="ri-close-line align-bottom"></i> Clear
-								</button>
-							</div>
-						</div>
-					</div> -->
-
+					<hr />
 					<div class="tab-content text-muted">
 						<div class="tab-pane active show" id="whatsappcount" role="tabpanel">
 							<div class="record" id="record"></div>
@@ -470,33 +449,6 @@
 		$(document).ready(() => {
 			chkLogin();
 
-			let baroptions = {
-				series: [
-					{
-						name: "Servings", data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65, 35]
-					}
-				],
-				chart: {
-					height: 200, type: "bar", toolbar: { show: !1 }
-				},
-				plotOptions: {
-					bar: { borderRadius: 4, columnWidth: "30%" }
-				},
-				colors: getChartColorsArray("column_rotated_labels"),
-				xaxis: {
-					labels: { rotate: -45 },
-					categories: ["Apples", "Oranges", "Strawberries", "Pineapples", "Mangoes", "Bananas", "Blackberries", "Pears", "Watermelons", "Cherries", "Pomegranates", "Tangerines", "Papayas"],
-					tickPlacement: "on"
-				},
-				yaxis: {
-					title: { text: "Servings" }
-				},
-				fill: {
-					type: "gradient",
-				}
-			}
-			let chart = new ApexCharts(document.querySelector("#column_rotated_labels"), baroptions).render();
-
 			function DashboardData() {
 				// let obj = {};
 				$.ajax({
@@ -563,6 +515,7 @@
 							$('#totalSingleMsg').html(totalSingleMsg).prop('data-target', totalSingleMsg);
 							$('#totalBroadcastMsg').html(totalBroadcastMsg).prop('data-target', totalBroadcastMsg);
 							$('#totalMsg').html(totalMsg).prop('data-target', totalMsg);
+
 						}
 
 					}, error: (error) => {
@@ -780,6 +733,34 @@
 					}
 				})
 			}
+
+			function getTemplateDataGraph() {
+				$.ajax({
+					url: "/api/dashboard/getTemplateReportData",
+					method: "GET",
+					success: function (val) {
+						if (val.success) {
+							const templates = val.data.map(item => item.template);
+							const usageCounts = val.data.map(item => item.total_usage);
+
+							chartBarColors = getChartColorsArray("bar_chart")
+
+							let baroptions = {
+								chart: { height: 290, type: "bar", toolbar: { show: !1 } },
+								plotOptions: { bar: { horizontal: 1 } },
+								dataLabels: { enabled: 1 },
+								series: [{ data: usageCounts }],
+								colors: ["#405189"],
+								grid: { borderColor: "#405189" },
+								xaxis: { categories: templates },
+							}
+							let chart = new ApexCharts(document.querySelector("#column_rotated_labels"), baroptions).render();
+
+						}
+					}
+				});
+			}
+			getTemplateDataGraph();
 
 			$(document).on("click", "#Filter", function () {
 				const timePeriodValue = $("#time_period").val();
