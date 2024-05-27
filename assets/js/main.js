@@ -307,13 +307,24 @@ $(document).ready(function () {
     $('.footer').html(`<div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <span>&copy;<span>
-                                    <span>${new Date().getFullYear()}<span>
-                                    <span>SwiftSend<span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="copy-rights mb-0 d-flex align-items-center gap-1">
+                                            <div>
+                                                <img src="/assets/images/logo-sm.svg" class="mt-n1 me-n1" height="22" />
+                                                <span class="text-primary fw-semibold">
+                                                    SwiftSend
+                                                </span>
+                                            </div>
+                                            <span class="text-muted fw-semibold">&#169;</span>
+                                            <span class="text-muted fw-semibold">
+                                                ${new Date().getFullYear()}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="text-sm-end d-none d-sm-block">
-                                        Developed by Triangles
+                                        Developed by <span class="text-primary fw-semibold">Quantum IT Solution</span>
                                     </div>
                                 </div>
                             </div>

@@ -395,24 +395,28 @@
 
                     for (let r of val) {
                         var cdate = new Date(r.create_date).toLocaleDateString();
-                        data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : ''}
+                        data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : (r.disabled == 2) ? `class="opacity-100" style="user-select: none; cursor: not-allowed;"` : ''}
                                     ${r.isRoot == 1 ? `class="bg-soft-info"` : ''}>
                                     <td class="instance_id fw-semibold" style="font-family: monospace;">
                                         <img src="/assets/images/w_icon.svg" height="20" width="20" />
                                         ${(r.phone != "") ? r.phone : '-'}
                                     </td>
-                                    <td class="instance_name">${r.i_name}</td>
+                                    <td class="instance_name">
+                                        ${r.isRoot ? `<span class="badge border border-primary text-primary">Main</span>` : r.i_name}
+                                    </td>
                                     <td class="date">${cdate}</td>
                                     <td class="status">
                                         ${r.disabled == 0 ?
                                 `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` :
-                                `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`
+                                (r.disabled == 2) ?
+                                    `<i class="ri-error-warning-line align-middle text-warning"></i> Pending` :
+                                    `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`
                             }
                                     </td>
                                     <td class="text-end">
                                         <div class="d-flex justify-content-end gap-3">
                                             <button type="button" class="btn btn-sm btn-primary manage" id="${r.instance_id}" 
-                                            ${r.disabled == 1 ? `disabled="true"` : ''}>
+                                            ${r.disabled != 0 ? `disabled="true"` : ''}>
                                                 Manage
                                             </button>
                                         </div>

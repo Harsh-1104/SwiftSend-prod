@@ -32,7 +32,6 @@ const getAllTemplate = async (req, res) => {
     const appID = wabaCred[0].appID;
 
 
-    console.log(`https://graph.facebook.com/${version}/${wabaId}/message_templates`)
     const response = await axios.get(
       `https://graph.facebook.com/${version}/${wabaId}/message_templates`,
       {
@@ -281,6 +280,7 @@ const createTemplate = async (req, res) => {
 const deleteTemplateByID = async (req, res) => {
   const templateID = req.params.id;
   const templateName = req.params.name;
+  const iid = req.params.iid;
 
   console.log("This is my name and ID : ", templateID, templateName);
   if (!templateID) {
@@ -303,7 +303,7 @@ const deleteTemplateByID = async (req, res) => {
     const email = req.cookies.email;
     const apiKey = req.cookies.apikey;
 
-    const wabaCred = await setWabaCred(apiKey, email);
+    const wabaCred = await setWabaCred(apiKey, iid);
 
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;

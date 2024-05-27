@@ -16,7 +16,7 @@ router.post("/createtemplate", createTemplate);
 router.get("/gettemplate/:iid", getAllTemplate);
 // router.get("/getTemplateStatus", getAllTemplateStatus);
 // router.get("/getTemplateByID/:id", getAllTemplateID);
-router.delete("/deleteTemplateByID/:id/:name", deleteTemplateByID);
+router.delete("/deleteTemplateByID/:id/:name/:iid", deleteTemplateByID);
 router.post("/mediaidfortemplate", mediaForTemplate);
 
 module.exports = router;

@@ -46,7 +46,31 @@ const getOverallReportData = async (req, res) => {
     }
 }
 
+const getTemplateReportData = async (req, res) => {
+    try {
+        const apikey = req.cookies.apikey;
+        const q1 = `SELECT template, SUM(usage_count) AS total_usage FROM (SELECT template_name AS template, COUNT(*) AS usage_count FROM single_message WHERE apikey = '${apikey}' GROUP BY template_name UNION ALL SELECT template_id AS template, COUNT(*) AS usage_count FROM boardcast WHERE apikey = '${apikey}' GROUP BY template_id ) AS combined_usage GROUP BY template`;
+
+        conn.query(q1, function (err, result) {
+            // console.log("E : ", err)
+            if (err) return res.status(500).send(status.internalservererror());
+            // if (result.length <= 0) return res.send(status.nodatafound());
+            res.status(200).json({
+                success: true,
+                data: result,
+            });
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching data",
+            errorMessage: error.response,
+        });
+    }
+}
+
 module.exports = {
     getDailyReportData,
-    getOverallReportData
+    getOverallReportData,
+    getTemplateReportData
 };

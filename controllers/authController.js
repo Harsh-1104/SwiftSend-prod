@@ -38,9 +38,8 @@ function setCookie(res, name, value, days) {
 
 // ----- SignIn Contoller ------
 const SignIn = async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    const rememberme = req.body.rememberme;
+
+    const { email, password, rememberme, type } = req.body;
 
     if (email && password && email != undefined && password != undefined) {
         tableData({
@@ -77,6 +76,16 @@ const SignIn = async (req, res) => {
             }
             bcrypt.compare(password, result[0].password, (err, match) => {
                 if (match) {
+                    let usertype = (type === "root") ? 1 : 0;
+                    if (usertype !== result[0].isRoot) {
+                        return res.send(
+                            Object.assign(status.unauthorized(), {
+                                error: {
+                                    detail: `Invalid User Type`,
+                                },
+                            })
+                        );
+                    }
                     setCookie(res, "apikey", result[0].apikey, 1);
                     if (rememberme == "true") {
                         res.cookie("email", email, { maxAge: 1000 * 60 * 60 * 24 * 15 });

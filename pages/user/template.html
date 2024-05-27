@@ -419,7 +419,7 @@
                         $("#template-list").html(`<tr class="">
                                             <td class="text-center py-5" colspan="5">
                                                 <div class="spinner-border text-primary" role="status">
-                                                    <span class="sr-only">Loading...</span>
+                                                     <span class="sr-only">Loading...</span>
                                                 </div>
                                             </td>
                                         </tr>`);
@@ -565,7 +565,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: `/api/template/deleteTemplateByID/${encodedID}/${name}`,
+                            url: `/api/template/deleteTemplateByID/${encodedID}/${name}/${iid}`,
                             method: "delete",
                             success: function (val) {
                                 if (val.success) {
@@ -636,7 +636,7 @@
             })
 
             $(document).on('click', '#redirecttocreate', () => {
-                location.href = '/instance/3894da600df5b1c5/createtemplate'
+                location.href = `/iuser/${iid}/createtemplate`;
             })
         })
     </script>
