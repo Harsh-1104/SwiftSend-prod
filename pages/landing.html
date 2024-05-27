@@ -541,23 +541,32 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-4">
-                                        <label for="name" class="form-label fs-13">Name</label>
+                                        <label for="name" class="form-label fs-13">Name
+                                            <span class="text-danger">*</span>
+                                            <span class="text-danger" id="err_name"></span>
+                                        </label>
                                         <input name="name" id="name" type="text"
-                                            class="form-control bg-light border-light" placeholder="Your name*">
+                                            class="form-control bg-light border-light" placeholder="Your name">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-4">
-                                        <label for="email" class="form-label fs-13">Email</label>
-                                        <input name="email" id="email" type="email"
-                                            class="form-control bg-light border-light" placeholder="Your email*">
+                                        <label for="email" class="form-label fs-13">Email
+                                            <span class="text-danger">*</span>
+                                            <span class="text-danger" id="err_email"></span>
+                                        </label>
+                                        <input name="email" id="email" type="email" data-type="email"
+                                            class="form-control bg-light border-light" placeholder="Your email">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-4">
-                                        <label for="subject" class="form-label fs-13">Subject</label>
+                                        <label for="subject" class="form-label fs-13">Subject
+                                            <span class="text-danger">*</span>
+                                            <span class="text-danger" id="err_subject"></span>
+                                        </label>
                                         <input type="text" class="form-control bg-light border-light" id="subject"
                                             name="subject" placeholder="Your Subject.." />
                                     </div>
@@ -566,17 +575,24 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
-                                        <label for="comments" class="form-label fs-13">Message</label>
-                                        <textarea name="comments" id="comments" rows="10"
-                                            class="form-control bg-light border-light"
-                                            placeholder="Your message..."></textarea>
+                                        <label for="comments" class="form-label fs-13">Message
+                                            <span class="text-danger">*</span>
+                                            <span class="text-danger" id="err_message"></span>
+                                        </label>
+                                        <textarea name="message" id="message" rows="5"
+                                            class="form-control bg-light border-light" placeholder="Your message..."
+                                            style="resize: none;scrollbar-width: none;"></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 text-end">
-                                    <input type="submit" id="submit" name="send" class="submitBnt btn btn-primary"
-                                        value="Send Message">
+                                    <button type="button" id="submit" class="btn btn-primary btn-load"> <i
+                                            class="mdi mdi-send me-lg-2 me-md-2"></i><span
+                                            class="d-none d-lg-inline-block d-md-inline-block">
+                                            send
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -657,9 +673,137 @@
     <!-- gmaps init -->
     <script src="/assets/js/pages/gmaps.init.js"></script>
 
+    <!-- sweet alert -->
+    <script src="/assets/sweetalert2/sweet-alert.init.js"></script>
+    <script src="/assets/sweetalert2/sweetalert2.all.js"></script>
+
+    <!-- validation -->
+    <script src="/assets/js/validate.js"></script>
+
     <script>
 
         $(document).ready(function () {
+            let valid_inquiry = false;
+
+            $(document).on('input', '#email', function () {
+                oninput_validation(`email`);
+                console.log("e", objFlag[`flag_email`]);
+                if (objFlag[`flag_email`] == 0) {
+                    valid_inquiry = true;
+                } else {
+                    valid_inquiry = false;
+                }
+            })
+
+            $(document).on('click', '#submit', function () {
+                nullfield_validation(`name`);
+                nullfield_validation(`email`);
+                nullfield_validation(`subject`);
+                nullfield_validation(`message`);
+                oninput_validation(`email`);
+                if (objFlag[`flag_name`] == 0 && objFlag[`flag_email`] == 0 && objFlag[`flag_subject`] == 0 && objFlag[`flag_message`] == 0) {
+                    valid_inquiry = true;
+                } else {
+                    valid_inquiry = false;
+                }
+
+                var messagebody = `<div style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px; color: #333;">
+            <div
+                style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; margin: auto;">
+                <h2 style="color:#405189;margin-bottom: 20px;">New Inquiry Received</h2>
+                <p style=" font-size: 16px;font-weight:bolder;">You have received a new inquiry through your contact
+                    form.
+                    Please find the details below:</p>
+                <div style="color:#666666;margin-bottom: 10px;font-size: 14px;">
+                    <strong style="display: inline-block; width: 120px;">Name:</strong> `+ $("#name").val() + `
+                </div>
+                <div style="color:#666666;margin-bottom: 10px;font-size: 14px;">
+                    <strong style="display: inline-block; width: 120px;">Email:</strong> `+ $("#email").val() + `
+                </div>
+                <div style="color:#666666;margin-bottom: 10px;font-size: 14px;">
+                    <strong style="display: inline-block; width: 120px;">Message:</strong> `+ $("#message").val() + `
+                </div>
+            </div>
+        </div>`;
+
+                var acknowledgementbody = `<div style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px; color: #333;">
+            <div
+                style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; margin: auto;">
+                <h2 class="fw-semibold" style="color:#405189;margin-bottom: 20px;">SwiftSend - Acknowledgement Mail</h2>
+                <p class="f-14 fw-semibold" style="line-height: 1.6;">Dear `+ $("#name").val() + `,</p>
+                <p class="f-14" style="color:#666666;line-height: 1.6;">Thank you for reaching out to us regarding
+                    Swiftsend - WhatsApp Solution.
+                    We have received your inquiry and will get back to you as soon as possible.</p>
+                <p class="f-14" style="color:#666666;line-height: 1.6;">In the meantime, if you have any urgent questions
+                    or concerns, please feel
+                    free to contact us at any time.</p>
+                <p class="f-14 fw-semibold" style="color:#666666;line-height: 1.6;">Best regards,<br> <span
+                        class="fw-semibold" style="color:#405189;">
+                        SwiftSend
+                    </span style="color:#666666;">- QIT Solutions.</p>
+            </div>
+        </div>`;
+                if (valid_inquiry) {
+                    $.ajax({
+                        url: `/api/landing/getInquiryData`,
+                        method: `post`,
+                        data: {
+                            name: $("#name").val(),
+                            email: $("#email").val(),
+                            subject: $("#subject").val(),
+                            message: $("#message").val(),
+                            messagebody: messagebody,
+                            acknowledgementbody: acknowledgementbody
+                        },
+                        beforeSend: function () {
+                            $("#submit")
+                                .prop('disabled', true)
+                                .removeClass("btn-primary btn-success")
+                                .addClass("btn-warning")
+                                .html(`<span class= "d-flex align-items-center">
+                                                        <span class="flex-grow-1 me-2">
+                                                            Sending
+                                                        </span>
+                                                        <span class="spinner-border flex-shrink-0" role="status">
+                                                            <span class="visually-hidden"></span>
+                                                        </span>
+                                                    </span>`);
+                        },
+                        success: function (val) {
+                            if (val.success) {
+                                swal({
+                                    title: "Inquiry Submitted Successfully!!!",
+                                    type: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                }).then(function () {
+                                    $("#submit")
+                                        .prop('disabled', false)
+                                        .removeClass("btn-warning btn-success")
+                                        .addClass("btn-primary")
+                                        .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                                                    <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                        send
+                                                    </span>`);
+                                    $("#name,#email,#subject,#message").val("");
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            console.log("error:", error.responseJSON.message);
+                            if (error.status == "403") {
+                                swal({
+                                    title: error.responseJSON.message,
+                                    type: "error",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                })
+                            }
+                        }
+                    })
+                }
+
+            })
 
             $.ajax({
                 url: "/get-landingpage-data",
