@@ -89,6 +89,7 @@ const userDashboardRoutes = require("./routes/userDashboardRoute");
 const signIn2 = require("./routes/authRotues");
 const broadcastRoutes = require("./routes/broadcastRoute");
 const instanceRoutes = require("./routes/instanceRoute");
+const landingRoutes = require("./routes/landingRoute");
 
 // Middleware
 function checkApi(req, res, next) {
@@ -112,6 +113,7 @@ app.use("/api/dashboard", checkApi, userDashboardRoutes);
 app.use("/api/auth", signIn2);
 app.use("/api/broadcast", checkApi, broadcastRoutes);
 app.use("/api/instance", checkApi, instanceRoutes);
+app.use("/api/landing", landingRoutes);
 
 async function checkAPIKey(apikey) {
     try {
