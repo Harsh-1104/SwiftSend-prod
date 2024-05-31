@@ -56,7 +56,8 @@ app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(
     ["/iuser/assets", "/docs/assets", "/instance/assets", "/assets","./assets"],
-    express.static("assets")
+    // express.static("assets")
+    express.static(path.join(__dirname, "assets"))
 );
 app.use("/", router);
 app.use(cors());
