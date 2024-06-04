@@ -172,6 +172,28 @@
                                 <li class="breadcrumb-item active">Message</li>
                             </ol>
                         </div>
+                        <div class="hstack flex-wrap gap-2">
+                            <div class="fw-semibold fs-14 d-flex align-items-center gap-2 text-muted"
+                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span>Message Limit : </span>
+                                <span>
+                                    [<span class="text-primary" id="daily-limit-count">-</span>/1000]
+                                </span>
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end mt-3 p-0">
+                                <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
+                                    <div class="text-center">
+                                        <h6 class="m-0 fs-16 fw-semibold">Today's Messages</h6>
+                                    </div>
+                                </div>
+                                <div class="p-2" id="daily-limit-graph">
+                                    <div class="p-5 text-muted fw-semibold">
+                                        No message sent today !
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card" id="msgform">
                         <h3 class="card-header text-center">Message</h3>
@@ -340,6 +362,12 @@
     <script src="/assets/libs/prismjs/prism.js"></script>
     <!-- animation init -->
     <script src="/assets/js/pages/animation-aos.init.js"></script>
+
+    <!-- Dashboard init -->
+    <script src="/assets/js/pages/dashboard-ecommerce.init.js"></script>
+
+    <!-- apexcharts -->
+    <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
 
     <!-- App js -->
     <script src="/assets/js/app.js"></script>

@@ -176,8 +176,31 @@
                                     <span>Instance</span>
                                 </li>
                                 <li class="breadcrumb-item" id="i_name"></li>
-                                <li class="breadcrumb-item active">Message</li>
+                                <li class="breadcrumb-item active">Template</li>
                             </ol>
+                        </div>
+
+                        <div class="hstack flex-wrap gap-2">
+                            <div class="fw-semibold fs-14 d-flex align-items-center gap-2 text-muted"
+                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span>Message Limit : </span>
+                                <span>
+                                    [<span class="text-primary" id="daily-limit-count">-</span>/1000]
+                                </span>
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end mt-3 p-0">
+                                <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
+                                    <div class="text-center">
+                                        <h6 class="m-0 fs-16 fw-semibold">Today's Messages</h6>
+                                    </div>
+                                </div>
+                                <div class="p-2" id="daily-limit-graph">
+                                    <div class="p-5 text-muted fw-semibold">
+                                        No message sent today !
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -208,11 +231,11 @@
                         </div>
                     </div>
                     <div class="row" id="templateData"></div>
-                    <div class="card">
+                    <div class="card" style="height: calc(100vh - 280px);">
                         <h3 class="card-header text-center">Templates</h3>
                         <div class="card-body">
                             <div class="table-responsive table-card mb-1" id="table-fixed-header" data-simplebar
-                                data-simplebar-auto-hide="false" style="max-height: 55vh;">
+                                data-simplebar-auto-hide="false" style="max-height: calc(100vh - 350px)">
                                 <table class="table align-middle table-nowrap mb-0" id="customerTable">
                                     <thead class="table-light">
                                         <tr>
@@ -338,6 +361,12 @@
     <script src="/assets/libs/prismjs/prism.js"></script>
     <!-- animation init -->
     <script src="/assets/js/pages/animation-aos.init.js"></script>
+
+    <!-- Dashboard init -->
+    <script src="/assets/js/pages/dashboard-ecommerce.init.js"></script>
+
+    <!-- apexcharts -->
+    <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
 
     <!-- App js -->
     <script src="/assets/js/app.js"></script>
@@ -636,11 +665,13 @@
             })
 
             $(document).on('click', '#redirecttocreate', () => {
-                location.href = `/iuser/${iid}/createtemplate`;
+                if (document.referrer.split("/")[3] === "iuser") {
+                    location.href = `/iuser/${iid}/createtemplate`;
+                }
+                location.href = `/instance/${iid}/createtemplate`;
             })
         })
     </script>
-
 </body>
 
 </html>

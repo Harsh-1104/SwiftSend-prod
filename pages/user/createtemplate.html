@@ -139,13 +139,9 @@
                                 </span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <!-- item-->
                                 <h6 class="dropdown-header">
                                     Welcome <span class="profilename"></span>
-                                </h6><a class="dropdown-item" href="/subscription">
-                                    <i class="mdi mdi-credit-card-chip text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Pay</span>
-                                </a>
+                                </h6>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" id="logout">
                                     <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
@@ -205,308 +201,328 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title mb-0">Template</h4>
-                        </div><!-- end card header -->
+                            <h4 class="card-title mb-0">Create Template</h4>
+                        </div>
                         <div class="card-body form-steps">
                             <div class="vertical-navs-step">
-                                <div class="row gy-5">
+                                <div class="row">
                                     <div class="col-lg-3">
                                         <div class="nav flex-column custom-nav nav-pills" role="tablist"
                                             aria-orientation="vertical">
-                                            <!-- data-bs-toggle="pill" -->
-                                            <button class="nav-link done active" id="v-pills-bill-info-tab"
+                                            <button class="nav-link active" id="v-pills-bill-info-tab"
                                                 data-bs-target="#v-pills-bill-info" type="button" role="tab"
                                                 aria-controls="v-pills-bill-info" aria-selected="true">
                                                 <span class="step-title me-2">
-                                                    <i class="ri-close-circle-fill step-icon me-2"></i> Step 1
+                                                    <i class="ri-record-circle-line align-middle text-primary me-2"></i>
+                                                    Step 1
                                                 </span>
-                                                Create Template
+                                                Name & Category
                                             </button>
-                                            <!-- data-bs-toggle="pill" -->
                                             <button class="nav-link" id="v-pills-bill-address-tab"
                                                 data-bs-target="#v-pills-bill-address" type="button" role="tab"
                                                 aria-controls="v-pills-bill-address" aria-selected="false">
                                                 <span class="step-title me-2">
-                                                    <i class="ri-close-circle-fill step-icon me-2"></i> Step 2
+                                                    <i class="ri-record-circle-line align-middle text-primary me-2"></i>
+                                                    Step 2
                                                 </span>
-                                                Details of Template
+                                                Template Data
                                             </button>
                                         </div>
-                                        <!-- end nav -->
-                                    </div> <!-- end col-->
-                                    <div class="col-lg-8">
-                                        <div class="px-lg-4">
-                                            <div class="tab-content">
-                                                <div class="tab-pane fade show active" id="v-pills-bill-info"
-                                                    role="tabpanel" aria-labelledby="v-pills-bill-info-tab">
-
-                                                    <div class="card">
-                                                        <h3 class="card-header text-center">Create New Template</h3>
-                                                        <div class="card-body">
-                                                            <div class="mb-2">
-                                                                <label for="document_file"
-                                                                    class="form-label fw-semibold">
-                                                                    Category
-                                                                    <span class="text-danger">*</span>
-                                                                    <span class="text-danger"
-                                                                        id="err_document_file"></span>
-                                                                </label>
-                                                                <div class="mb-2">
-                                                                    <span class="fs-12 text-muted">Choose a category
-                                                                        that
-                                                                        best
-                                                                        describe your
-                                                                        template.</span>
+                                    </div>
+                                    <div class="col-lg-9 mt-lg-0 mt-md-0 mt-sm-3">
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active" id="v-pills-bill-info"
+                                                role="tabpanel" aria-labelledby="v-pills-bill-info-tab">
+                                                <div class="mb-3">
+                                                    <label for="document_file" class="form-label fw-semibold mb-1">
+                                                        Category
+                                                        <span class="text-danger">*</span>
+                                                        <span class="text-danger" id="err_document_file"></span>
+                                                    </label>
+                                                    <div class="mb-2">
+                                                        <span class="fs-12 text-muted">
+                                                            Choose a category that best describe your template.
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-lg-flex d-md-flex justify-content-start gap-2 mb-2"
+                                                        style="user-select: none;">
+                                                        <label
+                                                            class="d-flex align-items-center border border-2 border-light rounded-3 text-muted text-center cursor-pointer"
+                                                            for="marketingRadio" style="height: 100px; flex: 50%;">
+                                                            <input class="form-check-input mx-1" type="radio"
+                                                                name="category" id="marketingRadio" value="marketing"
+                                                                hidden>
+                                                            <div class="d-flex align-items-center mb-0"
+                                                                for="marketingRadio">
+                                                                <div class="mx-2">
+                                                                    <div class="avatar-sm flex-shrink-0">
+                                                                        <span
+                                                                            class="avatar-title bg-light text-dark rounded-circle fs-3">
+                                                                            <i
+                                                                                class="bx bxs-volume-full align-middle"></i>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-check form-radio-primary mb-3">
-                                                                    <label for="Marketing_radio" class="form-label">
+                                                                <div class="text-muted text-start">
+                                                                    <div class="fw-semibold text-dark">
                                                                         Marketing
-                                                                    </label>
-                                                                    <input type="radio" id="Marketing_radio"
-                                                                        name="Category"
-                                                                        class="form-check-input required"
-                                                                        value="Marketing" data-type="radio" />
+                                                                    </div>
+                                                                    <div class="fs-12 me-2">
+                                                                        Promotions or information about your business,
+                                                                        products or services. Or any message that isn't
+                                                                        utility or
+                                                                        authentication.
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-check form-radio-primary mb-3">
-                                                                    <label for="Utility_radio" class="form-label">
+                                                            </div>
+                                                        </label>
+                                                        <label
+                                                            class="d-flex align-items-center border border-2 border-light rounded-3 text-muted text-center cursor-pointer"
+                                                            for="utilityRadio" style="height: 100px; flex: 50%;">
+                                                            <input class="form-check-input mx-1" type="radio"
+                                                                name="category" id="utilityRadio" value="utility"
+                                                                hidden>
+                                                            <div class="d-flex align-items-center mb-0"
+                                                                for="utilityRadio">
+                                                                <div class="mx-2">
+                                                                    <div class="avatar-sm flex-shrink-0">
+                                                                        <span
+                                                                            class="avatar-title bg-light text-dark rounded-circle fs-3">
+                                                                            <i class="bx bxs-bell align-middle"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-muted text-start">
+                                                                    <div class="fw-semibold text-dark">
                                                                         Utility
-                                                                    </label>
-                                                                    <input type="radio" id="Utility_radio"
-                                                                        name="Category" value="Utility"
-                                                                        class="form-check-input required"
-                                                                        data-type="radio" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="document_name"
-                                                                    class="form-label fw-semibold">
-                                                                    Template Name
-                                                                    <span class="text-danger">*</span>
-                                                                    <span class="text-danger"
-                                                                        id="err_document_name"></span>
-                                                                </label>
-                                                                <div class="mb-2">
-                                                                    <span class="fs-12 text-muted">Name your
-                                                                        message
-                                                                        template.</span>
-                                                                </div>
-                                                                <div class="position-relative">
-                                                                    <input type="text" id="document_Name"
-                                                                        class="form-control pe-5 required"
-                                                                        data-type="message">
-                                                                    <div class="text-end mt-1 character-counter">
-                                                                        <span id="characterCounter"></span>
+                                                                    </div>
+                                                                    <div class="fs-12 me-2">
+                                                                        Messages about a specific transaction, account,
+                                                                        order or customer request.
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-                                                            <div class="mb-3">
-                                                                <label for="document_lang"
-                                                                    class="form-label fw-semibold">
-                                                                    Language
-                                                                    <span class="text-danger">*</span>
-                                                                    <span class="text-danger"
-                                                                        id="err_document_lang"></span>
-                                                                </label>
-                                                                <div class="mb-2">
-                                                                    <span class="fs-12 text-muted">Choose language for
-                                                                        your message template.</span>
-                                                                </div>
-                                                                <div class="position-relative" id="templatelang">
-
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="d-flex align-items-start gap-3 mt-4">
-                                                                <button type="button" id="switchToEditTemplateButton"
-                                                                    class="btn btn-success btn-label right ms-auto nexttab nexttab"
-                                                                    data-nexttab="v-pills-bill-address-tab"><i
-                                                                        class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Next</button>
-                                                            </div>
-                                                        </div>
+                                                        </label>
                                                     </div>
-
                                                 </div>
-                                                <!-- end tab pane -->
-                                                <div class="tab-pane fade show" id="v-pills-bill-address"
-                                                    role="tabpanel" aria-labelledby="v-pills-bill-address-tab">
-
-                                                    <div class="card">
-                                                        <h3 class="card-header text-center">Details of Template</h3>
-                                                        <div class="card-body">
-                                                            <div class="mb-3">
-                                                                <h4 for="document_Header" class="form-label">
-                                                                    Header
-                                                                    <span
-                                                                        class="badge bg-primary-subtle text-primary">Optional</span>
-                                                                    <span class="text-danger" id="err_Header"></span>
-                                                                </h4>
-                                                                <div class="mb-2">
-                                                                    <span class="fs-12 text-muted">Add a title or choose
-                                                                        which type of media you'll use for this
-                                                                        header.</span>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <select id="headertype" class="form-select">
-                                                                        <option value="None">None</option>
-                                                                        <option value="Text">Text</option>
-                                                                        <option value="Media">Media</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-none" id="headerText">
-                                                                <label for="document_headertext" class="form-label">
-                                                                    Header Text
-                                                                </label>
-                                                                <div class="position-relative mb-3">
-                                                                    <input type="text" id="Headermsg"
-                                                                        class="form-control pe-5 required"
-                                                                        data-type="message">
-                                                                    <div class="text-end mt-1 character-counter">
-                                                                        <span id="HeadercharacterCounter"></span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <button class="btn btn-primary btn-load"
-                                                                        id="yourAddInputFieldButton">+ Add
-                                                                        Field</button>
-                                                                </div>
-                                                                <div id="yourInputFieldsContainer">
-                                                                    <!-- Input fields for the second button will be added here -->
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-none" id="headerMedia">
-                                                                <label for="document_headermedia" class="form-label">
-                                                                    Header Media
-                                                                    <span class="text-danger">*</span>
-                                                                    <span class="text-danger"
-                                                                        id="err_document_headermedia"></span>
-                                                                </label>
-                                                                <div
-                                                                    class="form-check form-radio-primary position-relative mb-3">
-                                                                    <label for="imageRadio" class="form-label">
-                                                                        Image
-                                                                    </label>
-                                                                    <input type="radio" id="imageRadio"
-                                                                        name="MediaCategory"
-                                                                        class="form-check-input required" value="IMAGE"
-                                                                        data-type="radio" />
-                                                                </div>
-                                                                <div
-                                                                    class="form-check form-radio-primary position-relative mb-3">
-                                                                    <label for="documentRadio" class="form-label">
-                                                                        document
-                                                                    </label>
-                                                                    <input type="radio" id="documentRadio"
-                                                                        name="MediaCategory"
-                                                                        class="form-check-input required"
-                                                                        value="DOCUMENT" data-type="radio" />
-                                                                </div>
-
-                                                                <div class="position-relative mb-3" id="imageField">
-                                                                    <label for="Image" class="form-label">
-                                                                        Image
-                                                                        <span class="text-danger">*</span>
-                                                                        <span class="text-danger" id="err_Image"></span>
-                                                                    </label>
-                                                                    <input type="file" class="form-control mb-3"
-                                                                        style="resize: none" id="image"
-                                                                        data-type="message">
-                                                                </div>
-                                                                <div class="position-relative mb-3" id="documentField">
-                                                                    <label for="Document" class="form-label">
-                                                                        Document
-                                                                        <span class="text-danger">*</span>
-                                                                        <span class="text-danger"
-                                                                            id="err_Document"></span>
-                                                                    </label>
-                                                                    <input type="file" class="form-control mb-3"
-                                                                        style="resize: none" id="document"
-                                                                        data-type="message">
-                                                                </div>
-                                                            </div>
-                                                            <div class="mb-6">
-                                                                <h4 for="document_Body" class="form-label">
-                                                                    Body
-                                                                    <span
-                                                                        class="badge bg-primary-subtle text-primary">Mandatory</span>
-                                                                    <span class="text-danger" id="err_Header"></span>
-                                                                </h4>
-                                                                <div class="mb-2">
-                                                                    <span class="fs-12 text-muted">Enter the text for
-                                                                        your message in the language that you've
-                                                                        selected.</span>
-                                                                </div>
-                                                                <div class="mb-3 position-relative">
-                                                                    <textarea class="form-control scrollbar-custom"
-                                                                        id="bodymsg" rows="5"
-                                                                        style="resize: none;"></textarea>
-                                                                    <div class="text-end mt-1 character-counter">
-                                                                        <span id="BodycharacterCounter"></span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <button class="btn btn-primary btn-load"
-                                                                        id="addInputFieldButton">+ Add Field</button>
-                                                                </div>
-                                                                <div id="inputFieldsContainer">
-                                                                    <!-- Input fields for the second button will be added here -->
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <h4 for="document_Footer" class="form-label">
-                                                                    Footer
-                                                                    <span
-                                                                        class="badge bg-primary-subtle text-primary">Optional</span>
-                                                                    <span class="text-danger" id="err_Header"></span>
-                                                                </h4>
-                                                                <div class="mb-3">
-                                                                    <input type="text" id="footertext"
-                                                                        class="form-control pe-5 required"
-                                                                        data-type="message">
-                                                                </div>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <!-- <button type="button" class="btn btn-warning bg-gradient waves-effect waves-light" id="addquickreply">Add Quick Reply</button> -->
-                                                                <button type="button"
-                                                                    class="btn btn-warning bg-gradient waves-effect waves-light"
-                                                                    id="addphonenumber" data-type="PHONE_NUMER">Add
-                                                                    Phone Number</button>
-                                                                <button type="button"
-                                                                    class="btn btn-warning bg-gradient waves-effect waves-light"
-                                                                    id="addurl" data-type="URL">Add URL</button>
-                                                            </div>
-                                                            <!-- <div id="quickReplyContainer" class="mb-3">
-                              </div> -->
-                                                            <div class="container">
-                                                                <div id="phoneContainer" class="row mt-4 gap-2"></div>
-                                                            </div>
-                                                            <div class="container">
-
-                                                                <div id="urlContainer" class="row mt-4 gap-2"></div>
-                                                            </div>
-
-                                                            <div class="d-flex align-items-start gap-3 mt-4">
-                                                                <div class="d-flex align-items-start">
-                                                                    <button type="button"
-                                                                        class="btn btn-success btn-label left ms-auto nexttab nexttab"
-                                                                        data-nexttab="v-pills-bill-info-tab"
-                                                                        id="backButton">
-                                                                        <i
-                                                                            class="ri-arrow-left-line label-icon align-middle fs-16"></i>Back</button>
-                                                                </div>
-                                                                <button type="button" id="submitforapproval"
-                                                                    class="btn btn-primary btn-load right ms-auto nexttab nexttab"
-                                                                    data-nexttab="v-pills-bill-address-tab"> <i
-                                                                        class="mdi mdi-send me-lg-2 me-md-2"></i><span
-                                                                        class="d-none d-lg-inline-block d-md-inline-block">
-                                                                        Submit for approval
-                                                                    </span>
-                                                                </button>
-                                                            </div>
+                                                <div class="mb-3">
+                                                    <label for="document_Name" class="form-label fw-semibold mb-1">
+                                                        Template Name
+                                                        <span class="text-danger">*</span>
+                                                        <span class="text-danger" id="err_document_Name"></span>
+                                                    </label>
+                                                    <div class="mb-2">
+                                                        <span class="fs-12 text-muted">Name your
+                                                            message
+                                                            template.</span>
+                                                    </div>
+                                                    <div class="position-relative">
+                                                        <input type="text" id="document_Name"
+                                                            class="form-control pe-5 required" data-type="message">
+                                                        <div class="text-end mt-1 character-counter">
+                                                            <span id="characterCounter"></span>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label for="selectedlang" class="form-label fw-semibold mb-1">
+                                                        Language
+                                                        <span class="text-danger">*</span>
+                                                        <span class="text-danger" id="err_selectedlang"></span>
+                                                    </label>
+                                                    <div class="mb-2">
+                                                        <span class="fs-12 text-muted">Choose language for
+                                                            your message template.</span>
+                                                    </div>
+                                                    <div class="position-relative" id="templatelang">
+                                                        <select id="selectedlang" class="form-select"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-start gap-3">
+                                                    <button type="button" id="switchToEditTemplateButton"
+                                                        class="btn btn-success btn-label right ms-auto nexttab nexttab"
+                                                        data-nexttab="v-pills-bill-address-tab"><i
+                                                            class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Next</button>
+                                                </div>
+                                            </div>
+                                            <!-- end tab pane -->
+                                            <div class="tab-pane fade mb-3" id="v-pills-bill-address" role="tabpanel"
+                                                aria-labelledby="v-pills-bill-address-tab" data-simplebar
+                                                data-simplebar-auto-hide="false">
+                                                <div class="mb-3">
+                                                    <h4 for="document_Header" class="form-label mb-1">
+                                                        Header
+                                                        <span class="badge bg-light text-body fs-10">Optional</span>
+                                                        <span class="text-danger" id="err_Header"></span>
+                                                    </h4>
+                                                    <div class="mb-2">
+                                                        <span class="fs-12 text-muted">
+                                                            Add a title or choose which type of media you'll use for
+                                                            this header.
+                                                        </span>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <select id="headertype" class="form-select">
+                                                            <option value="None">None</option>
+                                                            <option value="Text">Text</option>
+                                                            <option value="Media">Media</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="d-none" id="headerText">
+                                                    <label for="document_headertext" class="form-label">
+                                                        Header Text
+                                                    </label>
+                                                    <div class="position-relative mb-3">
+                                                        <input type="text" id="Headermsg"
+                                                            class="form-control pe-5 required" data-type="message">
+                                                        <div class="text-end mt-1 character-counter">
+                                                            <span id="HeadercharacterCounter"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <button class="btn btn-soft-primary"
+                                                            id="yourAddInputFieldButton" data-bs-toggle="tooltip"
+                                                            data-bs-placement="right"
+                                                            title="Only one dynamic field allowed">
+                                                            <i class="bx bx-plus align-middle me-1"></i>
+                                                            Add Field
+                                                        </button>
+                                                    </div>
+                                                    <div id="yourInputFieldsContainer">
+                                                        <!-- Input fields for the second button will be added here -->
+                                                    </div>
+                                                </div>
+                                                <div class="d-none" id="headerMedia">
+                                                    <label for="document_headermedia" class="form-label">
+                                                        Media Type
+                                                        <span class="text-danger">*</span>
+                                                        <span class="text-danger" id="err_document_headermedia"></span>
+                                                    </label>
 
+                                                    <div class="d-flex justify-content-start gap-3 mb-2">
+                                                        <label
+                                                            class="d-flex align-items-center justify-content-center border border-2 border-primary rounded-3 text-primary text-center bg-light cursor-pointer"
+                                                            for="imageRadio" style="height: 100px; width: 100px;">
+                                                            <input type="radio" id="imageRadio" name="MediaCategory"
+                                                                class="form-check-input" value="IMAGE" data-type="radio"
+                                                                checked hidden>
+                                                            <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
+                                                                for="imageRadio">
+                                                                <i class="bx bxs-file-image align-middle"
+                                                                    style="font-size: 3rem;"></i>
+                                                                Image
+                                                            </div>
+                                                        </label>
+                                                        <label
+                                                            class="d-flex align-items-center justify-content-center border border-2 border-light rounded-3 text-muted text-center bg-light cursor-pointer"
+                                                            for="documentRadio" style="height: 100px; width: 100px;">
+                                                            <input class="form-check-input" type="radio"
+                                                                id="documentRadio" name="MediaCategory" value="DOCUMENT"
+                                                                data-type="radio" hidden>
+                                                            <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
+                                                                for="documentRadio">
+                                                                <i class="bx bxs-file-doc align-middle"
+                                                                    style="font-size: 3rem;"></i>
+                                                                Document
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="position-relative mb-3" id="imageField">
+                                                        <label for="Image" class="form-label">
+                                                            Image
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_Image"></span>
+                                                        </label>
+                                                        <input type="file" class="form-control mb-3"
+                                                            style="resize: none" id="image" data-type="message"
+                                                            accept="image/*">
+                                                    </div>
+                                                    <div class="position-relative mb-3" id="documentField">
+                                                        <label for="Document" class="form-label">
+                                                            Document
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_Document"></span>
+                                                        </label>
+                                                        <input type="file" class="form-control mb-3"
+                                                            style="resize: none" id="document" data-type="message"
+                                                            accept="application/*">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <h4 for="document_Body mb-1" class="form-label mb-1">
+                                                        Body
+                                                        <span class="text-danger" id="err_Header"></span>
+                                                    </h4>
+                                                    <div class="mb-2">
+                                                        <span class="fs-12 text-muted">Enter the text for
+                                                            your message in the language that you've
+                                                            selected.</span>
+                                                    </div>
+                                                    <div class="mb-3 position-relative">
+                                                        <textarea class="form-control scrollbar-custom" id="bodymsg"
+                                                            rows="5" style="resize: none;"></textarea>
+                                                        <div class="text-end mt-1 character-counter">
+                                                            <span id="BodycharacterCounter"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <button class="btn btn-soft-primary" id="addInputFieldButton">
+                                                            <i class="bx bx-plus align-middle me-1"></i>
+                                                            Add Field
+                                                        </button>
+                                                    </div>
+                                                    <div id="inputFieldsContainer">
+                                                        <!-- Input fields for the second button will be added here -->
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h4 for="document_Footer" class="form-label">
+                                                        Footer
+                                                        <span class="badge bg-light text-body fs-10">Optional</span>
+                                                        <span class="text-danger" id="err_Header"></span>
+                                                    </h4>
+                                                    <div class="mb-3">
+                                                        <input type="text" id="footertext"
+                                                            class="form-control pe-5 required" data-type="message">
+                                                    </div>
+                                                </div>
+                                                <div class="">
+                                                    <!-- <button type="button" class="btn btn-warning bg-gradient waves-effect waves-light" id="addquickreply">Add Quick Reply</button> -->
+                                                    <button type="button" class="btn btn-soft-primary"
+                                                        id="addphonenumber" data-type="PHONE_NUMER">
+                                                        <i class="ri-phone-fill align-middle me-1"></i>
+                                                        Add Phone Number
+                                                    </button>
+                                                    <button type="button" class="btn btn-soft-primary" id="addurl"
+                                                        data-type="URL">
+                                                        <i class="mdi mdi-link-variant align-middle me-1"></i>
+                                                        Add URL
+                                                    </button>
+                                                </div>
+                                                <div id="phoneContainer" class="d-none">
+                                                    <div class="signin-other-title text-center mt-2">
+                                                        <h5 class="fs-13 title">Phone button</h5>
+                                                    </div>
+                                                </div>
+                                                <div id="urlContainer" class="d-none">
+                                                    <div class="signin-other-title text-center mt-2">
+                                                        <h5 class="fs-13 title">URL button</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-start justify-content-between mt-3">
+                                                    <button type="button"
+                                                        class="btn btn-light btn-label nexttab nexttab"
+                                                        data-nexttab="v-pills-bill-info-tab" id="backButton">
+                                                        <i class="ri-arrow-left-line label-icon align-middle fs-16"></i>
+                                                        Back
+                                                    </button>
+                                                    <button type="button" id="submitforapproval"
+                                                        class="btn btn-primary btn-load nexttab nexttab"
+                                                        data-nexttab="v-pills-bill-address-tab">
+                                                        <i class="mdi mdi-send me-2"></i>
+                                                        Submit
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -636,6 +652,7 @@
             }
             gettemplate();
 
+            let duplicateTemplateName = false;
             $(document).on('input', '#document_Name', function () {
                 var originalValue = $(this).val();
                 var lowercaseValue = originalValue.toLowerCase().replace(/\s/g, '_');
@@ -651,14 +668,17 @@
                     $(this).val(lowercaseValue.substr(0, (maxLength - 1)));
                     remainingLength = 0;
                 }
-                for (let i = 0; i <= templatedata.length; i++) {
+                for (let i = 0; i < templatedata.length; i++) {
                     if ($("#document_Name").val() == templatedata[i].name) {
-                        swal({
-                            title: "Template with same name already exist!!!",
-                            type: "warning",
-                            timer: 3000,
-                            showConfirmButton: false,
-                        })
+                        $('#err_document_Name').html('Template name already exist');
+                        $('#document_Name').removeClass('form-control-danger form-control-success').addClass('form-control-danger')
+                        duplicateTemplateName = false;
+                        break;
+                    }
+                    else {
+                        $('#err_document_Name').html('');
+                        $('#document_Name').removeClass('form-control-danger form-control-success').addClass('form-control-success')
+                        duplicateTemplateName = true;
                     }
                 }
             });
@@ -768,37 +788,43 @@
             ]
 
             function language() {
-                let data;
-                let output = `<select id="selectedlang" class="form-select">
-                    <option value="null" selected disabled>Select Language</option>`;
+                let output = `<option value="null" selected disabled>Select Language</option>`;
                 for (let i = 0; i < langarray.length; i++) {
                     output += `<option value="${langarray[i].code}">${langarray[i].language}</option>`;
                 }
-                output += `</select>`;
-                $('#templatelang').html(output);
+                $('#selectedlang').html(output);
             }
             language();
 
-
             $(document).on('click', '#switchToEditTemplateButton', function () {
-
                 nullfield_validation(`document_Name`);
                 nullfield_validation(`selectedlang`);
-                if (objFlag.flag_document_Name == 0 && objFlag.flag_selectedlang == 0) {
-                    if (!$("input[name='Category']:checked").val()) {
-                        $('#err_document_file').text("Please select a category.").addClass('text-danger');
-                    } else {
+
+                let flag = false;
+
+                if (!$('input[type=radio][name="category"]:checked').val()) {
+                    $('#err_document_file').text("Please select a category.").addClass('text-danger');
+                    flag = false;
+                }
+                else {
+                    $('#err_document_file').text("");
+                    flag = true;
+                }
+
+                if (objFlag.flag_document_Name == 0 && objFlag.flag_selectedlang == 0 && flag) {
+                    if (duplicateTemplateName) {
                         $('#err_document_file').text("").removeClass('text-danger');
 
-                        // Switch the active tab to the one with id v-pills-bill-address
-                        $('#v-pills-bill-address-tab').addClass('done active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+                        $('#v-pills-bill-address-tab').addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
                         $('#v-pills-bill-info-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
 
-                        // Show the content of the new active tab
                         $('#v-pills-bill-address').addClass('show active');
-
-                        // Hide the content of the previous active tab
                         $('#v-pills-bill-info').removeClass('show active');
+                    }
+                    else {
+                        $('#err_document_Name').html('Template name already exist');
+                        $('#document_Name').removeClass('form-control-danger form-control-success').addClass('form-control-danger');
+                        duplicateTemplateName = false;
                     }
                 }
             });
@@ -809,7 +835,7 @@
                 $('#v-pills-bill-info').addClass('show active');
 
                 // Deactivate Step 2
-                $('#v-pills-bill-address-tab').removeClass('done active').attr('aria-selected', 'false');
+                $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
                 $('#v-pills-bill-address').removeClass('show active');
             });
 
@@ -827,9 +853,25 @@
             const addInputFieldButton1 = document.getElementById('yourAddInputFieldButton');
             const dynamicVariableField1 = document.getElementById('Headermsg');
 
-            // Function to add input text field with specified variable name
             function addHeaderField(variableName) {
                 const inputFieldContainer = document.createElement('div');
+
+                // const lbltxt = $('<span>', {
+                //     class: 'input-group-text',
+                //     text: `{{${variableName}}}`
+                // });
+
+                // const inputbox = $('<input>', {
+                //     class: 'form-control',
+                //     placeholder: `Value for {{${variableName}}}`,
+                //     type: `text`,
+                //     name: `Headerinput${variableName}`,
+                //     id: ``
+                // });
+
+                // const mainBox = $('<div>', {
+                //     class: 'input-group',
+                // }).append(lbltxt, inputbox);
 
                 // Create label for variable
                 const variableLabel = document.createElement('label');
@@ -845,13 +887,14 @@
                 inputFieldContainer.appendChild(inputField);
 
                 // Append {{variableName}} to the dynamic variable field value
-                dynamicVariableField1.value += '{{' + variableName + '}}';
+                // dynamicVariableField1.value += variableName + '}}';
 
                 // Disable the button
                 addInputFieldButton1.disabled = true;
 
                 // Append input field and {{variableName}} to the container
                 inputFieldsContainer1.appendChild(inputFieldContainer);
+                // inputFieldsContainer1.appendChild(mainBox);
             }
 
             // Function to enable add input field button
@@ -866,33 +909,46 @@
             });
 
             // Function to remove input text field and corresponding label
-            function removeInputField(inputFieldContainer) {
-                inputFieldContainer.remove(); // Remove input field container
+            // function removeInputField(inputFieldContainer) {
+            //     inputFieldContainer.remove(); // Remove input field container
 
-                // Check if there are any input fields left
-                if (inputFieldsContainer1.querySelectorAll('div').length === 0) {
-                    enableAddInputFieldButton(); // If no input fields left, enable the button
-                }
-            }
+            //     // Check if there are any input fields left
+            //     if (inputFieldsContainer1.querySelectorAll('div').length === 0) {
+            //         enableAddInputFieldButton(); // If no input fields left, enable the button
+            //     }
+            // }
 
-            // Event delegation for input field change
-            dynamicVariableField1.addEventListener('input', function () {
-                const dynamicVariableValue = dynamicVariableField.value;
+            $(document).on('input', '#Headermsg', () => {
+                let dynamicVariableValue = dynamicVariableField1.value;
                 const dynamicVariableRegex = /\{\{(\w+)\}\}/g;
+                // const dynamicVariableRegex = /\{\{/g;
                 const matches = dynamicVariableValue.match(dynamicVariableRegex);
 
                 // Remove existing input fields
                 inputFieldsContainer1.innerHTML = '';
 
                 if (matches) {
-                    matches.forEach(match => {
-                        addHeaderField(match.substring(2, match.length - 2)); // Add input field for each match
-                    });
+                    if (matches.length === 1) {
+                        addHeaderField(1)
+                    }
+                    else {
+                        let str = $('#Headermsg').val();
+                        let newstr = str.replace(matches[1], "")
+                        $('#Headermsg').val(`${newstr}`);
+                        dynamicVariableValue = newstr;
+                    }
+                    // matches.forEach(match => {
+                    //     addHeaderField(match.substring(2, match.length - 2)); // Add input field for each match
+                    // });
                 }
                 else {
                     enableAddInputFieldButton(); // If no matches found, enable the button
                 }
-            });
+            })
+            // Event delegation for input field change
+            // dynamicVariableField1.addEventListener('input', function () {
+
+            // });
 
             // Event delegation for remove button click
             inputFieldsContainer1.addEventListener('click', function (event) {
@@ -922,9 +978,18 @@
                 }
             })
 
-            $("#imageField, #documentField, #videoField").hide();
+            $("#documentField, #videoField").hide();
+            $(document).on('change', 'input[type=radio][name="MediaCategory"]', function () {
+                $('input[name="MediaCategory"]').each(function () {
+                    if ($(this).is(':checked')) {
+                        // alert($(this).val());
+                        $(this).parent().removeClass('text-muted text-primary border-primary border-light bg-light').addClass('text-primary border-primary bg-light')
+                    }
+                    else {
+                        $(this).parent().removeClass('text-muted text-primary border-primary border-light bg-light').addClass('text-muted border-light')
+                    }
+                });
 
-            $('input[type=radio][name=MediaCategory]').change(function () {
                 $("#imageField, #documentField, #videoField").hide();
                 if (this.id === "imageRadio") {
                     $("#imageField").show();
@@ -935,7 +1000,32 @@
                 }
                 selectedMediaCategory = $(this).val()
                 compare_object.header.type = selectedMediaCategory;
-            });
+            })
+
+            $(document).on('change', 'input[type=radio][name="category"]', function () {
+                $('input[name="category"]').each(function () {
+                    const $this = $(this);
+                    const isChecked = $this.is(':checked');
+
+                    // Determine classes based on checked state
+                    const parentClassesToRemove = 'text-muted text-primary border-primary border-light bg-light';
+                    const parentClassesToAdd = isChecked ? 'text-primary border-primary bg-light' : 'text-muted border-light';
+                    const siblingInnerClassesToRemove = 'text-primary text-dark';
+                    const siblingInnerClassesToAdd = isChecked ? 'text-primary' : 'text-dark';
+
+                    // Update parent classes
+                    $this.parent().removeClass(parentClassesToRemove).addClass(parentClassesToAdd);
+
+                    // Update siblings' classes
+                    const siblingFirstChild = $this.siblings().children().eq(1).children().eq(0);
+                    const siblingSecondChild = $this.siblings().children().eq(0).children().eq(0).children().eq(0);
+
+                    siblingFirstChild.removeClass(siblingInnerClassesToRemove).addClass(siblingInnerClassesToAdd);
+                    siblingSecondChild.removeClass(siblingInnerClassesToRemove).addClass(siblingInnerClassesToAdd).addClass('bg-white');
+                });
+
+                selectedCategory = $(this).val()
+            })
 
             function getFileType(mimeType) {
                 if (mimeType.startsWith('image')) {
@@ -1046,11 +1136,12 @@
                 inputField.name = 'bodyinput' + (counter); // Unique name for each input field
                 inputField.id = 'bodyinput' + (counter); // Unique ID for each input field
                 inputField.classList.add('form-control'); // Add the form-control class
+                inputField.classList.add('mb-2'); // Add the form-control class
 
                 inputFieldContainer.appendChild(inputField);
                 inputFieldsContainer.appendChild(inputFieldContainer);
 
-                inputFieldsContainer.appendChild(document.createElement('br')); // Add line break
+                // inputFieldsContainer.appendChild(document.createElement('br')); // Add line break
 
                 // Append {{1}} to the dynamic variable field value
                 dynamicVariableField.value += '{{' + (counter) + '}}';
@@ -1164,42 +1255,40 @@
                     });
 
                     const label1 = $('<label>', {
-                        class: 'form-label col-2',
+                        class: 'form-label',
                         text: 'Button Text:'
                     });
 
                     // Create first input field and label
                     const input1 = $('<input>', {
                         type: 'text',
-                        class: 'col-3',
+                        class: 'form-control w-100',
                         id: 'phone_btn_text',
                         placeholder: 'Button Text'
                     });
 
                     const label2 = $('<label>', {
-                        class: 'form-label col-2',
+                        class: 'form-label',
                         text: 'Phone Number:'
                     });
 
                     // Create second input field and label
                     const input2 = $('<input>', {
                         type: 'text',
-                        class: 'col-3',
+                        class: 'form-control w-100',
                         id: 'phn_number',
                         placeholder: 'Phone Number'
                     });
 
                     // Create remove button
                     const removeBtn = $('<button>', {
-                        class: 'btn btn-danger mr-2 col-2 mb-3',
-                        text: 'Remove'
+                        class: 'btn btn-soft-danger'
                     }).on('click', function () {
-                        // Remove input fields, labels, and button
-                        input1.remove();
-                        input2.remove();
-                        label1.remove();
-                        label2.remove();
-                        removeBtn.remove();
+                        div1.remove();
+                        div2.remove();
+                        div3.remove();
+
+                        $('#phoneContainer').addClass('d-none')
 
                         compare_object.Buttons.pop({
                             type: "phone",
@@ -1207,10 +1296,23 @@
                         });
                         // Set flag back to false
                         phonebtn = false;
-                    });
+                    }).append(`<i class="ri-close-fill align-middle me-1"></i> Remove`);
 
-                    // Append elements to container
-                    $('#phoneContainer').append(label1, input1, label2, input2, removeBtn);
+                    const div1 = $('<div>', {
+                        style: 'flex-grow: 2;'
+                    }).append(input1);
+
+                    const div2 = $('<div>', {
+                        style: 'flex-grow: 2;'
+                    }).append(input2);
+
+                    const div3 = $('<div>').append(removeBtn);
+
+                    const mainDiv = $('<div>', {
+                        class: 'd-flex align-items-end gap-2 mb-2'
+                    }).append(div1, div2, div3)
+
+                    $('#phoneContainer').append(mainDiv).removeClass('d-none');
 
                 } else {
                     swal({
@@ -1246,35 +1348,35 @@
 
                 // Create input fields, labels, and remove button
                 const label1 = $('<label>', {
-                    class: 'col-form-label col-2 mb-3',
+                    class: 'form-label',
                     text: 'Button Text:'
                 });
                 const input1 = $('<input>', {
                     type: 'text',
-                    class: 'col-3 mb-3',
+                    class: 'form-control w-100',
                     id: 'url_btn_text',
                     placeholder: 'Button Text'
                 });
                 const label2 = $('<label>', {
-                    class: 'col-form-label col-2 mb-3',
+                    class: 'form-label',
                     text: 'URL:'
                 });
                 const input2 = $('<input>', {
                     type: 'text',
-                    class: 'col-3 mb-3',
+                    class: 'form-control w-100',
                     id: 'url',
                     placeholder: 'https://example.com'
                 });
+
                 const removeBtn = $('<button>', {
-                    class: 'btn btn-danger mr-2 col-2 mb-3',
-                    text: 'Remove'
+                    class: 'btn btn-soft-danger',
                 }).on('click', function () {
                     // Remove input fields, labels, and button
-                    input1.remove();
-                    input2.remove();
-                    label1.remove();
-                    label2.remove();
-                    removeBtn.remove();
+                    div1.remove();
+                    div2.remove();
+                    div3.remove();
+
+                    $('#urlContainer').addClass('d-none');
 
                     compare_object.Buttons.pop({
                         type: "URL",
@@ -1282,14 +1384,25 @@
                     });
                     // Reset flag to allow button click again
                     addUrlBtnClicked = false;
-                });
+                }).append(`<i class="ri-close-fill align-middle me-1"></i> Remove`);
+
+                const div1 = $('<div>', {
+                    style: 'flex-grow: 2;'
+                }).append(input1);
+
+                const div2 = $('<div>', {
+                    style: 'flex-grow: 2;'
+                }).append(input2);
+
+                const div3 = $('<div>').append(removeBtn);
+
+                const mainDiv = $('<div>', {
+                    class: 'd-flex align-items-end gap-2 mb-2'
+                }).append(div1, div2, div3)
+
                 // Append elements to container
-                $('#urlContainer').append(label1, input1, label2, input2, removeBtn);
+                $('#urlContainer').append(mainDiv).removeClass('d-none');
 
-            });
-
-            $('input[name="Category"]').change(function () {
-                selectedCategory = $(this).val()
             });
 
             $(document).on('change', '#phone_btn_text', function () {
@@ -1339,7 +1452,8 @@
                 component = [];
                 if (!$("input[name='MediaCategory']:checked").val()) {
                     $('#err_document_headermedia').text("Please select a Media category.").addClass('text-danger');
-                } else {
+                }
+                else {
                     $('#err_document_headermedia').text("").removeClass('text-danger');
                 }
 
@@ -1606,8 +1720,8 @@
                                         "buttons": buttons
                                     }
                                 }
+                                component.push(buttonpayLoad);
                             }
-                            component.push(buttonpayLoad);
                         }
 
                     }
@@ -1628,81 +1742,84 @@
                         "components": component
                     };
 
-                    $.ajax({
-                        url: "/api/template/createtemplate",
-                        method: "post",
-                        data: payload,
-                        beforeSend: function () {
-                            $("#submitforapproval")
-                                .prop('disabled', true)
-                                .removeClass("btn-primary btn-success")
-                                .addClass("btn-warning")
-                                .html(`<span class= "d-flex align-items-center">
-                                                        <span class="flex-grow-1 me-2">
-                                                            Sending
-                                                        </span>
-                                                        <span class="spinner-border flex-shrink-0" role="status">
-                                                            <span class="visually-hidden"></span>
-                                                        </span>
-                                                    </span>`);
-                        },
-                        success: function (val) {
-                            if (val.success) {
-                                swal({
-                                    title: "Template Created Successfully!!!",
-                                    type: "success",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                }).then(function () {
-                                    $("#submitforapproval")
-                                        .prop('disabled', false)
-                                        .removeClass("btn-warning btn-success")
-                                        .addClass("btn-primary")
-                                        .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
-                                                    <span class="d-none d-lg-inline-block d-md-inline-block">
-                                                        submit for approval
-                                                    </span>`);
-                                    $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
-                                    $('#v-pills-bill-info').addClass('show active');
+                    console.log(payload)
 
-                                    $('#v-pills-bill-address-tab').removeClass('done active').attr('aria-selected', 'false');
-                                    $('#v-pills-bill-address').removeClass('show active');
+                    // $.ajax({
+                    //     url: "/api/template/createtemplate",
+                    //     method: "post",
+                    //     data: payload,
+                    //     beforeSend: function () {
+                    //         $("#submitforapproval")
+                    //             .prop('disabled', true)
+                    //             .removeClass("btn-primary btn-success")
+                    //             .addClass("btn-warning")
+                    //             .html(`<span class= "d-flex align-items-center">
+                    //                                     <span class="flex-grow-1 me-2">
+                    //                                         Sending
+                    //                                     </span>
+                    //                                     <span class="spinner-border flex-shrink-0" role="status">
+                    //                                         <span class="visually-hidden"></span>
+                    //                                     </span>
+                    //                                 </span>`);
+                    //     },
+                    //     success: function (val) {
+                    //         if (val.success) {
+                    //             swal({
+                    //                 title: "Template Created Successfully!!!",
+                    //                 type: "success",
+                    //                 timer: 2000,
+                    //                 showConfirmButton: false,
+                    //             }).then(function () {
+                    //                 $("#submitforapproval")
+                    //                     .prop('disabled', false)
+                    //                     .removeClass("btn-warning btn-success")
+                    //                     .addClass("btn-primary")
+                    //                     .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                    //                                 <span class="d-none d-lg-inline-block d-md-inline-block">
+                    //                                     submit for approval
+                    //                                 </span>`);
+                    //                 $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
+                    //                 $('#v-pills-bill-info').addClass('show active');
 
-                                    $('#document_Name').val("");
-                                    $("#selectedlang").val("");
-                                    $('#Headermsg').val("");
-                                    $('#Headerinput1').val("");
+                    //                 $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
+                    //                 $('#v-pills-bill-address').removeClass('show active');
 
-                                    mediavalue = "";
-                                    $('#image').val("");
-                                    $('#document').val("");
-                                    $('#bodymsg').text("");
-                                    $("#footertext").val("");
+                    //                 $('#document_Name').val("");
+                    //                 $("#selectedlang").val("");
+                    //                 $('#Headermsg').val("");
+                    //                 $('#Headerinput1').val("");
 
-                                    $('#phone_btn_text').val("");
-                                    $('#phn_number').val("");
-                                    $('#url_btn_text').val("");
-                                    $('#url').val("");
-                                });
-                            }
-                        }, error: (error) => {
-                            if (error.status == "406") {
-                                swal({
-                                    title: "Template not accepted!!!",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                }).then(function () {
-                                    $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
-                                    $('#v-pills-bill-info').addClass('show active');
+                    //                 mediavalue = "";
+                    //                 $('#image').val("");
+                    //                 $('#document').val("");
+                    //                 $('#bodymsg').text("");
+                    //                 $("#footertext").val("");
 
-                                    $('#v-pills-bill-address-tab').removeClass('done active').attr('aria-selected', 'false');
-                                    $('#v-pills-bill-address').removeClass('show active');
-                                });
-                            }
-                            if (error.status == "500") { internalservererror(); }
-                        }
-                    })
+                    //                 $('#phone_btn_text').val("");
+                    //                 $('#phn_number').val("");
+                    //                 $('#url_btn_text').val("");
+                    //                 $('#url').val("");
+                    //             });
+                    //         }
+                    //     }, 
+                    //     error: (error) => {
+                    //         if (error.status == "406") {
+                    //             swal({
+                    //                 title: "Template not accepted!!!",
+                    //                 type: "error",
+                    //                 timer: 2000,
+                    //                 showConfirmButton: false,
+                    //             }).then(function () {
+                    //                 $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
+                    //                 $('#v-pills-bill-info').addClass('show active');
+
+                    //                 $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
+                    //                 $('#v-pills-bill-address').removeClass('show active');
+                    //             });
+                    //         }
+                    //         if (error.status == "500") { internalservererror(); }
+                    //     }
+                    // })
                 }
             })
         });

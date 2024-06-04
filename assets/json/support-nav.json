@@ -8,5 +8,10 @@
         "page": "Support Tickets",
         "link": "supportTicket",
         "icon": "mdi mdi-ticket-account"
+    },
+    {
+        "page": "Log Details",
+        "link": "logs",
+        "icon": "ri-list-check-2"
     }
 ]
