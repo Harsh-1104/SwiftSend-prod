@@ -107,6 +107,53 @@ function chkLogin() {
     userinfo();
 }
 
+function chkValidInstance() {
+    const iid = getCookie('iid');
+    if (iid) {
+        let page = document.URL.split("/");
+
+        switch (page[3]) {
+            case 'dashboard':
+            case 'instance':
+            case 'support-ticket':
+            case 'updateprofile':
+            case 'profile':
+            case 'subscription': {
+                $.ajax({
+                    url: "/getData",
+                    method: "POST",
+                    data: {
+                        obj: {
+                            table: `instance`,
+                            paramstr: `instance_id = '${iid}'`
+                        }
+                    },
+                    success: function (val) {
+                        switch (val.status_code) {
+                            case '401':
+                            case '404': {
+                                InvalidUser();
+                                break;
+                            }
+
+                            case '500': {
+                                InternalServerError();
+                                break;
+                            }
+
+                            default: {
+                                if (!val[0].isRoot) {
+                                    location.href = `/iuser/${iid}/template`
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+}
+
 function getCheckedCheckboxesFor(checkboxName) {
     var checkboxes = document.querySelectorAll(`input[name="${checkboxName}"]:checked`), values = [];
     Array.prototype.forEach.call(checkboxes, function (el) {
@@ -281,6 +328,69 @@ function replacePlaceholders(str, i, idname = "body") {
     return str;
 }
 
+function displayDailylimit(id) {
+    $.ajax({
+        url: "/api/dashboard/getDailyReportData",
+        method: "GET",
+        success: function (val) {
+            if (val.success) {
+                const iid = document.URL.split("/")[4];
+                const instance_data = val.data.filter(x => x.iid === iid);
+
+                if (instance_data.length > 0) {
+                    $(`#${id}`).html(instance_data[0].total_count).removeClass('text-danger text-warning text-primary');
+
+                    let percentage = (instance_data[0].total_count * 100) / 1000;
+                    let x = null;
+                    if (percentage > 90) {
+                        $(`#${id}`).addClass('text-danger');
+                        x = '["--vz-danger"]';
+                    }
+                    else if (percentage > 60 && percentage <= 90) {
+                        $(`#${id}`).addClass('text-warning');
+                        x = '["--vz-warning"]';
+                    }
+                    else {
+                        $(`#${id}`).addClass('text-primary');
+                        x = '["--vz-primary"]';
+                    }
+
+                    $('#daily-limit-graph').html(`<div id="basic_radialbar" data-colors='${x}' class="apex-charts" style="width: 180px" dir="ltr"></div>`);
+
+                    var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
+
+                    var options = {
+                        series: [percentage],
+                        chart: {
+                            height: 180,
+                            type: "radialBar",
+                        },
+                        plotOptions: {
+                            radialBar: {
+                                startAngle: 0,
+                                endAngle: 360,
+                                hollow: {
+                                    size: '65%',
+                                }
+                            }
+                        },
+                        stroke: {
+                            lineCap: 'round'
+                        },
+                        labels: [`(${instance_data[0].total_count}/1000)`], colors: chartRadialbarBasicColors
+                    }
+                    chart = new ApexCharts(document.querySelector("#basic_radialbar"), options).render();
+                }
+                else {
+                    $(`#${id}`).html(`0`);
+                }
+            }
+        }, error: (error) => {
+            if (error.status === 500) InternalServerError();
+        }
+    })
+}
+
 $(document).ready(function () {
     $(document).on("click", ".copy", function () {
         var param = $(this).attr("id").substring(5);
@@ -288,7 +398,9 @@ $(document).ready(function () {
     });
     let page = document.URL.split("/");
 
-    if (document.referrer.split("/")[3] === "iuser" || document.referrer.split("/")[0] == "") {
+    chkValidInstance();
+
+    if (document.referrer.split("/")[3] === "iuser") {
         const iid = getCookie('iid');
         switch (page[3]) {
             case 'dashboard':
@@ -329,6 +441,7 @@ $(document).ready(function () {
                                 </div>
                             </div>
                         </div>`);
+
     $(document).on('click', '#logout', function () {
         document.cookie = "apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "iid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -505,6 +618,9 @@ $(document).ready(function () {
                             }
                             $('#navbar-nav').html(result);
                             $(`a[data-page='${page[3]}'],a[data-page='${page[5]}']`).addClass('active');
+                            if (page[5] == "createtemplate") {
+                                $(`a[data-page='template`).addClass('active');
+                            }
                         })
                         .catch(error => {
                             console.error(error);
@@ -567,6 +683,7 @@ $(document).ready(function () {
                             }
                         }
                     });
+                    displayDailylimit('daily-limit-count');
                     break;
                 }
             }
@@ -574,6 +691,9 @@ $(document).ready(function () {
     }
 
     if (page[3] === 'iuser') {
+        if (page[4] !== getCookie('iid')) {
+            location.href = `/iuser/${getCookie('iid')}/template`
+        }
         if (page[5]) {
             $.ajax({
                 url: "/getData",
@@ -684,6 +804,7 @@ $(document).ready(function () {
             sessionStorage.setItem("data-layout-mode", "dark")
         }
     })
+
     $(document).on('click', '#topnav-hamburger-icon', () => {
         if (sessionStorage.getItem("data-sidebar-size") == "lg") {
             sessionStorage.setItem("data-sidebar-size", "sm")

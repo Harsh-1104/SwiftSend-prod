@@ -4,6 +4,7 @@ const { setWabaCred } = require("./userController");
 const status = require("../assets/js/status");
 const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 
 let obj = [],
     apikey,
@@ -122,4 +123,28 @@ const SignIn = async (req, res) => {
     }
 };
 
-module.exports = { SignIn };
+// ----- Update Password ------
+
+const updatePassword = async (req, res) => {
+    const api_key = req.cookies.apikey;
+    const newpwd = req.body.newpwd;
+    if (newpwd) {
+        bcrypt.hash(newpwd, 10, (err, hash) => {
+            if (err) return res.send("err in bcrypt");
+            let query = `UPDATE users SET password = '${hash}' WHERE apikey = '${api_key}'`;
+            conn.query(query, (err, result) => {
+                if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
+                if (result <= 0) return res.send(status.nodatafound());
+                let query = `UPDATE instance SET password = '${hash}' WHERE apikey = '${api_key}' and isRoot = 1`;
+                conn.query(query, (err, result) => {
+                    if (err || result.affectedRows <= 0) return res.send(status.internalservererror());
+                    if (result <= 0) return res.send(status.nodatafound());
+
+                    res.send(status.ok());
+                });
+            });
+        });
+    }
+}
+
+module.exports = { SignIn, updatePassword };

@@ -498,8 +498,9 @@
                                                 </label>
                                                 <div class="position-relative auth-pass-inputgroup">
                                                     <input type="password"
-                                                        class="form-control required pe-5 password-input" id="oldpwd"
-                                                        placeholder="Enter current password" data-type="password">
+                                                        class="form-control required pe-5 password-input-hide-show"
+                                                        id="oldpwd" placeholder="Enter current password"
+                                                        data-type="password">
                                                     <button
                                                         class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                         type="button" id="password-addon">
@@ -515,8 +516,9 @@
                                                 </label>
                                                 <div class="position-relative auth-pass-inputgroup">
                                                     <input type="password"
-                                                        class="form-control required pe-5 password-input" id="newpwd"
-                                                        placeholder="Enter new password" data-type="password">
+                                                        class="form-control required pe-5 password-input-hide-show"
+                                                        id="newpwd" placeholder="Enter new password"
+                                                        data-type="password">
                                                     <button
                                                         class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                         type="button" id="password-addon">
@@ -532,8 +534,9 @@
                                                 </label>
                                                 <div class="position-relative auth-pass-inputgroup">
                                                     <input type="password"
-                                                        class="form-control required pe-5 password-input" id="cnfmpwd"
-                                                        placeholder="Confirm password" data-type="password">
+                                                        class="form-control required pe-5 password-input-hide-show"
+                                                        id="cnfmpwd" placeholder="Confirm password"
+                                                        data-type="password">
                                                     <button
                                                         class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                         type="button" id="password-addon">
@@ -1159,9 +1162,10 @@
                                                 const apikey = getCookie("apikey");
 
                                                 $.ajax({
-                                                    url: "/updateData",
+                                                    url: "/api/auth/updatepassword",
                                                     method: "PUT",
                                                     data: {
+                                                        "newpwd": $('#newpwd').val(),
                                                         "table": "users",
                                                         "paramstr": `password = '${$('#newpwd').val()}'`,
                                                         "condition": `apikey = '${apikey}'`
@@ -1170,11 +1174,6 @@
                                                         $('#change_pwd').html('Changing ...');
                                                         $('#change_pwd').removeClass('btn-primary btn-success');
                                                         $('#change_pwd').addClass('btn-warning');
-                                                    },
-                                                    complete: function () {
-                                                        $('#change_pwd').html('Done');
-                                                        $('#change_pwd').removeClass('btn-primary btn-warning');
-                                                        $('#change_pwd').addClass('btn-success');
                                                     },
                                                     success: function (val) {
                                                         switch (val.status_code) {

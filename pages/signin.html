@@ -127,13 +127,13 @@
                                                 Remember me
                                             </label>
                                         </div>
-                                        <div class="col-6 mb-2">
+                                        <!-- <div class="col-6 mb-2">
                                             <div class="float-end text-end cursor-pointer">
                                                 <div id="forgot-pwd" class="text-muted">
                                                     <u>Forgot password?</u>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="mt-4">
                                         <input type="button" class="btn btn-primary w-100" id="signin"
@@ -194,19 +194,19 @@
 
 <script>
     $(document).ready(() => {
-        if (getCookie('apikey') != "") {
+        if (getCookie('apikey') != "" && getCookie('iid')) {
             $.ajax({
                 url: "/getData",
                 method: "POST",
                 data: {
                     obj: {
-                        table: `users`,
-                        paramstr: true
+                        table: `instance`,
+                        paramstr: `instance_id = '${getCookie('iid')}'`
                     }
                 },
                 success: function (val) {
                     if (val.length === 1) {
-                        if (getCookie('iid') != "") {
+                        if (!val[0].isRoot) {
                             location.href = `/iuser/${getCookie('iid')}/template`;
                         }
                         else {
@@ -235,7 +235,9 @@
         var password = document.getElementById('password');
         var remeberme = false;
 
-        email.value = getCookie('email');
+        if (getCookie('email')) {
+            email.value = getCookie('email');
+        }
 
         $(".required").on('focusout', function () {
             onfocusout_validation($(this).attr('id'));
@@ -339,8 +341,8 @@
                             case "200": {
                                 switch (type) {
                                     case 'root': {
-                                        // document.cookie = `iid=${val.data.iid}; path=/;`;
                                         if (val.data.isRoot == 1) {
+                                            document.cookie = `iid=${val.data.iid}; path=/;`;
                                             location.href = "/dashboard";
                                         }
                                         break;

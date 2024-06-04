@@ -203,7 +203,8 @@
                                     <h5 class="modal-title">
                                         Create Instance
                                     </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                        id="instance_popup_close_btn">
                                     </button>
                                 </div>
                                 <div class="modal-body">
@@ -255,21 +256,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card ribbon-box border shadow-none mb-3">
+                    <div class="card ribbon-box border shadow-none mb-3" style="height: calc(100vh - 230px);">
                         <div class="card-header text-muted">
                             <h2 class="d-flex justify-content-center">Instances</h2>
                             <div class="ribbon ribbon-primary ribbon-shape" id="pay_status">-</div>
                             <div class="d-flex justify-content-center text-primary" id="remaining_days"></div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive table-card">
-                                <table class="table align-middle table-nowrap">
+                            <div class="table-card" data-simplebar data-simplebar-auto-hide="false"
+                                style="max-height: calc(100vh - 320px)">
+                                <table class="table align-middle">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="col w-20">Number</th>
-                                            <th class="col w-20">NAME</th>
-                                            <th class="col w-20">CREATE DATE</th>
+                                            <th class="col w-15">Number</th>
+                                            <th class="col w-10">NAME</th>
+                                            <th class="col w-10">CREATE DATE</th>
                                             <th class="col w-20">Status</th>
+                                            <th class="col w-10">User</th>
                                             <th class="col w-10">Operation</th>
                                         </tr>
                                     </thead>
@@ -391,7 +394,6 @@
                 if (val.length > 0) {
                     let data = ``;
                     $('#instance_data').removeClass('d-none');
-                    console.log(val)
 
                     for (let r of val) {
                         var cdate = new Date(r.create_date).toLocaleDateString();
@@ -400,19 +402,22 @@
                                     <td class="instance_id fw-semibold" style="font-family: monospace;">
                                         <img src="/assets/images/w_icon.svg" height="20" width="20" />
                                         ${(r.phone != "") ? r.phone : '-'}
-                                    </td>
+                                        </td>
                                     <td class="instance_name">
-                                        ${r.isRoot ? `<span class="badge border border-primary text-primary">Main</span>` : r.i_name}
+                                        ${r.isRoot ? `<span class="badge border border-warning text-warning align-middle fs-12">
+                                            <i class="ri-star-fill align-middle text-warning me-1"></i>
+                                                            MAIN
+                                                        </span>` : r.i_name.toUpperCase()}
+                                    </td>
+                                    <td class="username">
+                                        <span style="white-space: nowrap; width: 90%; display: inline-block; overflow: hidden; text-overflow: ellipsis;" title="${r.username}">
+                                            ${r.username ? r.username : '-'}
+                                        </span>
                                     </td>
                                     <td class="date">${cdate}</td>
                                     <td class="status">
-                                        ${r.disabled == 0 ?
-                                `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` :
-                                (r.disabled == 2) ?
-                                    `<i class="ri-error-warning-line align-middle text-warning"></i> Pending` :
-                                    `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`
-                            }
-                                    </td>
+                                        ${r.disabled == 0 ? `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` : (r.disabled == 2) ? `<i class="ri-error-warning-line align-middle text-warning"></i> Pending` : `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`}
+                                    </td>                                    
                                     <td class="text-end">
                                         <div class="d-flex justify-content-end gap-3">
                                             <button type="button" class="btn btn-sm btn-primary manage" id="${r.instance_id}" 
@@ -431,7 +436,6 @@
             }
 
             $(document).on('input', '#searchInstance', () => {
-
                 function search(query) {
                     query = query.toLowerCase();
                     return datasource.filter(function (obj) {
@@ -687,6 +691,22 @@
                         if (val.success) {
                             datasource = val.data;
                             filterResult(val.data);
+
+                            function search(query) {
+                                query = query.toLowerCase();
+                                return !datasource.some(obj =>
+                                    Object.values(obj).some(value =>
+                                        typeof value === 'string' ? value.toLowerCase() === query :
+                                            typeof value === 'number' ? value.toString() === query :
+                                                true
+                                    )
+                                );
+                            }
+
+
+                            console.log(search("hr"))
+                            console.log(search("8320729231"))
+                            console.log(search("aa"))
                         }
                     }
                 })
@@ -714,65 +734,99 @@
                 nullfield_validation('uname');
                 nullfield_validation('pwd');
                 if (objFlag.flag_instance_name == 0 && objFlag.flag_phone == 0 && objFlag.flag_uname == 0 && objFlag.flag_pwd == 0) {
-                    $.ajax({
-                        url: "/api/instance/createInstance",
-                        method: "POST",
-                        data: {
-                            "instance_name": $('#instance_name').val().trim(),
-                            "phone": $('#phone').val().trim(),
-                            "uname": $('#uname').val().trim(),
-                            "pwd": $('#pwd').val().trim()
-                        },
-                        success: function (val) {
-                            display_ribbon_days();
+                    function search(query) {
+                        query = query.toLowerCase();
+                        return !datasource.some(obj =>
+                            Object.values(obj).some(value =>
+                                typeof value === 'string' ? value.toLowerCase() === query :
+                                    typeof value === 'number' ? value.toString() === query :
+                                        true
+                            )
+                        );
+                    }
+                    let name_check = false, phone_check = false, user_check = false;
+                    if (search($('#instance_name').val().trim())) {
+                        name_check = true;
+                    }
 
-                            switch (val.status_code) {
-                                case "201": {
-                                    swal({
-                                        title: 'Instance Created successfully',
-                                        type: 'success',
-                                        timer: 2000,
-                                        showConfirmButton: false,
-                                    }).then(function () {
-                                        $('#instance_name').val("");
-                                        $('#instance_name').removeClass('form-control-danger form-control-success')
-                                        instance_data();
-                                    })
-                                    break;
-                                }
-                                case "403": {
-                                    $('#instance_name').val("")
-                                    swal({
-                                        title: `Instance limit exceeded`,
-                                        text: `You can\'t create instance`,
-                                        type: 'error',
-                                        timer: 2500,
-                                        showConfirmButton: false,
-                                    })
-                                    break;
-                                }
-                                case "409": {
-                                    $('#instance_name').val("")
-                                    swal({
-                                        title: 'Instance alerady exist',
-                                        type: 'warning',
-                                        timer: 2500,
-                                        showConfirmButton: false,
-                                    })
-                                    break;
-                                }
-                                case "500": {
-                                    InternalServerError();
-                                    break;
+                    if (search($('#uname').val().trim())) {
+                        user_check = true;
+                    }
+
+                    if (search($('#phone').val().trim())) {
+                        phone_check = true;
+                    }
+
+                    // console.log(name_check, phone_check, user_check)
+                    if (name_check && phone_check && user_check) {
+                        $.ajax({
+                            url: "/api/instance/createInstance",
+                            method: "POST",
+                            data: {
+                                "instance_name": $('#instance_name').val().trim(),
+                                "phone": $('#phone').val().trim(),
+                                "uname": $('#uname').val().trim(),
+                                "pwd": $('#pwd').val().trim()
+                            },
+                            success: function (val) {
+                                display_ribbon_days();
+
+                                switch (val.status_code) {
+                                    case "201": {
+                                        swal({
+                                            title: 'Instance Created successfully',
+                                            type: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        }).then(() => {
+                                            $('#instance_name,#pwd,#uname,#phone').val("").removeClass('form-control-danger form-control-success');
+                                            $('#instance_popup_close_btn').click();
+                                            instance_data();
+                                        });
+                                        break;
+                                    }
+                                    case "403": {
+                                        swal({
+                                            title: `Instance limit exceeded`,
+                                            text: `You can\'t create instance`,
+                                            type: 'error',
+                                            timer: 2500,
+                                            showConfirmButton: false,
+                                        })
+                                        break;
+                                    }
+                                    case "409": {
+                                        $('#instance_name').focus().addClass('form-control-warning');
+                                        swal({
+                                            title: 'Instance alerady exist',
+                                            type: 'warning',
+                                            timer: 2500,
+                                            showConfirmButton: false,
+                                        })
+                                        break;
+                                    }
+                                    case "500": {
+                                        InternalServerError();
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    })
+                        })
+                    }
+                    else {
+                        swal({
+                            title: 'Duplicate record found',
+                            type: 'error',
+                            timer: 2500,
+                            showConfirmButton: false,
+                        })
+                    }
+
                 }
             })
 
             $(document).on('click', ".manage", function () {
-                location.href = `instance/${$(this).attr('id')}/wba`;
+                location.href = `instance/${$(this).attr('id')}/template`;
             })
         })
     </script>

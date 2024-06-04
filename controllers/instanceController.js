@@ -1,12 +1,13 @@
 const conn = require('../DB/connection');
 const status = require("../assets/js/status");
 const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 const tableData = require("../function/commonQuery");
 
 const getallInstance = async (req, res) => {
     try {
         const apikey = req.cookies.apikey;
-        const q1 = `SELECT * from instance where apikey = '${apikey}'`;
+        const q1 = `SELECT * from instance where apikey = '${apikey}' order by isRoot desc`;
         // const q1 = `SELECT * from instance where apikey = '${apikey}' and disabled = 0`;
 
         conn.query(q1, function (err, result) {
@@ -35,28 +36,38 @@ const createInstance = async (req, res) => {
             apikey: apikey,
         }, (result) => {
             if (result.status_code == 404) {
-                conn.query(`INSERT INTO instance(instance_id,i_name,apikey,token,create_date,username,password,phone) values('${id}','${name}','${apikey}','${token}',CURRENT_DATE,'${uname}','${pwd}','${phone}')`,
-                    function (error, result) {
-                        if (error)
+                bcrypt.hash(pwd, 10, (err, hash) => {
+                    if (err)
+                        return res.send(
+                            Object.assign(status.badRequest(), {
+                                error: { detail: `Error in Signup` },
+                            })
+                        );
+                    conn.query(`INSERT INTO instance(instance_id,i_name,apikey,token,create_date,username,password,phone) values('${id}','${name}','${apikey}','${token}',CURRENT_DATE,'${uname}','${hash}','${phone}')`,
+                        function (error, result) {
+                            if (error)
+                                return res.send(
+                                    Object.assign(status.internalservererror(), {
+                                        error: {
+                                            detail: `Internal Server Error | Try again after some time`,
+                                            message: error
+                                        },
+                                    })
+                                );
+
                             return res.send(
-                                Object.assign(status.internalservererror(), {
-                                    error: {
-                                        detail: `Internal Server Error | Try again after some time`,
-                                        message: error
+                                Object.assign(status.created(), {
+                                    data: {
+                                        detail: `Instance Created Successfully`,
+                                        "Instance ID": id,
                                     },
                                 })
                             );
+                        }
+                    );
 
-                        return res.send(
-                            Object.assign(status.created(), {
-                                data: {
-                                    detail: `Instance Created Successfully`,
-                                    "Instance ID": id,
-                                },
-                            })
-                        );
-                    }
-                );
+                });
+
             }
             else {
                 return res.send(
