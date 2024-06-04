@@ -49,19 +49,15 @@ let instance = new Razorpay({
     key_secret: "CGgkDqWQn8f2Sp6vNwqftaXO",
 });
 
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(fileUpload());
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
-app.use(
-    ["/iuser/assets", "/docs/assets", "/instance/assets", "/assets","./assets"],
-    // express.static("assets")
-    express.static(path.join(__dirname, "assets"))
-);
+app.use(["/iuser/assets", "/docs/assets", "/instance/assets", "/assets"], express.static("assets"));
 app.use("/", router);
 app.use(cors());
-
 app.use(
     sessions({
         resave: false,
@@ -371,6 +367,82 @@ app.get(
         );
     }
 );
+
+app.get("/webhook", (req, res) => {
+    const token = "apple";
+    // console.log("this is my request  ", req);
+    // console.log("this is my response  ", res);
+
+    if (
+        req.query["hub.mode"] === "subscribe" &&
+        req.query["hub.verify_token"] === token
+    ) {
+        res.status(200).send(req.query["hub.challenge"]);
+    } else {
+        res.sendStatus(400);
+    }
+});
+
+// Route for handling incoming messages
+app.post("/webhook", (req, res) => {
+    // Parse the request body from the POST
+    const body = req.body;
+
+    // Check if the request is from WhatsApp
+    if (body.object === "whatsapp_business_account") {
+        const message = body.entry[0].changes[0];
+
+        // Extract the phone number ID from the metadata
+        const phone_number_id = message.value.metadata.phone_number_id;
+
+        // Extract the statuses from the message
+        const statuses = message.value.statuses;
+
+        // Check if the statuses object exists
+        if (statuses) {
+            updateMessageStatus(statuses);
+            console.log("Statuses:", statuses);
+        } else {
+            console.log("No statuses found in the message.");
+        }
+
+        // Do whatever processing you need with the received message here...
+        // For example, you can extract the sender's phone number and the message body
+        const from = message; // Extract the phone number from the webhook payload
+        const msg_body = message; // Extract the message text from the webhook payload
+
+        // Log the received message
+        // console.log("Received message from:", from);
+        // console.log("Message body:", msg_body);
+
+        res.sendStatus(200); // Respond to WhatsApp API with a success status
+    } else {
+        res.sendStatus(404); // Return a '404 Not Found' if the event is not from a WhatsApp API
+    }
+});
+
+const updateMessageStatus = async (statuses) => {
+    for (const status of statuses) {
+        const { id, status: messageStatus, recipient_id } = status;
+        const query = `UPDATE message_info SET status = ? WHERE waba_message_id = ?;`;
+        const values = [messageStatus, id];
+
+        try {
+            await new Promise((resolve, reject) => {
+                db.query(query, values, (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    resolve();
+                });
+            });
+            console.log(`Status updated for message with ID ${id}`);
+        } catch (error) {
+            console.error(`Error updating status for message with ID ${id}:`, error);
+        }
+    }
+};
 
 app.post("/sheetdata", async (req, res) => {
     var ssid = req.body.ssid;
@@ -1942,7 +2014,6 @@ app.delete("/deleterecord", async (req, res) => {
 });
 
 // Common instance wise page API
-// app.get("/instance/:id/:pagename", async (req, res) => {
 app.get(["/iuser/:id/:pagename", "/instance/:id/:pagename"], async (req, res) => {
     apikey = req.cookies.apikey;
 
@@ -2842,10 +2913,8 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(
-        `${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`
-    );
+    console.log(`${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`);
     console.log(`Your server is up and running on : ${port}`);
     console.log(`http://localhost:${port}/signin`);
-    // console.log(`https://swiftsend.click`);
+    console.log(`https://swift-send.click`);
 });
