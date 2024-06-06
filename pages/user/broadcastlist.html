@@ -349,7 +349,7 @@
             let broadcast_list = [];
             const iid = document.URL.split("/")[4];
 
-            const ws = new WebSocket('ws://swift-send.click');
+            const ws = new WebSocket('wss://swift-send.click');
 
             ws.onopen = function () {
                 console.log('WebSocket connection opened');
