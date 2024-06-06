@@ -201,6 +201,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="dataDiv">Waiting for updates...</div>
                     <div class="card m-0" style="height: calc(100vh - 215px);">
                         <h3 class="card-header text-center">Broadcast Status</h3>
                         <div class="card-body h-100">
@@ -230,7 +231,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRightstatus"></div>
+                    <div class="offcanvas offcanvas-end" tabindex="-1" data-bs-backdrop="true" data-bs-scroll="true"
+                        id="offcanvasRightstatus"></div>
                 </div>
             </div>
             <footer class="footer"></footer>
@@ -342,9 +344,37 @@
     <script>
         $(document).ready(function () {
             chkLogin();
+            sessionStorage.removeItem("statusId");
 
             let broadcast_list = [];
             const iid = document.URL.split("/")[4];
+
+            const ws = new WebSocket('wss://swift-send.click');
+
+            ws.onopen = function () {
+                console.log('WebSocket connection opened');
+            };
+
+            ws.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                if (data.clientId) {
+                    ws.clientId = data.clientId;  // Store the client ID for later use
+                } else {
+                    if (sessionStorage.getItem('statusId')) {
+                        let id = JSON.parse(sessionStorage.getItem('statusId'));
+                        console.log("statusId : ", id);
+                        StatusUpdateBroadcastAPI(id)
+                    }
+                }
+            };
+
+            ws.onerror = function (error) {
+                console.error('WebSocket error:', error);
+            };
+
+            ws.onclose = function () {
+                console.log('WebSocket connection closed');
+            };
 
             function BroadcastDataDisplay(val) {
                 if (val.length > 0) {
@@ -437,6 +467,83 @@
                 }
             }
 
+            function StatusUpdateBroadcastAPI(brodid) {
+                $.ajax({
+                    url: `/api/broadcast/getsingleBroadcastData/${iid}/${brodid}`,
+                    method: "GET",
+                    beforeSend: () => {
+                        $("#broadcast-list").html(`<tr class="">
+                                            <td class="text-center py-5" colspan="5">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>`);
+                    },
+                    success: function (val) {
+                        if (val.success) {
+                            const broadcast = val.data[0];
+
+                            if (broadcast) {
+
+                                let output = `
+                                <div class="offcanvas-header bg-primary">
+                                        <div class="d-flex align-items-center justify-content-between w-100">
+                                            <div class="fs-18 text-white">
+                                                <span>Broadcast Status</span>
+                                                <div class="fs-14 text-info">${broadcast.time}</div>
+                                            </div>
+                                            <div data-bs-dismiss="offcanvas" class="close-offcanvas-btn">
+                                                <div class="text-light">
+                                                    <i class="ri-close-circle-line fs-18 align-middle"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="offcanvas-body">
+                                        <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 130px)">
+                                            <table class="table align-middle mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">Contacts</th>
+                                                        <th scope="col">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>`;
+
+                                for (var i in broadcast.broadcast) {
+                                    output += `<tr>
+                                                <td>
+                                                    <img src="https://11za.com/wp-content/themes/one-1za/assets/images/hero/wapp_iocn.svg" height="20" width="20" />
+                                                    <span class="text-muted">${broadcast.broadcast[i].phone.substring(2)}</span>
+                                                </td>
+                                                <td class="text-${(broadcast.broadcast[i].status == "read")
+                                            ? `info` :
+                                            ((broadcast.broadcast[i].status == "delivered"))
+                                                ? `muted` : ((broadcast.broadcast[i].status == "sent")) ? `muted` : `danger`}">
+                                                    <i class="${(broadcast.broadcast[i].status == "read")
+                                            ? `ri-check-double-line` :
+                                            ((broadcast.broadcast[i].status == "delivered"))
+                                                ? `ri-check-double-line` : ((broadcast.broadcast[i].status == "sent")) ? `ri-check-line` : `ri-error-warning-fill`} fs-17 align-middle"></i>
+                                                    <span class="text-muted">${broadcast.broadcast[i].status}</span>
+                                                </td>
+                                            </tr>`;
+                                }
+                                output += `</tbody>
+                                        </table>
+                                    </div>
+                                </div>`;
+
+                                $('#offcanvasRightstatus').html(output);
+                            }
+                        }
+                    }, error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 401) InvalidUser();
+                    }
+                });
+            };
+
             function GETBroadcastAPI() {
                 $.ajax({
                     url: `/api/broadcast/getallBroadcastData/${iid}`,
@@ -452,6 +559,7 @@
                     },
                     success: function (val) {
                         if (val.success) {
+                            console.log(val.data)
                             BroadcastDataDisplay(val.data);
                             broadcast_list = val.data;
                         }
@@ -463,20 +571,18 @@
             };
             GETBroadcastAPI();
 
-            $(document).on('click', '.showstatus', function () {
-                const name = $(this).attr('data-name');
-                const id = $(this).attr('data-id');
-                const time = $(this).attr('data-time');
-                const broadcast = broadcast_list.filter(x => x.boardCast_id == id)[0];
+            function showstatusAPI(name, id, time) {
+                if (name && id && time) {
+                    const broadcast = broadcast_list.filter(x => x.boardCast_id == id)[0];
 
-                let output = `
+                    let output = `
                     <div class="offcanvas-header bg-primary">
                             <div class="d-flex align-items-center justify-content-between w-100">
                                 <div class="fs-18 text-white">
                                     <span>Broadcast Status</span>
                                     <div class="fs-14 text-info">${time}</div>
                                 </div>
-                                <div data-bs-dismiss="offcanvas">
+                                <div data-bs-dismiss="offcanvas" class="close-offcanvas-btn">
                                     <div class="text-light">
                                         <i class="ri-close-circle-line fs-18 align-middle"></i>
                                     </div>
@@ -494,101 +600,72 @@
                                     </thead>
                                     <tbody>`;
 
-                let failedContact = 0;
-                for (var i in broadcast.broadcast) {
-                    output += `<tr>
+                    // let failedContact = 0;
+                    for (var i in broadcast.broadcast) {
+                        output += `<tr>
                                     <td>
                                         <img src="https://11za.com/wp-content/themes/one-1za/assets/images/hero/wapp_iocn.svg" height="20" width="20" />
                                         <span class="text-muted">${broadcast.broadcast[i].phone.substring(2)}</span>
                                     </td>
-                                    <td class="text-${(broadcast.broadcast[i].status == "sent") ? `success` : ((broadcast.broadcast[i].status == "delivered")) ? `info` : `danger`}">
-                                        <i class="${(broadcast.broadcast[i].status == "sent") ? `ri-check-line` : ((broadcast.broadcast[i].status == "delivered")) ? `ri-check-double-line` : ` ri-error-warning-fill`} fs-17 align-middle"></i>
-                                        ${broadcast.broadcast[i].status.toUpperCase()}
+                                    <td class="text-${(broadcast.broadcast[i].status == "read")
+                                ? `info` :
+                                ((broadcast.broadcast[i].status == "delivered"))
+                                    ? `muted` : ((broadcast.broadcast[i].status == "sent")) ? `muted` : `danger`}">
+                                        <i class="${(broadcast.broadcast[i].status == "read")
+                                ? `ri-check-double-line` :
+                                ((broadcast.broadcast[i].status == "delivered"))
+                                    ? `ri-check-double-line` : ((broadcast.broadcast[i].status == "sent")) ? `ri-check-line` : `ri-error-warning-fill`} fs-17 align-middle"></i>
+                                        <span class="text-muted">${broadcast.broadcast[i].status}</span>
                                     </td>
                                 </tr>`;
 
-                    if (broadcast.broadcast[i].status == "failed") {
-                        failedContact++;
+                        // if (broadcast.broadcast[i].status == "failed") {
+                        //     failedContact++;
+                        // }
                     }
-                }
-                let successRatio = ((broadcast.broadcast.length - failedContact) * 100) / broadcast.broadcast.length;
+                    // let successRatio = ((broadcast.broadcast.length - failedContact) * 100) / broadcast.broadcast.length;
 
-                output += `</tbody>
-                                <tfoot class="table-light">
-                                    <tr class="fw-bold">
-                                        <td>Success Ratio</td>
-                                        <td>${successRatio} %</td>
-                                    </tr>
-                                </tfoot>
+                    output += `</tbody>
                             </table>
                         </div>
                     </div>`;
 
-                $('#offcanvasRightstatus').html(output);
+                    $('#offcanvasRightstatus').html(output);
+                }
+                // <tfoot class="table-light">
+                //     <tr class="fw-bold">
+                //         <td>Success Ratio</td>
+                //         <td>${successRatio} %</td>
+                //     </tr>
+                // </tfoot>
+            }
 
-                // displayRadialbarGraph('sentgraph', 50)
-                // displayRadialbarGraph('deliveredgraph', 50)
-                // displayRadialbarGraph('failedgraph', 50)
-                // displayRadialbarGraph('basic_radialbar', 50)
+            $(document).on('click', '.showstatus', function () {
+                const name = $(this).attr('data-name');
+                const id = $(this).attr('data-id');
+                const time = $(this).attr('data-time');
+
+                showstatusAPI(name, id, time);
+
+                let obj = JSON.stringify({
+                    id: id,
+                    name: name,
+                    time: time,
+                    x: new Date().getSeconds()
+                });
+
+                sessionStorage.setItem("statusId", obj);
             })
 
-            // function displayRadialbarGraph(id, percentage) {
-            //     var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
-            //     let options = {
-            //         series: [percentage],
-            //         chart: {
-            //             height: 200,
-            //             type: "radialBar",
-            //         },
-            //         plotOptions: {
-            //             radialBar: {
-            //                 startAngle: 0,
-            //                 endAngle: 360,
-            //                 hollow: {
-            //                     size: '55%',
-            //                 }
-            //             }
-            //         },
-            //         fill: {
-            //             type: 'gradient',
-            //         },
-            //         stroke: {
-            //             lineCap: 'round'
-            //         },
-            //         labels: [`${id.substring(0, id.length - 5)}`],
-            //         color: chartRadialbarBasicColors
-            //     }
-            //     chart = new ApexCharts(document.querySelector(`#${id}`), options).render();
-            // }
+            $(document).on('click', '.close-offcanvas-btn', function () {
+                sessionStorage.removeItem("statusId");
+            })
 
-
-            // $(document).on('input', '#searchtemplate', function () {
-            //     let val = $('#searchtemplate').val().trim();
-
-            //     function search(query) {
-            //         query = query.toLowerCase();
-            //         return broadcast_list.filter(function (obj) {
-            //             for (var key in obj) {
-            //                 if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
-            //                     return true;
-            //                 }
-            //                 else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
-            //                     return true;
-            //                 }
-            //             }
-            //             return false;
-            //         });
-            //     }
-
-            //     let Searchresult = search(val);
-
-            //     if (val == null || val == "") {
-            //         BroadcastDataDisplay(broadcast_list)
-            //     }
-            //     else {
-            //         BroadcastDataDisplay(Searchresult)
-            //     }
-            // })
+            $(document).on('click', (e) => {
+                if ($(e.target).hasClass('offcanvas-backdrop fade')) {
+                    sessionStorage.removeItem("statusId");
+                }
+            })
         })
     </script>
 

@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const fileUpload = require("express-fileupload");
 const csvtojson = require("csvtojson");
+const cors = require("cors");
 
 const axios = require("axios");
 const bcrypt = require("bcrypt");
@@ -16,19 +17,20 @@ const country = require("country-list-with-dial-code-and-flag");
 const status = require("./assets/js/status");
 const jwt = require("jsonwebtoken");
 const path = require("path");
-const cors = require("cors");
 const conn = require("./DB/connection");
-
-//Testing
-
-const { setWabaCred } = require("./controllers/userController");
+const DomainName = require("./assets/js/url");
 
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-const DomainName = require("./assets/js/url");
+const WebSocket = require('ws');
+const http = require("http");
+
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
 let obj = [],
     apikey,
     userProfile;
@@ -383,41 +385,41 @@ app.get("/webhook", (req, res) => {
     }
 });
 
+const clients = new Map();  // To store connected clients
+wss.on('connection', (ws) => {
+    const clientId = crypto.randomBytes(8).toString("hex");  // Generate a unique ID for the client
+
+    clients.set(clientId, ws);
+
+    ws.on('message', (message) => {
+        console.log(`Received message from client ${clientId}: ${message}`);
+    });
+
+    ws.on('close', () => {
+        clients.delete(clientId);
+    });
+
+    // Optionally send initial message to the client
+    ws.send(JSON.stringify({ message: 'Welcome!', clientId: clientId }));
+});
+
 // Route for handling incoming messages
 app.post("/webhook", (req, res) => {
-    // Parse the request body from the POST
     const body = req.body;
 
-    // Check if the request is from WhatsApp
     if (body.object === "whatsapp_business_account") {
         const message = body.entry[0].changes[0];
-
-        // Extract the phone number ID from the metadata
-        const phone_number_id = message.value.metadata.phone_number_id;
-
-        // Extract the statuses from the message
         const statuses = message.value.statuses;
 
-        // Check if the statuses object exists
         if (statuses) {
             updateMessageStatus(statuses);
             console.log("Statuses:", statuses);
         } else {
             console.log("No statuses found in the message.");
         }
-
-        // Do whatever processing you need with the received message here...
-        // For example, you can extract the sender's phone number and the message body
-        const from = message; // Extract the phone number from the webhook payload
-        const msg_body = message; // Extract the message text from the webhook payload
-
-        // Log the received message
-        // console.log("Received message from:", from);
-        // console.log("Message body:", msg_body);
-
-        res.sendStatus(200); // Respond to WhatsApp API with a success status
+        res.sendStatus(200);
     } else {
-        res.sendStatus(404); // Return a '404 Not Found' if the event is not from a WhatsApp API
+        res.sendStatus(404);
     }
 });
 
@@ -434,6 +436,12 @@ const updateMessageStatus = async (statuses) => {
                         reject(error);
                         return;
                     }
+                    clients.forEach((cid) => {
+                        const client = clients.get(cid);
+                        if (client && client.readyState === WebSocket.OPEN) {
+                            client.send(JSON.stringify("Status updated"));
+                        }
+                    });
                     resolve();
                 });
             });
@@ -2912,7 +2920,7 @@ app.use((req, res) => {
     res.status(404).sendFile(`${__dirname}/pages/404.html`);
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`);
     console.log(`Your server is up and running on : ${port}`);
     console.log(`http://localhost:${port}/signin`);
