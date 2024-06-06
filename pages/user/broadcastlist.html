@@ -360,11 +360,9 @@
                 if (data.clientId) {
                     ws.clientId = data.clientId;  // Store the client ID for later use
                 } else {
-                    if (sessionStorage.getItem('statusId')) {
-                        let id = JSON.parse(sessionStorage.getItem('statusId')).id;
-                        console.log("statusId : ", id);
-                        StatusUpdateBroadcastAPI(id);
-                    }
+                    let id = JSON.parse(sessionStorage.getItem('statusId'));
+                    console.log("statusId : ", id);
+                    StatusUpdateBroadcastAPI(id);
                 }
             };
 
@@ -467,6 +465,7 @@
                 }
             }
 
+
             function StatusUpdateBroadcastAPI(brodid) {
                 $.ajax({
                     url: `/api/broadcast/getsingleBroadcastData/${iid}/${brodid}`,
@@ -483,6 +482,8 @@
                     success: function (val) {
                         if (val.success) {
                             const broadcast = val.data[0];
+
+                            broadcast_list.find(x => x.boardCast_id == "9f043a8c752625d3593e7bd8a7c8a55a").broadcast = broadcast.broadcast
 
                             if (broadcast) {
 
@@ -646,14 +647,7 @@
 
                 showstatusAPI(name, id, time);
 
-                let obj = JSON.stringify({
-                    id: id,
-                    name: name,
-                    time: time,
-                    x: new Date().getSeconds()
-                });
-
-                sessionStorage.setItem("statusId", obj);
+                sessionStorage.setItem("statusId", id);
             })
 
             $(document).on('click', '.close-offcanvas-btn', function () {
