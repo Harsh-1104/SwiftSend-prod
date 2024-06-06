@@ -363,7 +363,7 @@
                     if (sessionStorage.getItem('statusId')) {
                         let id = JSON.parse(sessionStorage.getItem('statusId'));
                         console.log("statusId : ", id);
-                        StatusUpdateBroadcastAPI(id)
+                        StatusUpdateBroadcastAPI(id);
                     }
                 }
             };

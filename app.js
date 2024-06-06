@@ -437,10 +437,15 @@ const updateMessageStatus = async (statuses) => {
                         return;
                     }
                     console.log(clients)
-                    clients.forEach((cid) => {
-                        const client = clients.get(cid);
-                        console.log("AA : ", cid, client)
-                        if (client && client.readyState === WebSocket.OPEN) {
+                    // clients.forEach((cid) => {
+                    //     const client = clients.get(cid);
+                    //     console.log("AA : ", cid, client)
+                    //     if (client && client.readyState === WebSocket.OPEN) {
+                    //         client.send(JSON.stringify("Status updated"));
+                    //     }
+                    // });
+                    wss.clients.forEach(client => {
+                        if (client.readyState === WebSocket.OPEN) {
                             client.send(JSON.stringify("Status updated"));
                         }
                     });
