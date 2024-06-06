@@ -362,7 +362,7 @@
                     let id = sessionStorage.getItem('statusId');
                     console.log("statusId : ", id);
                     StatusUpdateBroadcastAPI(id);
-                    GETBroadcastAPI()
+                    // GETBroadcastAPI()
                 }
             };
 
@@ -470,15 +470,6 @@
                 $.ajax({
                     url: `/api/broadcast/getsingleBroadcastData/${iid}/${brodid}`,
                     method: "GET",
-                    beforeSend: () => {
-                        $("#offcanvasRightstatus").html(`<tr class="">
-                                            <td class="text-center py-5" colspan="5">
-                                                <div class="spinner-border text-primary" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </td>
-                                        </tr>`);
-                    },
                     success: function (val) {
                         if (val.success) {
                             const broadcast = val.data[0];
