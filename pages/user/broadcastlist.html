@@ -474,25 +474,12 @@
                         if (val.success) {
                             const broadcast = val.data[0];
 
-                            broadcast_list.find(x => x.boardCast_id == "9f043a8c752625d3593e7bd8a7c8a55a").broadcast = broadcast.broadcast
+                            let index = broadcast_list.findIndex(x => x.boardCast_id == "9f043a8c752625d3593e7bd8a7c8a55a")
+                            broadcast_list[index] = broadcast;
+
 
                             if (broadcast) {
-
                                 let output = `
-                                <div class="offcanvas-header bg-primary">
-                                        <div class="d-flex align-items-center justify-content-between w-100">
-                                            <div class="fs-18 text-white">
-                                                <span>Broadcast Status</span>
-                                                <div class="fs-14 text-info">${broadcast.time}</div>
-                                            </div>
-                                            <div data-bs-dismiss="offcanvas" class="close-offcanvas-btn">
-                                                <div class="text-light">
-                                                    <i class="ri-close-circle-line fs-18 align-middle"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="offcanvas-body">
                                         <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 130px)">
                                             <table class="table align-middle mb-0">
                                                 <thead class="table-light">
@@ -523,10 +510,9 @@
                                 }
                                 output += `</tbody>
                                         </table>
-                                    </div>
-                                </div>`;
+                                    </div>`;
 
-                                $('#offcanvasRightstatus').html(output);
+                                $(`#body_${brodid}`).html(output);
                             }
                         }
                     }, error: (error) => {
@@ -553,6 +539,13 @@
                         if (val.success) {
                             BroadcastDataDisplay(val.data);
                             broadcast_list = val.data;
+
+                            console.log("old : ", broadcast_list)
+                            let index = broadcast_list.findIndex(x => x.boardCast_id == "9f043a8c752625d3593e7bd8a7c8a55a")
+                            broadcast_list[index] = [1, 2, 3]
+                            console.log("new : ", broadcast_list)
+
+
                         }
                     }, error: (error) => {
                         if (error.status === 500) InternalServerError();
@@ -580,7 +573,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="offcanvas-body">
+                        <div class="offcanvas-body" id="body_${id}">
                             <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 130px)">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
