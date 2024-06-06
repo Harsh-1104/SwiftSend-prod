@@ -539,13 +539,6 @@
                         if (val.success) {
                             BroadcastDataDisplay(val.data);
                             broadcast_list = val.data;
-
-                            console.log("old : ", broadcast_list)
-                            let index = broadcast_list.findIndex(x => x.boardCast_id == "9f043a8c752625d3593e7bd8a7c8a55a")
-                            broadcast_list[index] = [1, 2, 3]
-                            console.log("new : ", broadcast_list)
-
-
                         }
                     }, error: (error) => {
                         if (error.status === 500) InternalServerError();
