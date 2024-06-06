@@ -361,7 +361,7 @@
                     ws.clientId = data.clientId;  // Store the client ID for later use
                 } else {
                     if (sessionStorage.getItem('statusId')) {
-                        let id = JSON.parse(sessionStorage.getItem('statusId'));
+                        let id = JSON.parse(sessionStorage.getItem('statusId')).id;
                         console.log("statusId : ", id);
                         StatusUpdateBroadcastAPI(id);
                     }
@@ -472,7 +472,7 @@
                     url: `/api/broadcast/getsingleBroadcastData/${iid}/${brodid}`,
                     method: "GET",
                     beforeSend: () => {
-                        $("#broadcast-list").html(`<tr class="">
+                        $("#offcanvasRightstatus").html(`<tr class="">
                                             <td class="text-center py-5" colspan="5">
                                                 <div class="spinner-border text-primary" role="status">
                                                     <span class="sr-only">Loading...</span>
