@@ -438,6 +438,7 @@ const updateMessageStatus = async (statuses) => {
                     }
                     clients.forEach((cid) => {
                         const client = clients.get(cid);
+                        console.log("AA : ", cid, client)
                         if (client && client.readyState === WebSocket.OPEN) {
                             client.send(JSON.stringify("Status updated"));
                         }
