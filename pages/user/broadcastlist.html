@@ -201,7 +201,6 @@
                             </div>
                         </div>
                     </div>
-                    <div id="dataDiv">Waiting for updates...</div>
                     <div class="card m-0" style="height: calc(100vh - 215px);">
                         <h3 class="card-header text-center">Broadcast Status</h3>
                         <div class="card-body h-100">
@@ -360,7 +359,7 @@
                 if (data.clientId) {
                     ws.clientId = data.clientId;  // Store the client ID for later use
                 } else {
-                    let id = JSON.parse(sessionStorage.getItem('statusId'));
+                    let id = sessionStorage.getItem('statusId');
                     console.log("statusId : ", id);
                     StatusUpdateBroadcastAPI(id);
                 }
