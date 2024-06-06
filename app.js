@@ -385,7 +385,7 @@ app.get("/webhook", (req, res) => {
     }
 });
 
-const clients = new Map();  // To store connected clients
+const clients = new Map();
 wss.on('connection', (ws) => {
     const clientId = crypto.randomBytes(8).toString("hex");  // Generate a unique ID for the client
 
@@ -436,6 +436,7 @@ const updateMessageStatus = async (statuses) => {
                         reject(error);
                         return;
                     }
+                    console.log(clients)
                     clients.forEach((cid) => {
                         const client = clients.get(cid);
                         console.log("AA : ", cid, client)
