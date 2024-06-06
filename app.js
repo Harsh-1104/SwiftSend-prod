@@ -429,7 +429,7 @@ const updateMessageStatus = async (statuses) => {
 
         try {
             await new Promise((resolve, reject) => {
-                db.query(query, values, (error, results, fields) => {
+                conn.query(query, values, (error, results, fields) => {
                     if (error) {
                         reject(error);
                         return;
