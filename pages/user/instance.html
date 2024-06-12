@@ -270,9 +270,9 @@
                                         <tr>
                                             <th class="col w-15">Number</th>
                                             <th class="col w-10">NAME</th>
+                                            <th class="col w-20">User</th>
                                             <th class="col w-10">CREATE DATE</th>
-                                            <th class="col w-20">Status</th>
-                                            <th class="col w-10">User</th>
+                                            <th class="col w-10">Status</th>
                                             <th class="col w-10">Operation</th>
                                         </tr>
                                     </thead>
@@ -396,7 +396,14 @@
                     $('#instance_data').removeClass('d-none');
 
                     for (let r of val) {
-                        var cdate = new Date(r.create_date).toLocaleDateString();
+                        // var cdate = new Date(r.create_date).toLocaleDateString();
+                        const date = new Date(r.create_date);
+
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const year = date.getFullYear();
+                        const formattedDate = `${day}/${month}/${year}`;
+
                         data += `<tr ${r.disabled == 1 ? `class="opacity-50" style="user-select: none; cursor: not-allowed;"` : (r.disabled == 2) ? `class="opacity-100" style="user-select: none; cursor: not-allowed;"` : ''}
                                     ${r.isRoot == 1 ? `class="bg-soft-info"` : ''}>
                                     <td class="instance_id fw-semibold" style="font-family: monospace;">
@@ -414,7 +421,7 @@
                                             ${r.username ? r.username : '-'}
                                         </span>
                                     </td>
-                                    <td class="date">${cdate}</td>
+                                    <td class="date"><span class="fw-semibold">${formattedDate}</span></td>
                                     <td class="status">
                                         ${r.disabled == 0 ? `<i class="ri-checkbox-circle-line align-middle text-success"></i> Active` : (r.disabled == 2) ? `<i class="ri-error-warning-line align-middle text-warning"></i> Pending` : `<i class="ri-close-circle-line align-middle text-danger"></i> Blocked`}
                                     </td>                                    
@@ -702,11 +709,6 @@
                                     )
                                 );
                             }
-
-
-                            console.log(search("hr"))
-                            console.log(search("8320729231"))
-                            console.log(search("aa"))
                         }
                     }
                 })
@@ -757,7 +759,6 @@
                         phone_check = true;
                     }
 
-                    // console.log(name_check, phone_check, user_check)
                     if (name_check && phone_check && user_check) {
                         $.ajax({
                             url: "/api/instance/createInstance",

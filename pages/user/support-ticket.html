@@ -645,23 +645,6 @@
         </div>
     </div>
 
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <!-- JAVASCRIPT -->
     <script src="/assets/js/jquery.js"></script>
     <script src="/assets/js/main.js"></script>
@@ -866,78 +849,6 @@
                     }
                 }
             })
-
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "generate" && data[1] == "ticket") {
-                        $("#add_instance_btn").click();
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if (data[0] == "open" && data[1] != "" && data[1] != undefined) {
-                        $.ajax({
-                            url: "/getData",
-                            method: "post",
-                            data: {
-                                obj: {
-                                    table: `support_ticket`,
-                                    paramstr: `t_subject='${data[1]}' and apikey='${apikey}'`,
-                                }
-                            },
-                            success: function (data) {
-                                if (!data.status_code) {
-                                    location.href = `/support-ticket/${data[0].ticket_id}`
-                                } else {
-                                    swal({
-                                        title: "Ticket not found",
-                                        type: 'error',
-                                        timer: 3000,
-                                        showConfirmButton: false,
-                                    });
-                                }
-                            }
-                        })
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
-
-
         })
     </script>
 </body>

@@ -201,17 +201,18 @@ function userinfo() {
                         Object.assign(Obj, val[i]);
                     }
                     if (val.length == 1) {
-                        if (Obj.image == null || Obj.image == "") {
-                            $('.profileimg').html(`<i class="mdi mdi-alpha-${Obj.uname[0].toLowerCase()}-circle text-primary rounded-circle" style="font-size: 2.5rem;"></i>`);
-                        }
-                        else {
-                            if ((Obj.image).startsWith('http') || (Obj.image).startsWith('https')) {
-                                $('.profileimg').html(`<img class="rounded-circle header-profile-user profileimg" src="${Obj.image}" />`);
-                            }
-                            else {
-                                $('.profileimg').html(`<i class="mdi mdi-alpha-f-circle text-primary"></i>`);
-                            }
-                        }
+                        $('.profileimg').html(`<i class="mdi mdi-alpha-${Obj.uname[0].toLowerCase()}-circle text-primary rounded-circle" style="font-size: 2.5rem;"></i>`);
+                        // if (Obj.image == null || Obj.image == "") {
+                        //     $('.profileimg').html(`<i class="mdi mdi-alpha-${Obj.uname[0].toLowerCase()}-circle text-primary rounded-circle" style="font-size: 2.5rem;"></i>`);
+                        // }
+                        // else {
+                        //     if ((Obj.image).startsWith('http') || (Obj.image).startsWith('https')) {
+                        //         $('.profileimg').html(`<img class="rounded-circle header-profile-user profileimg" src="${Obj.image}" />`);
+                        //     }
+                        //     else {
+                        //         $('.profileimg').html(`<i class="mdi mdi-alpha-f-circle text-primary"></i>`);
+                        //     }
+                        // }
 
                         $('.profilename').html(Obj.uname);
                     }
@@ -737,16 +738,15 @@ $(document).ready(function () {
                             let result = ``;
                             for (var i in data) {
                                 result += `
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="/iuser/${document.URL.split("/")[4]}/${data[i].link}" data-page="${data[i].link}">
-                                <i class="${data[i].icon}"></i>
-                                <span data-key="t-dashboards">${data[i].page}</span>
-                            </a>
-                        </li>`;
+                                    <li class="nav-item">
+                                        <a class="nav-link menu-link" href="/iuser/${document.URL.split("/")[4]}/${data[i].link}" data-page="${data[i].link}">
+                                            <i class="${data[i].icon}"></i>
+                                            <span data-key="t-dashboards">${data[i].page}</span>
+                                        </a>
+                                    </li>`;
                             }
                             $('#navbar-nav').html(result);
                             $(`a[data-page='${page[5]}']`).addClass('active');
-
                         })
                     $.ajax({
                         url: "/getData",

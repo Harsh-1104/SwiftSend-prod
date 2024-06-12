@@ -267,31 +267,35 @@
 					</div>
 
 					<div class="row">
-						<div class="col-lg-8 h-100">
-							<div class="row">
-								<div class="col-lg-12">
-									<div class="card">
-										<div class="card-header border-0 align-items-center d-flex">
-											<h4 class="card-title mb-0 flex-grow-1">Template Graph</h4>
-										</div>
-										<div class="card-body p-0 pb-3">
-											<div class="card-body">
-												<div id="column_rotated_labels" data-colors='["--vz-primary"]'
-													class="apex-charts" dir="ltr">
-												</div>
-											</div>
-										</div><!-- end cardbody -->
+						<div class="col-lg-8">
+							<div class="card mb-1">
+								<div class="card-header border-0 align-items-center d-flex">
+									<h4 class="card-title mb-0 flex-grow-1">Template Usage Graph</h4>
+								</div>
+								<div class="card-body">
+									<div id="column_rotated_labels" data-colors='["--vz-primary"]' class="apex-charts"
+										dir="ltr">
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-4 h-100">
-							<div class="card">
-								<div class="card-header align-items-center d-flex">
-									<h4 class="card-title mb-0 flex-grow-1">Daily Limit</h4>
+						<div class="col-lg-4">
+							<div class="card mb-1">
+								<div class="card-header align-items-center justify-content-between d-flex">
+									<h4 class="card-title mb-0">Daily Limit</h4>
+									<select class="form-select form-select-sm" id="instance_balance_list"
+										style="width: 30%;"></select>
 								</div>
 								<div class="card-body py-0">
-									<div class="list-group-item p-0 m-0" id="limit-graph"></div>
+									<div class="list-group-item p-0 m-0" id="limit-graph">
+										<div class="p-2" id="daily-limit-graph">
+											<div class="p-5 d-flex align-items-center justify-content-center">
+												<div class="text-muted fw-semibold">
+													No message sent today !
+												</div>
+											</div>
+										</div>
+									</div>
 									<ul class="list-group list-group-flush border-dashed mb-0">
 										<li class="list-group-item px-0">
 											<div class="d-flex align-items-center">
@@ -301,7 +305,7 @@
 													</span>
 												</div>
 												<div class="flex-grow-1 ms-2">
-													<h6 class="mb-1 text-muted">Today's Single Message</h6>
+													<h6 class="mb-1 text-muted">Single Message</h6>
 												</div>
 												<div class=" flex-shrink-0 text-end">
 													<p class="text-success fs-14 mb-0 fw-semibold" id="dailysinglemsg">
@@ -317,7 +321,7 @@
 													</span>
 												</div>
 												<div class="flex-grow-1 ms-2">
-													<h6 class="mb-1 text-muted">Today's Broadcast</h6>
+													<h6 class="mb-1 text-muted">Send by Broadcast</h6>
 												</div>
 												<div class="flex-shrink-0 text-end">
 													<p class="text-success fs-14 mb-0 fw-semibold" id="dailybroadcast">
@@ -331,7 +335,10 @@
 						</div>
 					</div>
 					<hr />
-					<div class="tab-content text-muted">
+					<div class="signin-other-title text-center mt-n4">
+						<h5 class="fs-13 title bg-light">Instance Wise Data</h5>
+					</div>
+					<div class="tab-content text-muted mt-2">
 						<div class="tab-pane active show" id="whatsappcount" role="tabpanel">
 							<div class="record" id="record"></div>
 						</div>
@@ -403,21 +410,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- voice input modal  -->
-	<div id="voice_input" class="modal zoomIn">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" id="btn-voice-close" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close">
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="fs-1 text-center" id="msg" style="resize: none;"></div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- JAVASCRIPT -->
 	<script src="/assets/js/jquery.js"></script>
@@ -461,7 +453,7 @@
 							output += `<div class="row">`;
 							for (var i in val.data) {
 								totalSingleMsg += val.data[i].single_message_count;
-								totalBroadcastMsg += val.data[i].boardcast_count;
+								totalBroadcastMsg += val.data[i].boardcast_number_count;
 								totalMsg += val.data[i].total_count;
 
 								var countmsgarray = new Array();
@@ -560,6 +552,7 @@
 				chart = new ApexCharts(document.querySelector(`#${id}`), options).render();
 			}
 
+			let DailyReportDataList = null
 			function getDailyReportData() {
 				$.ajax({
 					url: "/api/dashboard/getDailyReportData",
@@ -567,56 +560,24 @@
 					success: function (val) {
 						if (val.success) {
 							let total_message = 0, dailySingleMsg = 0, dailyBroadcastMsg = 0;
+							DailyReportDataList = val.data;
+							let ins_list = ``;
 
-							for (let i = 0; i < val.data.length; i++) {
-								dailySingleMsg += val.data[i].single_message_count;
-								dailyBroadcastMsg += val.data[i].boardcast_count;
-								total_message += val.data[i].total_count;
-							}
+							if (val.data)
 
-							$('#dailysinglemsg').html(dailySingleMsg);
-							$('#dailybroadcast').html(dailyBroadcastMsg);
+								for (let i = 0; i < val.data.length; i++) {
+									ins_list += `<option id="${val.data[i].iid}" value="${val.data[i].iid}" class="text-${(val.data[i].i_name == "Main") ? `warning` : `primary`} fw-semibold">
+								${val.data[i].i_name}
+								</option>`
+								}
+							$('#instance_balance_list').html(ins_list);
+							(val.data.length <= 0) ? $('#instance_balance_list').addClass('d-none') : ``;
 
-							const percentage = (total_message * 100) / 1000;
-							let x = null;
-							if (percentage > 90) {
-								x = '["--vz-danger"]';
-							}
-							else if (percentage > 60 && percentage <= 90) {
-								x = '["--vz-warning"]';
-							}
-							else {
-								x = '["--vz-primary"]';
-							}
+							const instance_data = val.data.filter(x => x.iid === val.data[0].iid)[0] || null;
 
-							$('#limit-graph').html(`<div id="basic_radialbar" data-colors='${x}' class="apex-charts" dir="ltr"></div>`);
+							insByLimitGraph(instance_data)
 
-							var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
 
-							var options = {
-								series: [percentage],
-								chart: {
-									height: 250,
-									type: "radialBar",
-								},
-								plotOptions: {
-									radialBar: {
-										startAngle: 0,
-										endAngle: 360,
-										hollow: {
-											size: '65%',
-										}
-									}
-								},
-								fill: {
-									type: 'gradient',
-								},
-								stroke: {
-									lineCap: 'round'
-								},
-								labels: [`(${total_message}/1000)`], colors: chartRadialbarBasicColors
-							}
-							chart = new ApexCharts(document.querySelector("#basic_radialbar"), options).render();
 						}
 					}, error: (error) => {
 						if (error.status === 500) InternalServerError();
@@ -624,6 +585,59 @@
 				})
 			}
 			getDailyReportData();
+
+			function insByLimitGraph(instanceData) {
+				$('#dailysinglemsg').html(instanceData.single_message_count);
+				$('#dailybroadcast').html(instanceData.boardcast_count);
+
+				const percentage = (instanceData.total_count * 100) / 1000;
+				let x = null;
+				if (percentage > 90) {
+					x = '["--vz-danger"]';
+				}
+				else if (percentage > 60 && percentage <= 90) {
+					x = '["--vz-warning"]';
+				}
+				else {
+					x = '["--vz-primary"]';
+				}
+
+				$('#limit-graph').html(`<div id="basic_radialbar" data-colors='${x}' class="apex-charts" dir="ltr"></div>`);
+
+				var chartRadialbarBasicColors = getChartColorsArray("basic_radialbar");
+
+				var options = {
+					series: [percentage],
+					chart: {
+						height: 250,
+						type: "radialBar",
+					},
+					plotOptions: {
+						radialBar: {
+							startAngle: 0,
+							endAngle: 360,
+							hollow: {
+								size: '65%',
+							}
+						}
+					},
+					fill: {
+						type: 'gradient',
+					},
+					stroke: {
+						lineCap: 'round'
+					},
+					labels: [`(${instanceData.total_count}/1000)`], colors: chartRadialbarBasicColors
+				}
+				chart = new ApexCharts(document.querySelector("#basic_radialbar"), options).render();
+			}
+
+			$(document).on('change', '#instance_balance_list', function () {
+				const iid = $(this).val();
+				const instance_data = DailyReportDataList.filter(x => x.iid === iid)[0] || null;
+
+				insByLimitGraph(instance_data);
+			});
 
 			function message_filter(startDate, endDate) {
 				$.ajax({
@@ -745,9 +759,38 @@
 
 							chartBarColors = getChartColorsArray("bar_chart")
 
+							// let options = {
+							// 	series: usageCounts,
+							// 	chart: {
+							// 		height: 250,
+							// 		width: 250,
+							// 		type: "pie",
+							// 	},
+							// 	legend: {
+							// 		show: false
+							// 	},
+							// 	dataLabels: {
+							// 		dropShadow: {
+							// 			enabled: 2
+							// 		}
+							// 	},
+							// 	labels: templates,
+							// 	// colors: [
+							// 	// 	'#405189',
+							// 	// 	'#f7b84b'
+							// 	// ],
+							// 	plotOptions: {
+							// 		pie: {
+							// 			donut: {
+							// 				size: '10%'
+							// 			}
+							// 		}
+							// 	}
+							// }
+
 							let baroptions = {
-								chart: { height: 290, type: "bar", toolbar: { show: !1 } },
-								plotOptions: { bar: { horizontal: 1 } },
+								chart: { height: 310, type: "bar", toolbar: { show: !1 } },
+								plotOptions: { bar: { horizontal: !1 } },
 								dataLabels: { enabled: 1 },
 								series: [{ data: usageCounts }],
 								colors: ["#405189"],

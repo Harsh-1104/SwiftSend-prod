@@ -55,4 +55,26 @@ const getinquirydata = async (req, res) => {
     }
 }
 
-module.exports = getinquirydata;
+const getLandingData = async (req, res) => {
+    try {
+        const q1 = `SELECT combined.instance_id AS iid, i.i_name AS i_name, combined.apikey, SUM(combined.single_message_count) AS single_message_count, SUM(combined.boardcast_count) AS boardcast_count,SUM(combined.boardcast_number_count) AS boardcast_number_count, SUM(combined.single_message_count + combined.boardcast_count) AS total_count FROM (SELECT m.instance_id, m.apikey, COUNT(m.instance_id) AS single_message_count, 0 AS boardcast_count, 0 AS boardcast_number_count FROM single_message m GROUP BY m.instance_id, m.apikey UNION ALL SELECT b.instance_id, b.apikey, 0 AS single_message_count, COUNT(mi.boardcast_id) AS boardcast_count, 0 AS boardcast_number_count FROM message_info mi JOIN boardcast b ON mi.boardcast_id = b.boardcast_id GROUP BY b.instance_id, b.apikey UNION ALL SELECT b.instance_id, b.apikey, 0 AS single_message_count, 0 AS boardcast_count, COUNT(b.instance_id) AS boardcast_number_count FROM boardcast b GROUP BY b.instance_id, b.apikey) AS combined JOIN instance i ON combined.instance_id = i.instance_id GROUP BY combined.instance_id, i.i_name, combined.apikey`;
+
+        conn.query(q1, function (err, result) {
+            // console.log("E : ", err)
+            if (err) return res.status(500).send(status.internalservererror());
+            // if (result.length <= 0) return res.send(status.nodatafound());
+            res.status(200).json({
+                success: true,
+                data: result,
+            });
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching data",
+            errorMessage: error.response,
+        });
+    }
+}
+
+module.exports = { getinquirydata, getLandingData };

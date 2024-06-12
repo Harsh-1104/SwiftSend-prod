@@ -572,15 +572,7 @@
             $(document).on('click', '.remove-item-btn', function () {
                 const id = $(this).attr("data-id");
                 const name = $(this).attr("data-name");
-
-                console.log(id);
-                console.log(name);
-
-
-
                 const encodedID = btoa(id);
-                console.log("encodedID : ", encodedID);
-                // const encodedID = Buffer.from(id).toString('base64');
                 swal({
                     title: 'Are you sure?',
                     text: "You won't be able to access this anymore..!!",

@@ -200,7 +200,7 @@
                         </div>
                     </div>
 
-                    <div class="card card-body card-animate">
+                    <div class="card card-body">
                         <div class="row mb-1">
                             <div class="col-12">
                                 <label class="card-title">API Key</label>
@@ -216,8 +216,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card" data-aos="zoom-in">
+                        <div class="col-lg-8 col-md-6 col-sm-12">
+                            <div class="card">
                                 <div class="card-header">
                                     <div class="d-flex align-items-center mb-1">
                                         <div class="flex-grow-1">
@@ -261,6 +261,20 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="verti-sitemap">
+                                        <ul class="list-unstyled mb-0 fw-semibold" style="font-family: monospace;">
+                                            <li class="p-0 parent-title">
+                                                <span class="fw-semibold">Number List</span>
+                                            </li>
+                                            <li id="numberList"></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -470,6 +484,35 @@
                 })
             }
             displaydata();
+
+            function displayNoList() {
+                $.ajax({
+                    url: "/api/instance/getallInstance",
+                    method: "GET",
+                    success: function (val) {
+                        if (val.success) {
+                            console.log(val.data)
+
+                            let output = ``;
+
+                            for (let i in val.data) {
+                                output += `<div class="first-list">
+                                                    <div class="list-wrap list-unstyled">
+                                                        <a class="${(val.data[i].isRoot) ? `text-primary` : `text-muted`}">
+                                                            ${(val.data[i].disabled == 1) ? `<i class="ri-close-line align-middle fs-20 text-danger"></i>` : (val.data[i].disabled == 2) ? `<i class="ri-error-warning-line fs-20 align-middle text-warning"></i>` : `<img src="https://11za.com/wp-content/themes/one-1za/assets/images/hero/wapp_iocn.svg"
+                                                                height="20" width="20" />`}                                                            
+                                                            ${val.data[i].phone} ${(val.data[i].isRoot) ? `<i class="bx bxs-star text-warning"></i>` : ``}
+                                                        </a>
+                                                    </div>
+                                                </div>`;
+                            }
+
+                            $('#numberList').html(output);
+                        }
+                    }
+                })
+            }
+            displayNoList();
 
             $(document).on("click", ".copy", function () {
                 var param = $(this).attr("id").substring(5);

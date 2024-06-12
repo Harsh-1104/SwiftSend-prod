@@ -1088,7 +1088,7 @@
                                         let headerfields = countPlaceholders(x.text || null);
                                         if (headerfields > 0) {
                                             paramOBJ.type = "text";
-                                            paramOBJ.text = `${$('#headerDfield').val()}`;
+                                            paramOBJ.text = `${$('#headerDfield1').val()}`;
                                             headerOBJ.parameters.push(paramOBJ);
                                             payload.components.push(headerOBJ);
                                         }
@@ -1197,14 +1197,14 @@
                             },
                         });
                     }
-                    // else {
-                    //     swal({
-                    //         title: "No contact selected",
-                    //         type: "error",
-                    //         timer: 2000,
-                    //         showConfirmButton: false,
-                    //     })
-                    // }
+                    else {
+                        swal({
+                            title: "No contact selected",
+                            type: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        })
+                    }
                 }
             });
 

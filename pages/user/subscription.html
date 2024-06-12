@@ -500,24 +500,6 @@
         </div>
     </div>
 
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- JAVASCRIPT -->
@@ -744,57 +726,6 @@
                     },
                 });
             }
-
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "yearly" && data[1] == "plans") {
-                        $("#yearlyplans").trigger("click");
-                    }
-                    else if (data[0] == "monthly" && data[1] == "plans") {
-                        $("#monthlyplans").trigger("click");
-                    }
-                    else if (data[0] == "subscribe" && data[1] == "standard") {
-                        if ($("#month").hasClass("active")) {
-                            alert("work to be done");
-                        }
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
         });
     </script>
 </body>

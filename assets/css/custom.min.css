@@ -195,3 +195,7 @@ i {
 .shadow {
     box-shadow: 0px 20px 10px -10px var(--vz-gray-400) !important
 }
+
+.customizer-setting {
+    display: none;
+}

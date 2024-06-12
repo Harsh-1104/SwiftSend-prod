@@ -453,24 +453,6 @@
         </div>
     </div>
 
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
     <!-- JAVASCRIPT -->
     <script src="/assets/js/jquery.js"></script>
     <script src="/assets/js/main.js"></script>
@@ -533,7 +515,6 @@
                             },
                         },
                         success: function (data) {
-                            console.log(data);
                             t_email = data[0].email;
                             $("#ticket-user-email").html(t_email);
                         }
@@ -544,7 +525,6 @@
                     $("#ticket-user-contact").html(data[0].user);
                     category = data[0].category;
                     var index = getCookie("sindex");
-                    console.log(index);
 
                     user = data[0].user;
                     if (data[0].category == "whatsapp") {
@@ -620,7 +600,6 @@
                                 indexno = data.length;
                             }
 
-                                console.log(indexno);
                         }
                         $.ajax({
                             url: "/ClientReplyToTicketAgent",
@@ -656,7 +635,6 @@
 
                             },
                             success: function (data) {
-                                console.log(data);
                                 if (data.status_code == 200) {
 
                                     $("#ticket-status").html();
@@ -720,7 +698,6 @@
                         }
                     },
                     success: function (data) {
-                        console.log(data);
                         for (let i = 0; i < data.length; i++) {
                             if (data[i].identity == "supportAgent") {
                                 output += `
@@ -851,62 +828,6 @@
 
                 })
             })
-
-            $(document).on('click', '#mic', async function () {
-
-                mic("msg").then((result) => {
-                    let data = result.toString().split(" ");
-                    console.log(data);
-                    if (data[0] == "close" && data[1] == "ticket") {
-                        $("#closeticket").click();
-                    }
-                    else if (data[0] == "logout" || (data[0] == "log" && data[1] == "out")) {
-                        $("#logout").click();
-                    }
-                    else if (data[0] == "reply" && data[1] != "" && data[1] != undefined) {
-                        for (i = 1; i < data.length; i++) {
-                            $("#response").append(data[i] + " ");
-                        }
-                        setTimeout(() => {
-                            $("#reply").click();
-                        }, 2000);
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "profile") {
-                        location.href = "/profile";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && (data[2] == "pay" || data[2] == "pricing" || data[2] == "payment" || data[2] == "subscription")) {
-                        location.href = "/subscription";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "dashboard") {
-                        location.href = "/dashboard";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "instance") {
-                        location.href = "/instance";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "custom" && data[3] == "template") {
-                        location.href = "/customtemplate";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "email" && data[3] == "configuration") {
-                        location.href = "/addpasscode";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "support" && data[3] == "ticket") {
-                        location.href = "/support-ticket";
-                    }
-                    else if (data[0] == "go" && data[1] == "to" && data[2] == "api" && data[3] == "docs") {
-                        location.href = "/docs";
-                    }
-                    else {
-                        swal({
-                            title: "Command not recognized",
-                            type: 'error',
-                            timer: 2500,
-                            showConfirmButton: false,
-                        });
-                    }
-                })
-            })
-
-
         });
     </script>
 </body>

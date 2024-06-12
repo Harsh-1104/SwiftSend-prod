@@ -1125,7 +1125,6 @@
 
             $(document).on('click', '#deleteMultiple', function () {
                 var id = getCheckedCheckboxesFor('contact-select');
-                console.log(id);
 
                 let paramstr = ``;
                 for (var i in id) {
@@ -1221,7 +1220,6 @@
                         for (let i = 0; i < clientvalue.length; i++) {
                             clientobj.forEach((key, j) => {
                                 result[key] = clientvalue[i][j];
-                                console.log(result[key]);
                             });
                             clientarr.push(result);
                             result = {};
@@ -1433,7 +1431,6 @@
                                     </span>`);
                         },
                         success: function (data) {
-                            console.log(data);
                             if (data.status_code == 200) {
                                 swal({
                                     title: 'Contacts imported successfully',
@@ -1470,7 +1467,6 @@
             $(document).on('click', ".switch-active", function () {
                 const cid = $(this).attr('id');
                 let cval = ($(`#${cid}:checked`).length === 0) ? 1 : 0;
-                console.log(cval);
 
                 function updateStatus(cid, cval) {
                     $.ajax({

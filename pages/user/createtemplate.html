@@ -199,6 +199,40 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <div class="page-title">
+                            <ol class="breadcrumb m-0" id="api_path">
+                                <li class="breadcrumb-item">
+                                    <span>Instance</span>
+                                </li>
+                                <li class="breadcrumb-item" id="i_name"></li>
+                                <li class="breadcrumb-item active">Template</li>
+                            </ol>
+                        </div>
+
+                        <div class="hstack flex-wrap gap-2">
+                            <div class="fw-semibold fs-14 d-flex align-items-center gap-2 text-muted"
+                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span>Message Limit : </span>
+                                <span>
+                                    [<span class="text-primary" id="daily-limit-count">-</span>/1000]
+                                </span>
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end mt-3 p-0">
+                                <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
+                                    <div class="text-center">
+                                        <h6 class="m-0 fs-16 fw-semibold">Today's Messages</h6>
+                                    </div>
+                                </div>
+                                <div class="p-2" id="daily-limit-graph">
+                                    <div class="p-5 text-muted fw-semibold">
+                                        No message sent today !
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title mb-0">Create Template</h4>
@@ -229,7 +263,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-lg-9 mt-lg-0 mt-md-0 mt-sm-3">
+                                    <div class="col-lg-9 mt-lg-0 mt-md-3 mt-sm-3">
                                         <div class="tab-content">
                                             <div class="tab-pane fade show active" id="v-pills-bill-info"
                                                 role="tabpanel" aria-labelledby="v-pills-bill-info-tab">
@@ -346,9 +380,8 @@
                                                 </div>
                                             </div>
                                             <!-- end tab pane -->
-                                            <div class="tab-pane fade mb-3" id="v-pills-bill-address" role="tabpanel"
-                                                aria-labelledby="v-pills-bill-address-tab" data-simplebar
-                                                data-simplebar-auto-hide="false">
+                                            <div class="tab-pane fade mb-3 " id="v-pills-bill-address" role="tabpanel"
+                                                aria-labelledby="v-pills-bill-address-tab">
                                                 <div class="mb-3">
                                                     <h4 for="document_Header" class="form-label mb-1">
                                                         Header
@@ -361,92 +394,119 @@
                                                             this header.
                                                         </span>
                                                     </div>
-                                                    <div class="mb-3">
+                                                    <div class="mb-2">
                                                         <select id="headertype" class="form-select">
                                                             <option value="None">None</option>
                                                             <option value="Text">Text</option>
                                                             <option value="Media">Media</option>
                                                         </select>
                                                     </div>
-                                                </div>
-                                                <div class="d-none" id="headerText">
-                                                    <label for="document_headertext" class="form-label">
-                                                        Header Text
-                                                    </label>
-                                                    <div class="position-relative mb-3">
-                                                        <input type="text" id="Headermsg"
-                                                            class="form-control pe-5 required" data-type="message">
-                                                        <div class="text-end mt-1 character-counter">
-                                                            <span id="HeadercharacterCounter"></span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <button class="btn btn-soft-primary"
-                                                            id="yourAddInputFieldButton" data-bs-toggle="tooltip"
-                                                            data-bs-placement="right"
-                                                            title="Only one dynamic field allowed">
-                                                            <i class="bx bx-plus align-middle me-1"></i>
-                                                            Add Field
-                                                        </button>
-                                                    </div>
-                                                    <div id="yourInputFieldsContainer">
-                                                        <!-- Input fields for the second button will be added here -->
-                                                    </div>
-                                                </div>
-                                                <div class="d-none" id="headerMedia">
-                                                    <label for="document_headermedia" class="form-label">
-                                                        Media Type
-                                                        <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_document_headermedia"></span>
-                                                    </label>
 
-                                                    <div class="d-flex justify-content-start gap-3 mb-2">
-                                                        <label
-                                                            class="d-flex align-items-center justify-content-center border border-2 border-primary rounded-3 text-primary text-center bg-light cursor-pointer"
-                                                            for="imageRadio" style="height: 100px; width: 100px;">
-                                                            <input type="radio" id="imageRadio" name="MediaCategory"
-                                                                class="form-check-input" value="IMAGE" data-type="radio"
-                                                                checked hidden>
-                                                            <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
-                                                                for="imageRadio">
-                                                                <i class="bx bxs-file-image align-middle"
-                                                                    style="font-size: 3rem;"></i>
+                                                    <div class="d-none" id="headerText">
+                                                        <label for="document_headertext" class="form-label">
+                                                            Header Text
+                                                        </label>
+                                                        <div class="position-relative mb-3">
+                                                            <input type="text" id="Headermsg"
+                                                                class="form-control pe-5 required" data-type="message">
+                                                            <div class="text-end mt-1 character-counter">
+                                                                <span id="HeadercharacterCounter"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <button class="btn btn-soft-primary"
+                                                                id="header_dfield_add_btn" data-bs-toggle="tooltip"
+                                                                data-bs-placement="right"
+                                                                title="Only one dynamic field allowed">
+                                                                <i class="bx bx-plus align-middle me-1"></i>
+                                                                Add Field
+                                                            </button>
+                                                        </div>
+                                                        <div id="header_dfield_box"></div>
+                                                    </div>
+                                                    <div class="d-none" id="headerMedia">
+                                                        <label for="document_headermedia" class="form-label">
+                                                            Media Type
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger"
+                                                                id="err_document_headermedia"></span>
+                                                        </label>
+
+                                                        <div
+                                                            class="d-lg-flex d-md-flex d-sm-flex d-xs-inline justify-content-lg-start justify-content-md-start justify-content-sm-center gap-3">
+                                                            <label
+                                                                class="d-flex align-items-center justify-content-center border border-2 border-primary rounded-3 text-primary text-center bg-light cursor-pointer px-4"
+                                                                for="imageRadio" style="height: 100px;">
+                                                                <input type="radio" id="imageRadio" name="MediaCategory"
+                                                                    class="form-check-input" value="IMAGE"
+                                                                    data-type="radio" checked hidden>
+                                                                <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
+                                                                    for="imageRadio">
+                                                                    <i class="bx bxs-file-image align-middle"
+                                                                        style="font-size: 3rem;"></i>
+                                                                    Image
+                                                                </div>
+                                                            </label>
+                                                            <!-- <label
+                                                                class="d-flex align-items-center justify-content-center border border-2 border-light rounded-3 text-muted text-center bg-light cursor-pointer px-4"
+                                                                for="videoRadio" style="height: 100px;">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="videoRadio" name="MediaCategory"
+                                                                    value="DOCUMENT" data-type="radio" hidden>
+                                                                <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
+                                                                    for="videoRadio">
+                                                                    <i class="bx bx-play-circle align-middle"
+                                                                        style="font-size: 3rem;"></i>
+                                                                    Video
+                                                                </div>
+                                                            </label> -->
+                                                            <label
+                                                                class="d-flex align-items-center justify-content-center border border-2 border-light rounded-3 text-muted text-center bg-light cursor-pointer px-3"
+                                                                for="documentRadio" style="height: 100px;">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="documentRadio" name="MediaCategory"
+                                                                    value="DOCUMENT" data-type="radio" hidden>
+                                                                <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
+                                                                    for="documentRadio">
+                                                                    <i class="bx bxs-file-doc align-middle"
+                                                                        style="font-size: 3rem;"></i>
+                                                                    Document
+                                                                </div>
+                                                            </label>
+                                                            <!-- <label
+                                                                class="d-flex align-items-center justify-content-center border border-2 border-light rounded-3 text-muted text-center bg-light cursor-pointer px-4"
+                                                                for="mapRadio" style="height: 100px;">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="mapRadio" name="MediaCategory" value="DOCUMENT"
+                                                                    data-type="radio" hidden>
+                                                                <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
+                                                                    for="mapRadio">
+                                                                    <i class="bx bxs-map align-middle"
+                                                                        style="font-size: 3rem;"></i>
+                                                                    Location
+                                                                </div>
+                                                            </label> -->
+                                                        </div>
+                                                        <div class="mb-2" id="imageField">
+                                                            <label for="Image" class="form-label">
                                                                 Image
-                                                            </div>
-                                                        </label>
-                                                        <label
-                                                            class="d-flex align-items-center justify-content-center border border-2 border-light rounded-3 text-muted text-center bg-light cursor-pointer"
-                                                            for="documentRadio" style="height: 100px; width: 100px;">
-                                                            <input class="form-check-input" type="radio"
-                                                                id="documentRadio" name="MediaCategory" value="DOCUMENT"
-                                                                data-type="radio" hidden>
-                                                            <div class="d-flex align-items-center justify-content-center mb-0 flex-column"
-                                                                for="documentRadio">
-                                                                <i class="bx bxs-file-doc align-middle"
-                                                                    style="font-size: 3rem;"></i>
+                                                                <span class="text-danger">*</span>
+                                                                <span class="text-danger" id="err_Image"></span>
+                                                            </label>
+                                                            <input type="file" class="form-control mb-3"
+                                                                style="resize: none" id="image" data-type="message"
+                                                                accept="image/*">
+                                                        </div>
+                                                        <div class="mb-2" id="documentField">
+                                                            <label for="Document" class="form-label">
                                                                 Document
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="position-relative mb-3" id="imageField">
-                                                        <label for="Image" class="form-label">
-                                                            Image
-                                                            <span class="text-danger">*</span>
-                                                            <span class="text-danger" id="err_Image"></span>
-                                                        </label>
-                                                        <input type="file" class="form-control mb-3"
-                                                            style="resize: none" id="image" data-type="message"
-                                                            accept="image/*">
-                                                    </div>
-                                                    <div class="position-relative mb-3" id="documentField">
-                                                        <label for="Document" class="form-label">
-                                                            Document
-                                                            <span class="text-danger">*</span>
-                                                            <span class="text-danger" id="err_Document"></span>
-                                                        </label>
-                                                        <input type="file" class="form-control mb-3"
-                                                            style="resize: none" id="document" data-type="message"
-                                                            accept="application/*">
+                                                                <span class="text-danger">*</span>
+                                                                <span class="text-danger" id="err_Document"></span>
+                                                            </label>
+                                                            <input type="file" class="form-control mb-3"
+                                                                style="resize: none" id="document" data-type="message"
+                                                                accept="application/*">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3">
@@ -472,8 +532,10 @@
                                                             Add Field
                                                         </button>
                                                     </div>
-                                                    <div id="inputFieldsContainer">
-                                                        <!-- Input fields for the second button will be added here -->
+                                                    <div id="body_dfield_box">
+                                                        <div class="signin-other-title text-center mt-2 d-none">
+                                                            <h5 class="fs-13 title">Body Sample Text</h5>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -630,6 +692,12 @@
     <script src="/assets/libs/list.js/list.min.js"></script>
     <script src="/assets/libs/list.pagination.js/list.pagination.min.js"></script>
 
+    <!-- Dashboard init -->
+    <!-- <script src="/assets/js/pages/dashboard-ecommerce.init.js"></script> -->
+
+    <!-- apexcharts -->
+    <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
+
     <script>
         $(document).ready(() => {
             chkLogin();
@@ -662,7 +730,7 @@
                 var currentLength = lowercaseValue.length;
                 var remainingLength = maxLength - currentLength;
 
-                $('#characterCounter').text('(' + (currentLength) + '/' + maxLength + ')');
+                $('#characterCounter').html(`(<span class="fw-semibold text-primary">${currentLength}</span>/${maxLength})`);
 
                 if (currentLength >= maxLength) {
                     $(this).val(lowercaseValue.substr(0, (maxLength - 1)));
@@ -690,7 +758,7 @@
                 var currentLength = $(this).val().length;
                 var remainingLength = maxLength - currentLength;
 
-                $('#HeadercharacterCounter').text('(' + currentLength + '/' + maxLength + ')');
+                $('#HeadercharacterCounter').html(`(<span class="fw-semibold text-primary">${currentLength}</span>/${maxLength})`);
 
                 if (currentLength > maxLength) {
                     $(this).val($(this).val().substr(0, (maxLength - 1)));
@@ -705,7 +773,7 @@
                 var currentLength = $(this).val().length;
                 var remainingLength = maxLength - currentLength;
 
-                $('#BodycharacterCounter').text('(' + currentLength + '/' + maxLength + ')');
+                $('#BodycharacterCounter').html(`(<span class="fw-semibold text-primary">${currentLength}</span>/${maxLength})`);
 
                 if (currentLength > maxLength) {
                     $(this).val($(this).val().substr(0, (maxLength - 1)));
@@ -849,116 +917,95 @@
             compare_object.footer = null;
             compare_object.Buttons = [];
 
-            const inputFieldsContainer1 = document.getElementById('yourInputFieldsContainer');
-            const addInputFieldButton1 = document.getElementById('yourAddInputFieldButton');
-            const dynamicVariableField1 = document.getElementById('Headermsg');
-
             function addHeaderField(variableName) {
-                const inputFieldContainer = document.createElement('div');
+                const lbltxt = $('<span>', {
+                    class: 'input-group-text fw-semibold',
+                    text: `{{${variableName}}}`
+                });
 
-                // const lbltxt = $('<span>', {
-                //     class: 'input-group-text',
-                //     text: `{{${variableName}}}`
-                // });
+                const inputbox = $('<input>', {
+                    class: 'form-control',
+                    placeholder: `Sample value for {{${variableName}}}`,
+                    type: `text`,
+                    name: `Headerinput${variableName}`,
+                    id: `Headerinput${variableName}`
+                });
 
-                // const inputbox = $('<input>', {
-                //     class: 'form-control',
-                //     placeholder: `Value for {{${variableName}}}`,
-                //     type: `text`,
-                //     name: `Headerinput${variableName}`,
-                //     id: ``
-                // });
+                const removeBtn = $('<button>', {
+                    class: 'input-group-text bg-soft-danger text-danger fw-semibold',
+                    type: "button"
+                }).on('click', function () {
+                    mainBox.remove();
+                    hrlinetxt.remove();
+                    let headettext = $('#Headermsg').val().trim();
+                    $('#Headermsg').val(headettext.replace("{{1}}", "").trim()).focus();
+                    $('#header_dfield_add_btn').prop('disabled', false).removeClass('d-none');
+                    compare_object.header.dfield = 0;
+                    isheaderdfield = false;
+                }).append(`<i class="bx bxs-trash-alt align-middle text-danger me-1"></i> Remove`);
 
-                // const mainBox = $('<div>', {
-                //     class: 'input-group',
-                // }).append(lbltxt, inputbox);
+                const mainBox = $('<div>', {
+                    class: 'input-group',
+                }).append(lbltxt, inputbox, removeBtn);
 
-                // Create label for variable
-                const variableLabel = document.createElement('label');
-                variableLabel.textContent = '{{' + variableName + '}}';
-                inputFieldContainer.appendChild(variableLabel);
+                const hrlinetxt = $('<div>', {
+                    class: 'signin-other-title text-center mt-2',
+                }).append($('<h5>', {
+                    class: 'fs-13 title',
+                    text: `Header Sample Text`
+                }));
 
-                // Create input field
-                const inputField = document.createElement('input');
-                inputField.type = 'text';
-                inputField.name = 'Headerinput' + variableName; // Unique name for each input field
-                inputField.id = 'Headerinput' + variableName; // Unique ID for each input field
-                inputField.classList.add('form-control'); // Add the form-control class
-                inputFieldContainer.appendChild(inputField);
-
-                // Append {{variableName}} to the dynamic variable field value
-                // dynamicVariableField1.value += variableName + '}}';
-
-                // Disable the button
-                addInputFieldButton1.disabled = true;
-
-                // Append input field and {{variableName}} to the container
-                inputFieldsContainer1.appendChild(inputFieldContainer);
-                // inputFieldsContainer1.appendChild(mainBox);
+                $('#header_dfield_box').append(hrlinetxt, mainBox);
             }
 
-            // Function to enable add input field button
-            function enableAddInputFieldButton() {
-                addInputFieldButton1.disabled = false;
-            }
-
-            // Event listener for button click to add input field
-            addInputFieldButton1.addEventListener('click', function () {
-                addHeaderField('1'); // Change 'your_variable_name' to any other variable name you want
+            let isheaderdfield = false;
+            $(document).on('click', '#header_dfield_add_btn', () => {
                 compare_object.header.dfield = 1;
-            });
-
-            // Function to remove input text field and corresponding label
-            // function removeInputField(inputFieldContainer) {
-            //     inputFieldContainer.remove(); // Remove input field container
-
-            //     // Check if there are any input fields left
-            //     if (inputFieldsContainer1.querySelectorAll('div').length === 0) {
-            //         enableAddInputFieldButton(); // If no input fields left, enable the button
-            //     }
-            // }
-
-            $(document).on('input', '#Headermsg', () => {
-                let dynamicVariableValue = dynamicVariableField1.value;
-                const dynamicVariableRegex = /\{\{(\w+)\}\}/g;
-                // const dynamicVariableRegex = /\{\{/g;
-                const matches = dynamicVariableValue.match(dynamicVariableRegex);
-
-                // Remove existing input fields
-                inputFieldsContainer1.innerHTML = '';
-
-                if (matches) {
-                    if (matches.length === 1) {
-                        addHeaderField(1)
-                    }
-                    else {
-                        let str = $('#Headermsg').val();
-                        let newstr = str.replace(matches[1], "")
-                        $('#Headermsg').val(`${newstr}`);
-                        dynamicVariableValue = newstr;
-                    }
-                    // matches.forEach(match => {
-                    //     addHeaderField(match.substring(2, match.length - 2)); // Add input field for each match
-                    // });
+                if (!isheaderdfield) {
+                    addHeaderField('1');
+                    insertTextAtCursor('Headermsg', `{{${1}}}`)
+                    $('#header_dfield_add_btn').prop('disabled', true).addClass('d-none');
+                    isheaderdfield = true;
                 }
                 else {
-                    enableAddInputFieldButton(); // If no matches found, enable the button
+                    $('#header_dfield_add_btn').prop('disabled', false).removeClass('d-none');
+                    isheaderdfield = false;
                 }
             })
-            // Event delegation for input field change
-            // dynamicVariableField1.addEventListener('input', function () {
 
-            // });
+            $(document).on('input', '#Headermsg', () => {
+                const matches = $('#Headermsg').val().match(/\{\{(\w+)\}\}/g);
 
-            // Event delegation for remove button click
-            inputFieldsContainer1.addEventListener('click', function (event) {
-                if (event.target && event.target.classList.contains('removeInputFieldButton')) {
-                    const inputFieldContainer = event.target.parentElement; // Get the container div
-
-                    removeInputField(inputFieldContainer);
+                if ($("#Headermsg").val() == '') {
+                    $('#header_dfield_add_btn').prop('disabled', false).removeClass('d-none');
+                    isheaderdfield = false;
                 }
-            });
-
+                if (matches) {
+                    if (matches.length == 1) {
+                        if (!isheaderdfield) {
+                            isheaderdfield = true;
+                            addHeaderField(1);
+                            $('#header_dfield_add_btn').prop('disabled', true).addClass('d-none');
+                        }
+                    }
+                    else {
+                        let sortedmatches = matches.sort((a, b) => {
+                            let numA = parseInt(a.replace(/[{}]/g, ''));
+                            let numB = parseInt(b.replace(/[{}]/g, ''));
+                            return numA - numB;
+                        });
+                        for (let i = 1; i < sortedmatches.length; i++) {
+                            let headettext = $('#Headermsg').val().trim();
+                            $('#Headermsg').val(headettext.replace(sortedmatches[i], "").trim());
+                        }
+                    }
+                }
+                else {
+                    $('#header_dfield_box').html('');
+                    $('#header_dfield_add_btn').prop('disabled', false).removeClass('d-none');
+                    isheaderdfield = false;
+                }
+            })
 
             $(document).on('change', '#headertype', function () {
                 if ($("#headertype").val() === "Text") {
@@ -1038,7 +1085,6 @@
             }
 
             let mediavalue = "";
-
             $(document).on('change', '#image , #document', (e) => {
                 let formData = new FormData();
                 let validfile = false;
@@ -1113,84 +1159,225 @@
                 }
             });
 
+            $(document).on('keydown', '#Headermsg', function (event) {
+
+                let textarea = this;
+                let start = textarea.selectionStart;
+                let end = textarea.selectionEnd;
+                let selectedText = textarea.value.substring(start, end);
+
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'b')) {
+                    event.preventDefault();
+                    if (selectedText) {
+                        let wrappedText = `*${selectedText}*`;
+                        textarea.value = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                        textarea.selectionStart = textarea.selectionEnd = start + wrappedText.length;
+                    }
+                }
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'i')) {
+                    event.preventDefault();
+                    if (selectedText) {
+                        // Wrap the selected text with asterisks
+                        let wrappedText = `_${selectedText}_`;
+                        textarea.value = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                        textarea.selectionStart = textarea.selectionEnd = start + wrappedText.length;
+                    }
+                }
+            });
+
+            $('#bodymsg').on('keydown', function (event) {
+
+                let textarea = this;
+                let start = textarea.selectionStart;
+                let end = textarea.selectionEnd;
+                let selectedText = textarea.value.substring(start, end);
+
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'b')) {
+                    event.preventDefault();
+                    if (selectedText) {
+                        let wrappedText = `*${selectedText}*`;
+                        textarea.value = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                        textarea.selectionStart = textarea.selectionEnd = start + wrappedText.length;
+                    }
+                }
+                if ((event.ctrlKey || event.metaKey) && (event.key === 'i')) {
+                    event.preventDefault();
+                    if (selectedText) {
+                        // Wrap the selected text with asterisks
+                        let wrappedText = `_${selectedText}_`;
+                        textarea.value = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                        textarea.selectionStart = textarea.selectionEnd = start + wrappedText.length;
+                    }
+                }
+            });
+
             //dynamic fields for body
-            const inputFieldsContainer = document.getElementById('inputFieldsContainer');
+            const body_dfield_box = document.getElementById('body_dfield_box');
             const addInputFieldButton = document.getElementById('addInputFieldButton');
             const dynamicVariableField = document.getElementById('bodymsg');
-            let counter = 1; // To generate unique IDs for each input field
+            let counter = 0;
+            let dfieldcount = 0;
             // Function to add input text field
             compare_object.body = {
-                bfield: counter - 1
+                bfield: dfieldcount
+            }
+
+            function insertTextAtCursor(textareaId, text) {
+                var textarea = document.getElementById(textareaId);
+                var startPos = textarea.selectionStart;
+                var endPos = textarea.selectionEnd;
+                var scrollTop = textarea.scrollTop;
+
+                textarea.value = textarea.value.substring(0, startPos) + text + textarea.value.substring(endPos, textarea.value.length);
+                textarea.selectionStart = textarea.selectionEnd = startPos + text.length;
+                textarea.scrollTop = scrollTop;
+                textarea.focus();
             }
 
             function addBodyField() {
-                const inputFieldContainer = document.createElement('div');
+                dfieldcount++;
+                const lbltxt = $('<span>', {
+                    class: 'input-group-text fw-semibold',
+                    style: "font-family: 'monospace';",
+                    text: `{{${dfieldcount}}}`,
+                    id: `bodyinput${dfieldcount}lbl`
+                });
 
-                // Create label element for variable
-                const variableLabel = document.createElement('label');
-                variableLabel.textContent = '{{' + (counter) + '}}';
-                inputFieldContainer.appendChild(variableLabel);
+                const inputbox = $('<input>', {
+                    class: 'form-control',
+                    placeholder: `Sample value for {{${dfieldcount}}}`,
+                    type: `text`,
+                    name: `bodyinput${dfieldcount}`,
+                    id: `bodyinput${dfieldcount}`
+                });
 
-                const inputField = document.createElement('input');
-                inputField.type = 'text';
-                inputField.name = 'bodyinput' + (counter); // Unique name for each input field
-                inputField.id = 'bodyinput' + (counter); // Unique ID for each input field
-                inputField.classList.add('form-control'); // Add the form-control class
-                inputField.classList.add('mb-2'); // Add the form-control class
+                const removeBtn = $('<button>', {
+                    class: 'input-group-text bg-soft-danger text-danger fw-semibold',
+                    type: "button",
+                    id: `bodyinput${dfieldcount}deletebtn`,
+                    "data-id": `${dfieldcount}`
+                }).on('click', function () {
+                    mainBox.remove();
+                    let id = $(this).attr('data-id');
 
-                inputFieldContainer.appendChild(inputField);
-                inputFieldsContainer.appendChild(inputFieldContainer);
+                    for (let i = parseInt(id - 1); i < dfieldcount; i++) {
+                        let bodytext = $('#bodymsg').val().trim();
+                        let currentId = i;
+                        let nextId = currentId + 1;
+                        let prevId = currentId - 1;
 
-                // inputFieldsContainer.appendChild(document.createElement('br')); // Add line break
+                        $(`#bodyinput${nextId}`).attr("placeholder", `Sample value for {{${currentId}}}`);
+                        $(`#bodyinput${nextId}lbl`).text(`{{${currentId}}}`);
+                        $(`#bodyinput${nextId}deletebtn`).attr("data-id", `${currentId}`);
+                        $(`#bodyboxid${nextId}`).attr('data-id', `${currentId}`);
 
-                // Append {{1}} to the dynamic variable field value
-                dynamicVariableField.value += '{{' + (counter) + '}}';
+                        $(`#bodyinput${nextId}`).attr("id", `bodyinput${currentId}`);
+                        $(`#bodyinput${nextId}lbl`).attr("id", `bodyinput${currentId}lbl`);
+                        $(`#bodyinput${nextId}deletebtn`).attr("id", `bodyinput${currentId}deletebtn`);
+                        $(`#bodyboxid${nextId}`).attr("id", `bodyboxid${currentId}`);
 
-                counter++;
-                compare_object.body.bfield = counter - 1;
+                        $('#bodymsg').val(bodytext.replace(`{{${nextId + 1}}}`, `{{${currentId + 1}}}`).trim()).focus();
+                    }
+                    let bodytext = $('#bodymsg').val().trim();
+                    $('#bodymsg').val(bodytext.replace(`{{${id}}}`, "").trim()).focus();
+                    dfieldcount--;
+                    compare_object.body.bfield = dfieldcount;
+                    if (dfieldcount == 0) {
+                        $('#body_dfield_box').children().eq(0).addClass('d-none')
+                    }
+                }).append(`<i class="bx bxs-trash-alt align-middle text-danger me-1"></i> Remove`);
+
+                const mainBox = $('<div>', {
+                    class: 'input-group mb-2',
+                    id: `bodyboxid${dfieldcount}`,
+                    "data-id": `${dfieldcount}`
+                }).append(lbltxt, inputbox, removeBtn);
+
+                if (dfieldcount == 1) {
+                    $('#body_dfield_box').children().eq(0).removeClass('d-none')
+                }
+                $('#body_dfield_box').append(mainBox);
+
+                compare_object.body.bfield = dfieldcount;
             }
 
-            // Event listener for button click to add input field
-            addInputFieldButton.addEventListener('click', addBodyField);
+            $('#addInputFieldButton').on('click', () => {
+                if (dfieldcount < 5) {
+                    addBodyField();
+                    insertTextAtCursor('bodymsg', `{{${dfieldcount}}}`)
+                }
+            })
+
+            // $(document).on('input', '#bodymsg', () => {
+            //     const matches = $('#bodymsg').val().match(/\{\{(\w+)\}\}/g);
+
+            //     if (matches) {
+            //         if (matches.length <= 3) {
+            //             if (matches.length != dfieldcount) {
+            //                 addBodyField();
+            //             }
+            //             else {
+            //                 dfieldcount
+            //             }
+            //             let str = $('#bodymsg').val().trim();
+            //             console.log(str)
+
+            //             // $('#bodymsg').val(`${str.replace(`{{${dfieldcount}}}`, "").trim()}{{${dfieldcount}}}`);
+            //         }
+            //         else {
+            //             let sortedmatches = matches.sort((a, b) => {
+            //                 let numA = parseInt(a.replace(/[{}]/g, ''));
+            //                 let numB = parseInt(b.replace(/[{}]/g, ''));
+            //                 return numA - numB;
+            //             });
+            //             for (let i = (sortedmatches.length - 1); i >= (sortedmatches.length - dfieldcount); i--) {
+            //                 let bodytext = $('#bodymsg').val().trim();
+            //                 $('#bodymsg').val(bodytext.replace(sortedmatches[i], "").trim());
+            //             }
+            //         }
+            //     }
+            //     else {
+            //         $('#body_dfield_box').html('');
+            //     }
+            // })
 
             // Event listener for changes in the dynamic variable field
-            dynamicVariableField.addEventListener('input', function () {
-                const dynamicVariableValue = dynamicVariableField.value;
-                const dynamicVariableRegex = /\{\{(\d+)\}\}/g;
-                const matches = dynamicVariableValue.match(dynamicVariableRegex);
+            // dynamicVariableField.addEventListener('blue', function () {
+            //     const dynamicVariableValue = dynamicVariableField.value;
+            //     const dynamicVariableRegex = /\{\{(\d+)\}\}/g;
+            //     const matches = dynamicVariableValue.match(dynamicVariableRegex);
 
-                // Remove existing input fields
-                inputFieldsContainer.innerHTML = '';
+            //     // Remove existing input fields
+            //     body_dfield_box.innerHTML = '';
 
-                if (matches) {
-                    matches.forEach(match => {
-                        const inputFieldContainer = document.createElement('div');
+            //     if (matches) {
+            //         matches.forEach(match => {
+            //             const inputFieldContainer = document.createElement('div');
 
-                        // Create label element for variable
-                        const variableLabel = document.createElement('label');
-                        const matchIndex = match.substring(2, match.length - 2);
-                        variableLabel.textContent = match;
-                        inputFieldContainer.appendChild(variableLabel);
+            //             // Create label element for variable
+            //             const variableLabel = document.createElement('label');
+            //             const matchIndex = match.substring(2, match.length - 2);
+            //             variableLabel.textContent = match;
+            //             inputFieldContainer.appendChild(variableLabel);
 
-                        const inputField = document.createElement('input');
-                        inputField.type = 'text';
-                        inputField.name = 'bodyinput' + matchIndex; // Unique name for each input field
-                        inputField.id = 'bodyinput' + matchIndex; // Unique ID for each input field
-                        inputField.classList.add('form-control'); // Add the form-control class
+            //             const inputField = document.createElement('input');
+            //             inputField.type = 'text';
+            //             inputField.name = 'bodyinput' + matchIndex; // Unique name for each input field
+            //             inputField.id = 'bodyinput' + matchIndex; // Unique ID for each input field
+            //             inputField.classList.add('form-control'); // Add the form-control class
 
-                        inputFieldContainer.appendChild(inputField);
-                        inputFieldsContainer.appendChild(inputFieldContainer);
-                        inputFieldsContainer.appendChild(document.createElement('br')); // Add line break
-                    });
-                    // Update counter to the last index + 1
-                    counter = parseInt(matches[matches.length - 1].substring(2, matches[matches.length - 1].length - 2)) + 1;
-                    compare_object.body.bfield = counter - 1;
-                } else {
-                    // If there are no matches, reset the counter to 1
-                    counter = 1;
-                    compare_object.body.bfield = counter - 1;
-                }
-            });
+            //             inputFieldContainer.appendChild(inputField);
+            //             body_dfield_box.appendChild(inputFieldContainer);
+            //         });
+            //         // Update counter to the last index + 1
+            //         counter = parseInt(matches[matches.length - 1].substring(2, matches[matches.length - 1].length - 2)) + 1;
+            //         compare_object.body.bfield = counter - 1;
+            //     } else {
+            //         // If there are no matches, reset the counter to 1
+            //         counter = 1;
+            //         compare_object.body.bfield = counter - 1;
+            //     }
+            // });
 
             //   var replycounter = 1
 
@@ -1365,7 +1552,7 @@
                     type: 'text',
                     class: 'form-control w-100',
                     id: 'url',
-                    placeholder: 'https://example.com'
+                    placeholder: 'https://swift-send.click'
                 });
 
                 const removeBtn = $('<button>', {
@@ -1742,84 +1929,93 @@
                         "components": component
                     };
 
-                    console.log(payload)
+                    // console.log(payload.components);
 
-                    // $.ajax({
-                    //     url: "/api/template/createtemplate",
-                    //     method: "post",
-                    //     data: payload,
-                    //     beforeSend: function () {
-                    //         $("#submitforapproval")
-                    //             .prop('disabled', true)
-                    //             .removeClass("btn-primary btn-success")
-                    //             .addClass("btn-warning")
-                    //             .html(`<span class= "d-flex align-items-center">
-                    //                                     <span class="flex-grow-1 me-2">
-                    //                                         Sending
-                    //                                     </span>
-                    //                                     <span class="spinner-border flex-shrink-0" role="status">
-                    //                                         <span class="visually-hidden"></span>
-                    //                                     </span>
-                    //                                 </span>`);
-                    //     },
-                    //     success: function (val) {
-                    //         if (val.success) {
-                    //             swal({
-                    //                 title: "Template Created Successfully!!!",
-                    //                 type: "success",
-                    //                 timer: 2000,
-                    //                 showConfirmButton: false,
-                    //             }).then(function () {
-                    //                 $("#submitforapproval")
-                    //                     .prop('disabled', false)
-                    //                     .removeClass("btn-warning btn-success")
-                    //                     .addClass("btn-primary")
-                    //                     .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
-                    //                                 <span class="d-none d-lg-inline-block d-md-inline-block">
-                    //                                     submit for approval
-                    //                                 </span>`);
-                    //                 $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
-                    //                 $('#v-pills-bill-info').addClass('show active');
+                    $.ajax({
+                        url: "/api/template/createtemplate",
+                        method: "post",
+                        data: payload,
+                        beforeSend: function () {
+                            $("#submitforapproval")
+                                .prop('disabled', true)
+                                .removeClass("btn-primary btn-success")
+                                .addClass("btn-warning")
+                                .html(`<span class= "d-flex align-items-center">
+                                                        <span class="flex-grow-1 me-2">
+                                                            Sending
+                                                        </span>
+                                                        <span class="spinner-border flex-shrink-0" role="status">
+                                                            <span class="visually-hidden"></span>
+                                                        </span>
+                                                    </span>`);
+                        },
+                        success: function (val) {
+                            if (val.success) {
+                                swal({
+                                    title: "Template Created Successfully!!!",
+                                    type: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                }).then(function () {
+                                    $("#submitforapproval")
+                                        .prop('disabled', false)
+                                        .removeClass("btn-warning btn-success")
+                                        .addClass("btn-primary")
+                                        .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                                                    <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                        submit for approval
+                                                    </span>`);
+                                    $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
+                                    $('#v-pills-bill-info').addClass('show active');
 
-                    //                 $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
-                    //                 $('#v-pills-bill-address').removeClass('show active');
+                                    $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
+                                    $('#v-pills-bill-address').removeClass('show active');
 
-                    //                 $('#document_Name').val("");
-                    //                 $("#selectedlang").val("");
-                    //                 $('#Headermsg').val("");
-                    //                 $('#Headerinput1').val("");
+                                    $('#document_Name').val("");
+                                    $("#selectedlang").val("");
+                                    $('#Headermsg').val("");
+                                    $('#Headerinput1').val("");
 
-                    //                 mediavalue = "";
-                    //                 $('#image').val("");
-                    //                 $('#document').val("");
-                    //                 $('#bodymsg').text("");
-                    //                 $("#footertext").val("");
+                                    mediavalue = "";
+                                    $('#image').val("");
+                                    $('#document').val("");
+                                    $('#bodymsg').text("");
+                                    $("#footertext").val("");
 
-                    //                 $('#phone_btn_text').val("");
-                    //                 $('#phn_number').val("");
-                    //                 $('#url_btn_text').val("");
-                    //                 $('#url').val("");
-                    //             });
-                    //         }
-                    //     }, 
-                    //     error: (error) => {
-                    //         if (error.status == "406") {
-                    //             swal({
-                    //                 title: "Template not accepted!!!",
-                    //                 type: "error",
-                    //                 timer: 2000,
-                    //                 showConfirmButton: false,
-                    //             }).then(function () {
-                    //                 $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
-                    //                 $('#v-pills-bill-info').addClass('show active');
+                                    $('#phone_btn_text').val("");
+                                    $('#phn_number').val("");
+                                    $('#url_btn_text').val("");
+                                    $('#url').val("");
+                                });
+                            }
+                        },
+                        error: (error) => {
+                            if (error.status == "406") {
+                                swal({
+                                    title: "Template not accepted!!!",
+                                    type: "error",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                }).then(function () {
+                                    $('#v-pills-bill-info-tab').addClass('active').attr('aria-selected', 'true');
+                                    $('#v-pills-bill-info').addClass('show active');
 
-                    //                 $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
-                    //                 $('#v-pills-bill-address').removeClass('show active');
-                    //             });
-                    //         }
-                    //         if (error.status == "500") { internalservererror(); }
-                    //     }
-                    // })
+                                    $('#v-pills-bill-address-tab').removeClass('active').attr('aria-selected', 'false');
+                                    $('#v-pills-bill-address').removeClass('show active');
+                                });
+                            }
+                            if (error.status == "500") { internalservererror(); }
+
+                            $("#submitforapproval")
+                                .prop('disabled', false)
+                                .removeClass("btn-warning btn-success")
+                                .addClass("btn-primary")
+                                .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                                                    <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                        submit for approval
+                                                    </span>`);
+                        }
+                    })
                 }
             })
         });

@@ -180,99 +180,162 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
-                    <div class="position-relative mx-n4 mt-n4">
-                        <div class="profile-wid-bg profile-setting-img">
-                            <img src="/assets/images/profile-bg.jpg" class="profile-wid-img" alt="">
-                            <div class="overlay-content"></div>
+                    <div class="profile-foreground position-relative mx-n4 mt-n4">
+                        <div class="profile-wid-bg">
+                            <img src="/assets/images/profile-bg.jpg" alt="" class="profile-wid-img" />
                         </div>
                     </div>
-                </div>
+                    <div class="mb-4 pt-3">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-center">
+                                <div
+                                    class="profileimg bg-light rounded-circle avatar-sm user-profile-image d-flex align-items-center justify-content-center">
+                                </div>
+                                <h3 class="text-white profilename ps-3"></h3>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="row">
-                    <div class="col-lg-12 mt-n5" id="boximage">
-                        <div class="card">
-                            <div class="card-header">
-                                <ul class="nav nav-tabs-custom nav-justified rounded card-header-tabs border-bottom-0"
-                                    role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails"
-                                            role="tab">
-                                            <i class="bx bx-user-pin me-lg-1 me-md-1 fs-20 align-middle"></i>
-                                            <span class="d-none d-lg-inline-block d-md-inline-block">Personal
-                                                Details</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
+
+                    <div class="row">
+                        <div class="col-lg-12 mt-5" id="boximage">
+                            <div class="card">
+                                <div class="card-header">
+                                    <ul class="nav nav-tabs-custom nav-justified rounded card-header-tabs border-bottom-0"
+                                        role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails"
+                                                role="tab">
+                                                <i class="bx bx-user-pin me-lg-1 me-md-1 fs-20 align-middle"></i>
+                                                <span class="d-none d-lg-inline-block d-md-inline-block">Personal
+                                                    Details</span>
+                                            </a>
+                                        </li>
+                                        <!-- <li class="nav-item">
                                         <a class="nav-link" data-bs-toggle="tab" href="#profileDetails" role="tab">
                                             <i class="bx bx-image-alt me-lg-1 me-md-1 fs-20 align-middle"></i>
                                             <span class="d-none d-lg-inline-block d-md-inline-block">Update Profile
                                                 Image</span>
                                         </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab">
-                                            <i class="bx bxs-key me-lg-1 me-md-1 fs-20 align-middle"></i>
-                                            <span class="d-none d-lg-inline-block d-md-inline-block">Change
-                                                Password</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card-body p-4">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="personalDetails" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="nameInput" class="form-label">
-                                                        Name
-                                                        <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_nameInput"></span>
-                                                    </label>
-                                                    <input type="text" class="form-control required" id="nameInput"
-                                                        placeholder="Enter Name" value="" data-type="name">
+                                    </li> -->
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab">
+                                                <i class="bx bxs-key me-lg-1 me-md-1 fs-20 align-middle"></i>
+                                                <span class="d-none d-lg-inline-block d-md-inline-block">Change
+                                                    Password</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="personalDetails" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label for="nameInput" class="form-label">
+                                                            Name
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_nameInput"></span>
+                                                        </label>
+                                                        <input type="text" class="form-control required" id="nameInput"
+                                                            placeholder="Enter Name" value="" data-type="name">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label for="emailInput" class="form-label">
+                                                            Email
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_emailInput"></span>
+                                                        </label>
+                                                        <input type="email" class="form-control required"
+                                                            id="emailInput" placeholder="Enter Email" value=""
+                                                            data-type="email" disabled readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label for="phoneInput" class="form-label">
+                                                            Phone Number
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_phoneInput"></span>
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="tel" class="form-control required"
+                                                                id="phoneInput" placeholder="Enter Phone-number"
+                                                                value="" data-type="phone" disabled readonly>
+                                                            <button class="btn btn-warning rounded-end d-none"
+                                                                type="button" id="verifybtn" data-bs-toggle="modal"
+                                                                data-bs-target="#phoneverifymodal">
+                                                                <span>
+                                                                    <i
+                                                                        class="fa-solid fa-triangle-exclamation me-lg-2"></i>
+                                                                    <span class="d-none d-lg-inline-block">Verify</span>
+                                                                </span>
+                                                            </button>
+                                                            <button class="btn btn-success rounded-end d-none"
+                                                                type="button" id="verifiedbtn">
+                                                                <span>
+                                                                    <i class="fa-solid fa-check me-lg-2"></i>
+                                                                    <span
+                                                                        class="d-none d-lg-inline-block">Verified</span>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="emailInput" class="form-label">
-                                                        Email
-                                                        <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_emailInput"></span>
-                                                    </label>
-                                                    <input type="email" class="form-control required" id="emailInput"
-                                                        placeholder="Enter Email" value="" data-type="email">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label for="countryInput" class="form-label">
+                                                            Country
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_countryInput"></span>
+                                                        </label>
+                                                        <input type="text" class="form-control required"
+                                                            id="countryInput" placeholder="Enter Country" value=""
+                                                            data-type="name" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label for="stateInput" class="form-label">
+                                                            State
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_stateInput"></span>
+                                                        </label>
+                                                        <input type="text" class="form-control required" id="stateInput"
+                                                            placeholder="Enter State" value="" data-type="name" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label for="cityInput" class="form-label">
+                                                            City
+                                                            <span class="text-danger">*</span>
+                                                            <span class="text-danger" id="err_cityInput"></span>
+                                                        </label>
+                                                        <input type="text" class="form-control required" id="cityInput"
+                                                            placeholder="City" value="" data-type="name" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="phoneInput" class="form-label">
-                                                        Phone Number
-                                                        <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_phoneInput"></span>
-                                                    </label>
-                                                    <div class="input-group">
-                                                        <input type="tel" class="form-control required" id="phoneInput"
-                                                            placeholder="Enter Phone-number" value="" data-type="phone">
-                                                        <button class="btn btn-warning rounded-end d-none" type="button"
-                                                            id="verifybtn" data-bs-toggle="modal"
-                                                            data-bs-target="#phoneverifymodal">
-                                                            <span>
-                                                                <i class="fa-solid fa-triangle-exclamation me-lg-2"></i>
-                                                                <span class="d-none d-lg-inline-block">Verify</span>
-                                                            </span>
-                                                        </button>
-                                                        <button class="btn btn-success rounded-end d-none" type="button"
-                                                            id="verifiedbtn">
-                                                            <span>
-                                                                <i class="fa-solid fa-check me-lg-2"></i>
-                                                                <span class="d-none d-lg-inline-block">Verified</span>
-                                                            </span>
-                                                        </button>
+                                            <div class="row mt-3">
+                                                <div class="col-lg-8 col-md-8 col-sm-12">
+                                                    <div class="mb-3">
+                                                        <div class="justify-content-lg-start justify-content-sm-center">
+                                                            <button class="btn btn-primary btn-load"
+                                                                id="updatepersonalinfo">
+                                                                Update
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="modal fade" id="phoneverifymodal" tabindex="-1" role="dialog"
                                             aria-modal="true" data-bs-backdrop="static">
                                             <div class="modal-dialog modal-dialog-centered">
@@ -416,146 +479,76 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="countryInput" class="form-label">
-                                                        Country
+                                        <!--end tab-pane-->
+                                        <div class="tab-pane" id="changePassword" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-12 mb-3">
+                                                    <label for="oldpwd" class="form-label">
+                                                        Old Password
                                                         <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_countryInput"></span>
+                                                        <span class="text-danger" id="err_oldpwd"></span>
                                                     </label>
-                                                    <input type="text" class="form-control required" id="countryInput"
-                                                        placeholder="Enter Country" value="" data-type="name" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="stateInput" class="form-label">
-                                                        State
-                                                        <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_stateInput"></span>
-                                                    </label>
-                                                    <input type="text" class="form-control required" id="stateInput"
-                                                        placeholder="Enter State" value="" data-type="name" />
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="cityInput" class="form-label">
-                                                        City
-                                                        <span class="text-danger">*</span>
-                                                        <span class="text-danger" id="err_cityInput"></span>
-                                                    </label>
-                                                    <input type="text" class="form-control required" id="cityInput"
-                                                        placeholder="City" value="" data-type="name" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col-lg-8 col-md-8 col-sm-12">
-                                                <div class="mb-3">
-                                                    <div class="justify-content-lg-start justify-content-sm-center">
-                                                        <button class="btn btn-primary btn-load"
-                                                            id="updatepersonalinfo">
-                                                            Update
+                                                    <div class="position-relative auth-pass-inputgroup">
+                                                        <input type="password"
+                                                            class="form-control required pe-5 password-input-hide-show"
+                                                            id="oldpwd" placeholder="Enter current password"
+                                                            data-type="password">
+                                                        <button
+                                                            class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                                            type="button" id="password-addon">
+                                                            <i class="ri-eye-fill align-middle"></i>
                                                         </button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tab-pane" id="profileDetails" role="tabpanel">
-                                        <div class="d-flex align-items-center justify-content-center my-4">
-                                            <div class="profile-user position-relative d-inline-block mx-auto mb-4">
-                                                <form method="post" enctype="multipart/form-data">
-                                                    <img
-                                                        class="rounded-circle avatar-xl user-profile-image profileimg" />
-                                                    <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                                        <input id="profile-img-file-input" type="file"
-                                                            class="profile-img-file-input" name="uploadFile">
-                                                        <label for="profile-img-file-input"
-                                                            class="profile-photo-edit avatar-xs">
-                                                            <span
-                                                                class="avatar-title rounded-circle bg-light text-body">
-                                                                <i class="ri-camera-fill"></i>
-                                                            </span>
-                                                        </label>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--end tab-pane-->
-                                    <div class="tab-pane" id="changePassword" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-12 mb-3">
-                                                <label for="oldpwd" class="form-label">
-                                                    Old Password
-                                                    <span class="text-danger">*</span>
-                                                    <span class="text-danger" id="err_oldpwd"></span>
-                                                </label>
-                                                <div class="position-relative auth-pass-inputgroup">
-                                                    <input type="password"
-                                                        class="form-control required pe-5 password-input-hide-show"
-                                                        id="oldpwd" placeholder="Enter current password"
-                                                        data-type="password">
-                                                    <button
-                                                        class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                        type="button" id="password-addon">
-                                                        <i class="ri-eye-fill align-middle"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="newpwd" class="form-label">
-                                                    New Password
-                                                    <span class="text-danger">*</span>
-                                                    <span class="text-danger" id="err_newpwd"></span>
-                                                </label>
-                                                <div class="position-relative auth-pass-inputgroup">
-                                                    <input type="password"
-                                                        class="form-control required pe-5 password-input-hide-show"
-                                                        id="newpwd" placeholder="Enter new password"
-                                                        data-type="password">
-                                                    <button
-                                                        class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                        type="button" id="password-addon">
-                                                        <i class="ri-eye-fill align-middle"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label for="cnfmpwd" class="form-label">
-                                                    Confirm Password
-                                                    <span class="text-danger">*</span>
-                                                    <span class="text-danger" id="err_cnfmpwd"></span>
-                                                </label>
-                                                <div class="position-relative auth-pass-inputgroup">
-                                                    <input type="password"
-                                                        class="form-control required pe-5 password-input-hide-show"
-                                                        id="cnfmpwd" placeholder="Confirm password"
-                                                        data-type="password">
-                                                    <button
-                                                        class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                        type="button" id="password-addon">
-                                                        <i class="ri-eye-fill align-middle"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="mb-3">
-                                                    <div id="forgot-pwd" class="text-muted cursor-pointer">
-                                                        <u>Forgot password?</u>
+                                                <div class="col-12 mb-3">
+                                                    <label for="newpwd" class="form-label">
+                                                        New Password
+                                                        <span class="text-danger">*</span>
+                                                        <span class="text-danger" id="err_newpwd"></span>
+                                                    </label>
+                                                    <div class="position-relative auth-pass-inputgroup">
+                                                        <input type="password"
+                                                            class="form-control required pe-5 password-input-hide-show"
+                                                            id="newpwd" placeholder="Enter new password"
+                                                            data-type="password">
+                                                        <button
+                                                            class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                                            type="button" id="password-addon">
+                                                            <i class="ri-eye-fill align-middle"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="text-end">
-                                                    <button type="button" class="btn btn-success" id="change_pwd">
-                                                        Change Password
-                                                    </button>
+                                                <div class="col-12 mb-3">
+                                                    <label for="cnfmpwd" class="form-label">
+                                                        Confirm Password
+                                                        <span class="text-danger">*</span>
+                                                        <span class="text-danger" id="err_cnfmpwd"></span>
+                                                    </label>
+                                                    <div class="position-relative auth-pass-inputgroup">
+                                                        <input type="password"
+                                                            class="form-control required pe-5 password-input-hide-show"
+                                                            id="cnfmpwd" placeholder="Confirm password"
+                                                            data-type="password">
+                                                        <button
+                                                            class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                                            type="button" id="password-addon">
+                                                            <i class="ri-eye-fill align-middle"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <div class="mb-3">
+                                                        <!-- <div class="text-muted cursor-pointer">
+                                                        <u id="forgot-pwd">Forgot password?</u>
+                                                    </div> -->
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-10">
+                                                    <div class="text-end">
+                                                        <button type="button" class="btn btn-success" id="change_pwd">
+                                                            Change Password
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
