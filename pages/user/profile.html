@@ -200,23 +200,38 @@
                         </div>
                     </div>
 
-                    <div class="card card-body">
-                        <div class="row mb-1">
-                            <div class="col-12">
-                                <label class="card-title">API Key</label>
-                                <div class="d-flex">
-                                    <input type="text" class="form-control" id="apikey" readonly disabled />
-                                    <a class="copy mx-2" id="copy_apikey" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Copy API">
-                                        <i class="bx bx-copy form-control fs-4"></i>
-                                    </a>
+
+
+                    <div class="row">
+                        <div class="col-lg-5 col-md-6 col-sm-12">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="card-title">API Key</label>
+                                        <div class="d-flex">
+                                            <input type="text" class="form-control" id="apikey" readonly disabled />
+                                            <a class="copy mx-2" id="copy_apikey" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Copy API">
+                                                <i class="bx bx-copy form-control fs-4"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="verti-sitemap">
+                                        <ul class="list-unstyled mb-0 fw-semibold" style="font-family: monospace;">
+                                            <li class="p-0 parent-title">
+                                                <span class="fw-semibold card-title">Number List</span>
+                                            </li>
+                                            <li id="numberList"></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-8 col-md-6 col-sm-12">
+                        <div class="col-lg-7 col-md-6 col-sm-12">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="d-flex align-items-center mb-1">
@@ -261,20 +276,6 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="verti-sitemap">
-                                        <ul class="list-unstyled mb-0 fw-semibold" style="font-family: monospace;">
-                                            <li class="p-0 parent-title">
-                                                <span class="fw-semibold">Number List</span>
-                                            </li>
-                                            <li id="numberList"></li>
-                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -491,8 +492,6 @@
                     method: "GET",
                     success: function (val) {
                         if (val.success) {
-                            console.log(val.data)
-
                             let output = ``;
 
                             for (let i in val.data) {

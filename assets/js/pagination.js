@@ -1,44 +1,44 @@
 function displayAtBeginning(content, prevclass, myclass, nextclass, paramstr, table) {
-    let out = `<div class="gridjs-wrapper" style="height: auto">
+  let out = `<div class="gridjs-wrapper" style="height: auto">
     <table role="grid" class="gridjs-table" style="height: auto">
         <thead class="gridjs-thead">
             <tr class="gridjs-tr">`;
-    for (let i = 0; i < Object.keys(content[0]).length; i++) {
-        out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
+  for (let i = 0; i < Object.keys(content[0]).length; i++) {
+    out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
                     <div class="gridjs-th-content">${Object.keys(content[0])[i]}</div>
                 </th>`;
-    }
-    `</tr></thead><tbody class="gridjs-tbody">`;
-    for (let j = 0; j < content.length; j++) {
-        out += `<tr class="gridjs-tr">`;
-        for (let k = 0; k < Object.keys(content[j]).length; k++) {
-            out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">
+  }
+  `</tr></thead><tbody class="gridjs-tbody">`;
+  for (let j = 0; j < content.length; j++) {
+    out += `<tr class="gridjs-tr">`;
+    for (let k = 0; k < Object.keys(content[j]).length; k++) {
+      out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">
                         ${Object.values(content[j])[k]}
                     </td>`;
-        }
-        out += `</tr>`;
     }
-    out += `</tbody>
+    out += `</tr>`;
+  }
+  out += `</tbody>
                     </table>
                   </div>
                   <div class="gridjs-footer">
                     <div class="gridjs-pagination">
                       <div class="gridjs-pages">`;
-    $.ajax({
-        url: "/getBtn",
-        method: "post",
-        data: {
-            table: table,
-            pgno: 1,
-            limit: localStorage.getItem("limit"),
-            paramstr: paramstr,
-        },
-        success: (data) => {
-            let btns = `<button tabindex="0" role="button" disabled="" title="Previous" aria-label="Previous" class="">Previous</button>`;
-            totalBtn = data.totalBtn;
-            for (let i = 0; i < totalBtn; i++) {
-                if (i == 0) {
-                    btns += `<button
+  $.ajax({
+    url: "/getBtn",
+    method: "post",
+    data: {
+      table: table,
+      pgno: 1,
+      limit: localStorage.getItem("limit"),
+      paramstr: paramstr,
+    },
+    success: (data) => {
+      let btns = `<button tabindex="0" role="button" disabled="" title="Previous" aria-label="Previous" class="">Previous</button>`;
+      totalBtn = data.totalBtn;
+      for (let i = 0; i < totalBtn; i++) {
+        if (i == 0) {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="gridjs-currentPage ${myclass}"
@@ -48,8 +48,8 @@ function displayAtBeginning(content, prevclass, myclass, nextclass, paramstr, ta
                         >
                           ${i + 1}</button
                         >`;
-                } else {
-                    btns += `<button
+        } else {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="${myclass}"
@@ -59,10 +59,10 @@ function displayAtBeginning(content, prevclass, myclass, nextclass, paramstr, ta
                         >
                           ${i + 1}</button
                         >`;
-                }
-            }
-            if (totalBtn == 1) {
-                btns += `<button
+        }
+      }
+      if (totalBtn == 1) {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -72,8 +72,8 @@ function displayAtBeginning(content, prevclass, myclass, nextclass, paramstr, ta
                         >
                           Next
                         </button>`;
-            } else {
-                btns += `<button
+      } else {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -83,54 +83,54 @@ function displayAtBeginning(content, prevclass, myclass, nextclass, paramstr, ta
                         >
                           Next
                         </button>`;
-            }
-            btns += `</div>
+      }
+      btns += `</div>
                     </div>
                   </div>
                   <div id="gridjs-temp" class="gridjs-temp"></div>`;
-            $("#mycomplementry").html(out + btns);
-            $("#chklimit").val(localStorage.getItem("limit"));
-        },
-    });
+      $("#mycomplementry").html(out + btns);
+      $("#chklimit").val(localStorage.getItem("limit"));
+    },
+  });
 }
 
-function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
-    let out = `<div class="gridjs-wrapper" style="height: auto">
+function nextBtnDisplay(content, prevclass, myclass, nextclass, pn, paramstr, table) {
+  let out = `<div class="gridjs-wrapper" style="height: auto">
                     <table role="grid" class="gridjs-table" style="height: auto">
                       <thead class="gridjs-thead">
                         <tr class="gridjs-tr">`;
-    for (let i = 0; i < Object.keys(content[0]).length; i++) {
-        out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
+  for (let i = 0; i < Object.keys(content[0]).length; i++) {
+    out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
                     <div class="gridjs-th-content">${Object.keys(content[0])[i]}</div>
                 </th>`;
+  }
+  `</tr></thead><tbody class="gridjs-tbody">`;
+  for (let j = 0; j < content.length; j++) {
+    out += `<tr class="gridjs-tr">`;
+    for (let k = 0; k < Object.keys(content[j]).length; k++) {
+      out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
     }
-    `</tr></thead><tbody class="gridjs-tbody">`;
-    for (let j = 0; j < content.length; j++) {
-        out += `<tr class="gridjs-tr">`;
-        for (let k = 0; k < Object.keys(content[j]).length; k++) {
-            out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-        }
-        out += `</tr>`;
-    }
-    out += `</tbody>
+    out += `</tr>`;
+  }
+  out += `</tbody>
                     </table>
                   </div>
                   <div class="gridjs-footer">
                     <div class="gridjs-pagination">
                       <div class="gridjs-pages">`;
-    $.ajax({
-        url: "/getBtn",
-        method: "post",
-        data: {
-            table: table,
-            pgno: pn + 1,
-            limit: localStorage.getItem("limit"),
-            paramstr: paramstr,
-        },
-        success: (data) => {
-            let btns = "";
-            if (pn + 1 == 1) {
-                btns += `<button
+  $.ajax({
+    url: "/getBtn",
+    method: "post",
+    data: {
+      table: table,
+      pgno: pn + 1,
+      limit: localStorage.getItem("limit"),
+      paramstr: paramstr,
+    },
+    success: (data) => {
+      let btns = "";
+      if (pn + 1 == 1) {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           disabled=""
@@ -140,8 +140,8 @@ function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
                         >
                           Previous</button
                         >`;
-            } else {
-                btns += `<button
+      } else {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Previous"
@@ -150,11 +150,11 @@ function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
                         >
                           Previous</button
                         >`;
-            }
-            totalBtn = data.totalBtn;
-            for (let i = 0; i < totalBtn; i++) {
-                if (i == pn) {
-                    btns += `<button
+      }
+      totalBtn = data.totalBtn;
+      for (let i = 0; i < totalBtn; i++) {
+        if (i == pn) {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="gridjs-currentPage ${myclass}"
@@ -164,8 +164,8 @@ function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
                         >
                           ${i + 1}</button
                         >`;
-                } else {
-                    btns += `<button
+        } else {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="${myclass} ${nextclass}"
@@ -175,10 +175,10 @@ function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
                         >
                           ${i + 1}</button
                         >`;
-                }
-            }
-            if (pn + 1 == Math.ceil(totalBtn)) {
-                btns += `<button
+        }
+      }
+      if (pn + 1 == Math.ceil(totalBtn)) {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -188,8 +188,8 @@ function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
                         >
                           Next
                         </button>`;
-            } else {
-                btns += `<button
+      } else {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -198,59 +198,59 @@ function nextBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
                         >
                           Next
                         </button>`;
-            }
-            btns += `</div>
+      }
+      btns += `</div>
                     </div>
                   </div>
                   <div id="gridjs-temp" class="gridjs-temp"></div>`;
-            $("#mycomplementry").html(out + btns);
-            $("#chklimit").val(localStorage.getItem("limit"));
-        },
-    });
+      $("#mycomplementry").html(out + btns);
+      $("#chklimit").val(localStorage.getItem("limit"));
+    },
+  });
 }
 
-function previousBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,table) {
-    let out = `<div class="gridjs-wrapper" style="height: auto">
+function previousBtnDisplay(content, prevclass, myclass, nextclass, pn, paramstr, table) {
+  let out = `<div class="gridjs-wrapper" style="height: auto">
                     <table role="grid" class="gridjs-table" style="height: auto">
                       <thead class="gridjs-thead">
                         <tr class="gridjs-tr">`;
-    for (let i = 0; i < Object.keys(content[0]).length; i++) {
-        out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
+  for (let i = 0; i < Object.keys(content[0]).length; i++) {
+    out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
                     <div class="gridjs-th-content">${Object.keys(content[0])[i]}</div>
                 </th>`;
+  }
+  `</tr></thead><tbody class="gridjs-tbody">`;
+  for (let j = 0; j < content.length; j++) {
+    out += `<tr class="gridjs-tr">`;
+    for (let k = 0; k < Object.keys(content[j]).length; k++) {
+      out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
     }
-    `</tr></thead><tbody class="gridjs-tbody">`;
-    for (let j = 0; j < content.length; j++) {
-        out += `<tr class="gridjs-tr">`;
-        for (let k = 0; k < Object.keys(content[j]).length; k++) {
-            out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-        }
-        out += `</tr>`;
-    }
-    out += `</tbody></table></div>
+    out += `</tr>`;
+  }
+  out += `</tbody></table></div>
                   <div class="gridjs-footer">
                     <div class="gridjs-pagination">
                       <div class="gridjs-pages">`;
-    $.ajax({
-        url: "/getBtn",
-        method: "post",
-        data: {
-            table: table,
-            pgno: pn - 1,
-            limit: localStorage.getItem("limit"),
-            paramstr: paramstr,
-        },
-        success: (data) => {
-            let btns = "";
-            if (pn - 1 == 1) {
-                btns += `<button tabindex="0" disabled="" title="Previous" aria-label="Previous" class="${prevclass}">Previous</button>`;
-            } else {
-                btns += `<button tabindex="0" title="Previous" aria-label="Previous" class="${prevclass}">Previous</button>`;
-            }
-            totalBtn = data.totalBtn;
-            for (let i = 0; i < totalBtn; i++) {
-                if (i + 1 == pn - 1) {
-                    btns += `<button
+  $.ajax({
+    url: "/getBtn",
+    method: "post",
+    data: {
+      table: table,
+      pgno: pn - 1,
+      limit: localStorage.getItem("limit"),
+      paramstr: paramstr,
+    },
+    success: (data) => {
+      let btns = "";
+      if (pn - 1 == 1) {
+        btns += `<button tabindex="0" disabled="" title="Previous" aria-label="Previous" class="${prevclass}">Previous</button>`;
+      } else {
+        btns += `<button tabindex="0" title="Previous" aria-label="Previous" class="${prevclass}">Previous</button>`;
+      }
+      totalBtn = data.totalBtn;
+      for (let i = 0; i < totalBtn; i++) {
+        if (i + 1 == pn - 1) {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="gridjs-currentPage ${myclass}"
@@ -260,8 +260,8 @@ function previousBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,tabl
                         >
                           ${i + 1}</button
                         >`;
-                } else {
-                    btns += `<button
+        } else {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="${myclass} ${nextclass}"
@@ -271,10 +271,10 @@ function previousBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,tabl
                         >
                           ${i + 1}</button
                         >`;
-                }
-            }
-            if (pn - 1 == Math.ceil(totalBtn)) {
-                btns += `<button
+        }
+      }
+      if (pn - 1 == Math.ceil(totalBtn)) {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -284,8 +284,8 @@ function previousBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,tabl
                         >
                           Next
                         </button>`;
-            } else {
-                btns += `<button
+      } else {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -294,71 +294,71 @@ function previousBtnDisplay(content,prevclass,myclass,nextclass,pn,paramstr,tabl
                         >
                           Next
                         </button>`;
-            }
-            btns += `</div>
+      }
+      btns += `</div>
                     </div>
                   </div>
                   <div id="gridjs-temp" class="gridjs-temp"></div>`;
-            $("#mycomplementry").html(out + btns);
-            $("#chklimit").val(localStorage.getItem("limit"));
-        },
-    });
+      $("#mycomplementry").html(out + btns);
+      $("#chklimit").val(localStorage.getItem("limit"));
+    },
+  });
 }
 
 function myBtnDisplay(content, prevclass, myclass, nextclass, index, btnno, pgno, paramstr, table) {
-    let out = `<div class="gridjs-wrapper" style="height: auto">
+  let out = `<div class="gridjs-wrapper" style="height: auto">
     <table role="grid" class="gridjs-table" style="height: auto">
         <thead class="gridjs-thead">
             <tr class="gridjs-tr">`;
-    for (let i = 0; i < Object.keys(content[0]).length; i++) {
-        out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
+  for (let i = 0; i < Object.keys(content[0]).length; i++) {
+    out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th" style="min-width: 77px; width: 77px">
                     <div class="gridjs-th-content">
                         ${Object.keys(content[0])[i]}
                     </div>
                 </th>`;
+  }
+  `</tr></thead><tbody class="gridjs-tbody">`;
+  for (let j = 0; j < content.length; j++) {
+    out += `<tr class="gridjs-tr">`;
+    for (let k = 0; k < Object.keys(content[j]).length; k++) {
+      out += `<td data-column-id="${Object.values(content[j])[k]
+        }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
     }
-    `</tr></thead><tbody class="gridjs-tbody">`;
-    for (let j = 0; j < content.length; j++) {
-        out += `<tr class="gridjs-tr">`;
-        for (let k = 0; k < Object.keys(content[j]).length; k++) {
-            out += `<td data-column-id="${Object.values(content[j])[k]
-                }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-        }
 
-        out += `</tr>`;
-    }
-    out += `</tbody>
+    out += `</tr>`;
+  }
+  out += `</tbody>
                     </table>
                   </div>
                   <div class="gridjs-footer">
                     <div class="gridjs-pagination">
                       <div class="gridjs-pages">`;
-    $.ajax({
-        url: "/getBtn",
-        method: "post",
-        data: {
-            table: table,
-            pgno: pgno,
-            limit: localStorage.getItem("limit"),
-            paramstr: paramstr,
-        },
-        success: (data) => {
-            let btns = "";
-            if (btnno == 1) {
-                btns += `
+  $.ajax({
+    url: "/getBtn",
+    method: "post",
+    data: {
+      table: table,
+      pgno: pgno,
+      limit: localStorage.getItem("limit"),
+      paramstr: paramstr,
+    },
+    success: (data) => {
+      let btns = "";
+      if (btnno == 1) {
+        btns += `
                 <button tabindex="0" role="button" disabled="" title="Previous" aria-label="Previous" class="${prevclass}">
                     Previous
                 </button>`;
-            } else {
-                btns += `<button tabindex="0" role="button" title="Previous" aria-label="Previous" class="${prevclass}">
+      } else {
+        btns += `<button tabindex="0" role="button" title="Previous" aria-label="Previous" class="${prevclass}">
                     Previous
                 </button>`;
-            }
+      }
 
-            totalBtn = data.totalBtn;
-            for (let i = 1; i <= totalBtn; i++) {
-                if (i == index) {
-                    btns += `<button
+      totalBtn = data.totalBtn;
+      for (let i = 1; i <= totalBtn; i++) {
+        if (i == index) {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="${myclass}"
@@ -368,8 +368,8 @@ function myBtnDisplay(content, prevclass, myclass, nextclass, index, btnno, pgno
                         >
                           ${i}</button
                         >`;
-                } else if (btnno == i) {
-                    btns += `<button
+        } else if (btnno == i) {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="gridjs-currentPage ${myclass}"
@@ -379,8 +379,8 @@ function myBtnDisplay(content, prevclass, myclass, nextclass, index, btnno, pgno
                         >
                           ${i}</button
                         >`;
-                } else {
-                    btns += `<button
+        } else {
+          btns += `<button
                           tabindex="0"
                           role="button"
                           class="${myclass}"
@@ -390,10 +390,10 @@ function myBtnDisplay(content, prevclass, myclass, nextclass, index, btnno, pgno
                         >
                           ${i}</button
                         >`;
-                }
-            }
-            if (btnno == Math.ceil(totalBtn)) {
-                btns += `<button
+        }
+      }
+      if (btnno == Math.ceil(totalBtn)) {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -403,8 +403,8 @@ function myBtnDisplay(content, prevclass, myclass, nextclass, index, btnno, pgno
                         >
                           Next
                         </button>`;
-            } else {
-                btns += `<button
+      } else {
+        btns += `<button
                           tabindex="0"
                           role="button"
                           title="Next"
@@ -413,11 +413,11 @@ function myBtnDisplay(content, prevclass, myclass, nextclass, index, btnno, pgno
                         >
                           Next
                         </button>`;
-            }
+      }
 
-            btns += `</div></div></div><div id="gridjs-temp" class="gridjs-temp"></div>`;
-            $("#mycomplementry").html(out + btns);
-            $("#chklimit").val(localStorage.getItem("limit"));
-        },
-    });
+      btns += `</div></div></div><div id="gridjs-temp" class="gridjs-temp"></div>`;
+      $("#mycomplementry").html(out + btns);
+      $("#chklimit").val(localStorage.getItem("limit"));
+    },
+  });
 }

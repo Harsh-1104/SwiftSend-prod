@@ -100,10 +100,6 @@ router.get("/CompanyDetails", (req, res) => {
   res.sendFile(`${path}/admin/admin-company-details.html`);
 });
 
-router.get("/whatsappbot", (req, res) => {
-  res.sendFile(`${path}/admin/admin-bot.html`);
-});
-
 router.get("/instanceData", (req, res) => {
   res.sendFile(`${path}/admin/admin-display-instances.html`);
 });
@@ -136,9 +132,6 @@ router.get("/messageData", (req, res) => {
   res.sendFile(`${path}/admin/admin-display-messages.html`);
 });
 
-router.get("/emailData", (req, res) => {
-  res.sendFile(`${path}/admin/admin-display-email.html`);
-});
 
 router.get("/subscriptionData", (req, res) => {
   res.sendFile(`${path}/admin/admin-display-subscriptions.html`);

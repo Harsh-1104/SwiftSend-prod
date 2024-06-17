@@ -181,22 +181,26 @@
                                                     <thead class="gridjs-thead">
                                                         <tr class="gridjs-tr">
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                instance_id
+                                                                ID
                                                             </th>
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                i_name</th>
+                                                                Name
+                                                            </th>
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                apikey</th>
+                                                                APIKEY
+                                                            </th>
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                token</th>
+                                                                Create date
+                                                            </th>
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                create_date</th>
+                                                                Is Root
+                                                            </th>
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                isActive</th>
+                                                                Status
+                                                            </th>
                                                             <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                disabled</th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                Delete</th>
+                                                                Operation
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="gridjs-tbody d-none" id="instance-list"></tbody>
@@ -325,25 +329,37 @@
                 $('.noresult').addClass('d-none');
                 $('#instance-list').removeClass('d-none');
                 for (var i in val) {
+                    const date = new Date(val[i].create_date);
+
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    const formattedDate = `${day}/${month}/${year}`;
                     data += `<tr class="gridjs-tr">
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
                                     ${val[i].instance_id}
                                 </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                    ${val[i].i_name}</td>
+                                    ${val[i].i_name}
+                                </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                    ${val[i].apikey}</td>
+                                    ${val[i].apikey}
+                                </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                    ${val[i].token}</th>
+                                    ${formattedDate}
+                                </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                    ${val[i].create_date}</td>
-                                <td class="gridjs-td" style="min-width: 77px; width: 77px">
-                                    ${val[i].isActive}</td>
+                                    ${val[i].isRoot ? `<span class="badge border border-warning text-warning align-middle fs-12">
+                                            <i class="ri-star-fill align-middle text-warning me-1"></i>
+                                                            MAIN
+                                                        </span>` : `NO`}
+                                </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
                                     <div class="form-check form-switch" data-id="${val[i].instance_id}">
-                <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
-                ${val[i].disabled == 0 ? `<label class="form-check-label" for="${val[i].instance_id}">Active</label>` : `<label class="form-check-label" for="${val[i].instance_id}">Disable</label>`}
-            </div></td>
+                                        <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
+                                                ${val[i].disabled == 0 ? `<label class="form-check-label" for="${val[i].instance_id}">Active</label>` : (val[i].disabled == 1) ? `<label class="form-check-label" for="${val[i].instance_id}">Disable</label>` : `<label class="form-check-label" for="${val[i].instance_id}">Pending</label>`}
+                                    </div>
+                                </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
                                     <input type="button" id="${val[i].instance_id}" class="btn btn-sm btn-danger" value="Delete" onclick="deleteRecord(this.id)"></td>
                             </tr>`;

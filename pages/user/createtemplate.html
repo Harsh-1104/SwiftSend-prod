@@ -1302,7 +1302,7 @@
             }
 
             $('#addInputFieldButton').on('click', () => {
-                if (dfieldcount < 5) {
+                if (dfieldcount < 10) {
                     addBodyField();
                     insertTextAtCursor('bodymsg', `{{${dfieldcount}}}`)
                 }

@@ -22,6 +22,8 @@ const tableData = (data, callback) => {
     try {
         const sql = `SELECT * FROM ${data.table} WHERE ${data.paramstr} AND apikey = '${data.apikey}`;
         conn.query(sql, (err, result) => {
+            console.log("sql : ", sql)
+            console.log("result : ", result)
             if (err) return callback(Object.assign(status.internalservererror(), { error: err }));
             if (result.length == 0) return callback(status.nodatafound());
             return callback(result);
@@ -147,4 +149,78 @@ const updatePassword = async (req, res) => {
     }
 }
 
-module.exports = { SignIn, updatePassword };
+// ----- SignIn Contoller ------
+const AdminSignIn = async (req, res) => {
+
+    const { email, password } = req.body;
+
+    if (email && password && email != undefined && password != undefined) {
+        tableData({
+            table: "admin",
+            paramstr: `email = '${email}' --`,
+            apikey: apikey,
+        }, (result) => {
+            if (result.status_code == 500) {
+                return res.send(Object.assign(status.internalservererror(), {
+                    error: {
+                        detail: `Internal Server Error | Try again after some time`,
+                    },
+                }));
+            }
+
+            if (result.status_code == 404) {
+                console.log("this is my result : ", result);
+                return res.send(
+                    Object.assign(status.unauthorized(), {
+                        error: {
+                            detail: `Invalid Email`,
+                        },
+                    })
+                );
+            }
+            if (result.length > 1) {
+                return res.send(
+                    Object.assign(status.duplicateRecord(), {
+                        error: {
+                            detail: `Multiple Email found`,
+                        },
+                    })
+                );
+            }
+            bcrypt.compare(password, result[0].password, (err, match) => {
+                if (match) {
+                    setCookie(res, "apikey", result[0].apikey, 1);
+                    return res.send(
+                        Object.assign(status.ok(), {
+                            data: {
+                                detail: `Login Successful`,
+                                apikey: result[0].apikey,
+                                iid: result[0].instance_id,
+                                isRoot: result[0].isRoot,
+                            },
+                            success: true
+                        })
+                    );
+                } else {
+                    return res.send(
+                        Object.assign(status.unauthorized(), {
+                            error: {
+                                detail: `Invalid Password`,
+                            },
+                        })
+                    );
+                }
+            });
+        });
+    } else {
+        return res.send(
+            Object.assign(status.badRequest(), {
+                error: {
+                    detail: `Invalid / Missing Parameter`,
+                },
+            })
+        );
+    }
+};
+
+module.exports = { SignIn, updatePassword, AdminSignIn };

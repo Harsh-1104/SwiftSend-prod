@@ -69,8 +69,46 @@ const getTemplateReportData = async (req, res) => {
     }
 }
 
+const GetLimitandbalance = (req, res) => {
+    let apikey = req.cookies.apikey;
+    let iid = req.params.iid;
+
+    conn.query(`SELECT * from instance where instance_id = '${iid}'`,
+        (err, insresult) => {
+            if (err) return res.status(500).send(status.internalservererror());
+            if (insresult.length <= 0) return res.status(404).send(Object.assign(status.nodatafound(), { success: false }, {
+                data: {
+                    detail: `No instance found of ${iid}`,
+                },
+            }))
+
+            conn.query(`SELECT combined.instance_id AS iid, i.i_name AS i_name, combined.apikey, SUM(combined.single_message_count) AS single_message_count, SUM(combined.boardcast_count) AS boardcast_count, SUM(combined.single_message_count + combined.boardcast_count) AS total_count FROM (SELECT m.instance_id, m.apikey, COUNT(m.instance_id) AS single_message_count, 0 AS boardcast_count FROM single_message m WHERE m.apikey = '${apikey}' AND DATE(m.time) = CURDATE() GROUP BY m.instance_id, m.apikey UNION ALL SELECT b.instance_id, b.apikey, 0 AS single_message_count, COUNT(mi.boardcast_id) AS boardcast_count FROM message_info mi JOIN boardcast b ON mi.boardcast_id = b.boardcast_id WHERE b.apikey = '${apikey}' AND DATE(b.time) = CURDATE() GROUP BY b.instance_id, b.apikey) AS combined JOIN instance i ON combined.instance_id = i.instance_id GROUP BY combined.instance_id, i.i_name, combined.apikey`,
+                (error, results) => {
+                    if (error) return res.status(500).send(status.internalservererror());
+                    let instanceData = results.filter(x => x.iid == iid)
+                    if (instanceData.length > 0) {
+                        return res.send({
+                            success: true,
+                            used: instanceData[0].total_count,
+                            remaining: parseInt(1000 - instanceData[0].total_count)
+                        });
+                    }
+                    else {
+                        return res.send({
+                            success: true,
+                            used: 0,
+                            remaining: 1000
+                        });
+                    }
+                }
+            );
+        }
+    );
+}
+
 module.exports = {
     getDailyReportData,
     getOverallReportData,
-    getTemplateReportData
+    getTemplateReportData,
+    GetLimitandbalance
 };

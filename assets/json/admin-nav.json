@@ -5,11 +5,6 @@
         "icon": "ri-dashboard-2-line"
     },
     {
-        "page": "WhatsApp Bot",
-        "link": "whatsappbot",
-        "icon": "mdi mdi-robot"
-    },
-    {
         "page": "Company",
         "link": "CompanyDetails",
         "icon": "mdi mdi-briefcase"
@@ -35,11 +30,6 @@
         "icon": "bx bxs-message-alt-detail"
     },
     {
-        "page": "Emails",
-        "link": "emailData",
-        "icon": "mdi mdi-email"
-    },
-    {
         "page": "Plans",
         "link": "planData",
         "icon": "ri-price-tag-3-fill"
@@ -58,11 +48,6 @@
         "page": "Support Agents",
         "link": "agentsData",
         "icon": "bx bx-support"
-    },
-    {
-        "page": "Templates",
-        "link": "templateData",
-        "icon": "ri-pages-fill"
     },
     {
         "page": "Users",

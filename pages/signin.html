@@ -273,6 +273,27 @@
             }
         })
 
+        let keysPressed = [];
+        let sequence = ['q', 'i', 't'];
+
+        $(document).keydown(function (event) {
+            if (event.altKey) {
+                if (sequence.includes(event.key)) {
+                    keysPressed.push(event.key);
+
+                    if (keysPressed.join('') === sequence.join('')) {
+                        event.preventDefault();
+                        location.href = "/swiftsend/admin/login";
+                        keysPressed = [];
+                    }
+                } else {
+                    keysPressed = [];
+                }
+            } else {
+                keysPressed = [];
+            }
+        });
+
         $(document).on('click', '#forgot-pwd', function () {
             localStorage.setItem("email", email.value.trim());
             location.href = `/password-reset`;

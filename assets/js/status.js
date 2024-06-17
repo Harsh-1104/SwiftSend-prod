@@ -75,6 +75,13 @@ class status {
             "message": "not accepted"
         }
     }
+
+    overlimit() {
+        return {
+            "status_code": "429",
+            "message": "Limit Exceed"
+        }
+    }
 }
 
 module.exports = new status();

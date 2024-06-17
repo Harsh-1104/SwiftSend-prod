@@ -453,6 +453,24 @@
                 }
             })
 
+            let limitObject = {};
+            function getlimitandbalance() {
+                $.ajax({
+                    url: `/api/dashboard/GetLimitandbalance/${iid}`,
+                    method: "GET",
+                    success: function (val) {
+                        if (val.success) {
+                            limitObject = val;
+                            console.log(limitObject)
+                        }
+                    },
+                    error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 401) InvalidUser();
+                    },
+                });
+            }
+            getlimitandbalance();
             function display_template() {
                 $.ajax({
                     url: `/api/template/gettemplate/${iid}`,
@@ -1057,89 +1075,89 @@
                     });
 
                     if (validAllData && bodyFieldValid && contactList.length > 0) {
-                        let payload = {
-                            "iid": iid,
-                            "numberList": contactList.filter(contact => contact.phone).map(contact => `91${contact.phone}`),
-                            "languageCode": `${template.language}`,
-                            "templateName": `${template.name}`,
-                            "components": []
-                        }
+                        if (contactList.length <= limitObject.remaining) {
+                            let payload = {
+                                "iid": iid,
+                                "numberList": contactList.filter(contact => contact.phone).map(contact => `91${contact.phone}`),
+                                "languageCode": `${template.language}`,
+                                "templateName": `${template.name}`,
+                                "components": []
+                            }
 
-                        template.components.forEach(x => {
-                            if (x.type == "HEADER") {
-                                let headerOBJ = {
-                                    "type": "header",
-                                    "parameters": []
-                                }
-
-                                let paramOBJ = {};
-
-                                switch (x.format) {
-                                    case "IMAGE": {
-                                        paramOBJ.type = "image";
-                                        paramOBJ.image = {
-                                            "id": mediaID
-                                        };
-                                        headerOBJ.parameters.push(paramOBJ);
-                                        payload.components.push(headerOBJ);
-                                        break;
+                            template.components.forEach(x => {
+                                if (x.type == "HEADER") {
+                                    let headerOBJ = {
+                                        "type": "header",
+                                        "parameters": []
                                     }
-                                    case "TEXT": {
-                                        let headerfields = countPlaceholders(x.text || null);
-                                        if (headerfields > 0) {
-                                            paramOBJ.type = "text";
-                                            paramOBJ.text = `${$('#headerDfield1').val()}`;
+
+                                    let paramOBJ = {};
+
+                                    switch (x.format) {
+                                        case "IMAGE": {
+                                            paramOBJ.type = "image";
+                                            paramOBJ.image = {
+                                                "id": mediaID
+                                            };
                                             headerOBJ.parameters.push(paramOBJ);
                                             payload.components.push(headerOBJ);
+                                            break;
                                         }
-                                        break;
-                                    }
-                                    case "DOCUMENT": {
-                                        paramOBJ.type = "document";
-                                        paramOBJ.document = {
-                                            "id": mediaID,
-                                            "filename": file_name
-                                        };
-                                        headerOBJ.parameters.push(paramOBJ);
-                                        payload.components.push(headerOBJ);
-                                        break;
+                                        case "TEXT": {
+                                            let headerfields = countPlaceholders(x.text || null);
+                                            if (headerfields > 0) {
+                                                paramOBJ.type = "text";
+                                                paramOBJ.text = `${$('#headerDfield1').val()}`;
+                                                headerOBJ.parameters.push(paramOBJ);
+                                                payload.components.push(headerOBJ);
+                                            }
+                                            break;
+                                        }
+                                        case "DOCUMENT": {
+                                            paramOBJ.type = "document";
+                                            paramOBJ.document = {
+                                                "id": mediaID,
+                                                "filename": file_name
+                                            };
+                                            headerOBJ.parameters.push(paramOBJ);
+                                            payload.components.push(headerOBJ);
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
-
-                            if (x.type == "BODY") {
-                                let bodyOBJ = {
-                                    "type": "body",
-                                    "parameters": []
-                                }
-
-                                let bodyfields = countPlaceholders(x.text || null);
-
-                                if (bodyfields > 0) {
-                                    let arr = [];
-                                    for (let i = 1; i <= bodyfields; i++) {
-                                        let paramOBJ = {};
-                                        paramOBJ.type = "text";
-                                        paramOBJ.text = `${$(`#body${i}`).val()}`;
-                                        bodyOBJ.parameters.push(paramOBJ);
+                                if (x.type == "BODY") {
+                                    let bodyOBJ = {
+                                        "type": "body",
+                                        "parameters": []
                                     }
-                                    payload.components.push(bodyOBJ);
-                                }
-                            }
-                        });
-                        // console.log(payload)
 
-                        $.ajax({
-                            url: "/api/message/sendinbulk",
-                            method: "POST",
-                            data: payload,
-                            beforeSend: function () {
-                                $("#sendmsg")
-                                    .prop('disabled', true)
-                                    .removeClass("btn-primary btn-success")
-                                    .addClass("btn-warning")
-                                    .html(`<span class= "d-flex align-items-center">
+                                    let bodyfields = countPlaceholders(x.text || null);
+
+                                    if (bodyfields > 0) {
+                                        let arr = [];
+                                        for (let i = 1; i <= bodyfields; i++) {
+                                            let paramOBJ = {};
+                                            paramOBJ.type = "text";
+                                            paramOBJ.text = `${$(`#body${i}`).val()}`;
+                                            bodyOBJ.parameters.push(paramOBJ);
+                                        }
+                                        payload.components.push(bodyOBJ);
+                                    }
+                                }
+                            });
+                            // console.log(payload)
+
+                            $.ajax({
+                                url: "/api/message/sendinbulk",
+                                method: "POST",
+                                data: payload,
+                                beforeSend: function () {
+                                    $("#sendmsg")
+                                        .prop('disabled', true)
+                                        .removeClass("btn-primary btn-success")
+                                        .addClass("btn-warning")
+                                        .html(`<span class= "d-flex align-items-center">
                                                     <span class="flex-grow-1 me-2">
                                                         Sending
                                                     </span>
@@ -1147,55 +1165,83 @@
                                                         <span class="visually-hidden"></span>
                                                     </span>
                                                 </span>`);
-                            },
-                            success: (result) => {
-                                if (result.success) {
-                                    swal({
-                                        title: "Message Sent",
-                                        type: "success",
-                                        timer: 2000,
-                                        showConfirmButton: false,
-                                    }).then(function () {
-                                        $("#sendmsg")
-                                            .prop('disabled', false)
-                                            .removeClass("btn-warning btn-success")
-                                            .addClass("btn-primary")
-                                            .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                                },
+                                success: (result) => {
+                                    if (result.success) {
+                                        swal({
+                                            title: "Message Sent",
+                                            type: "success",
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                        }).then(function () {
+                                            $("#sendmsg")
+                                                .prop('disabled', false)
+                                                .removeClass("btn-warning btn-success")
+                                                .addClass("btn-primary")
+                                                .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
                                                 <span class="d-none d-lg-inline-block d-md-inline-block">
                                                     Send
                                                 </span>`);
-                                        $('#phone, #template,#IMAGE, #DOCUMENT,#datafile').val("").removeClass("form-control-success form-control-danger");
-                                        $('#template option[value="null"]').prop('selected', true);
-                                        $('#channel_list option[value="null"]').prop('selected', true);
-                                        $('#template-body').html(`<div class="px-3 py-1 rounded-3 fw-semibold preview-text">
+                                            $('#phone, #template,#IMAGE, #DOCUMENT,#datafile').val("").removeClass("form-control-success form-control-danger");
+                                            $('#template option[value="null"]').prop('selected', true);
+                                            $('#channel_list option[value="null"]').prop('selected', true);
+                                            $('#template-body').html(`<div class="px-3 py-1 rounded-3 fw-semibold preview-text">
                                                 <i class="ri-information-fill align-middle fw-normal me-1"></i>
                                                 Template Preview
                                             </div>`);
-                                        $("#Headerdynamic,#Bodydynamic").html(``);
-                                        $('#contact_data').html(`<h5 class="text-muted text-center p-5">
+                                            $("#Headerdynamic,#Bodydynamic").html(``);
+                                            $('#contact_data').html(`<h5 class="text-muted text-center p-5">
                                                 Preview of the data will show here after you select csv file
                                             </h5>`);
-                                    });
-                                }
-                            },
-                            error: (error) => {
-                                console.log(error);
-                                if (error.status === 500) InternalServerError();
-                                if (error.status === 401) InvalidUser();
-                                if (error.status === 417) {
-                                    if (!error.success) {
-                                        swal({
-                                            title: "Error in sending message",
-                                            text: error.responseJSON.message,
-                                            type: "error",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        })
+                                        });
                                     }
-                                }
-
-                            },
-                        });
+                                },
+                                error: (error) => {
+                                    console.log(error);
+                                    if (error.status === 500) InternalServerError();
+                                    if (error.status === 401) InvalidUser();
+                                    if (error.status === 417) {
+                                        if (!error.success) {
+                                            swal({
+                                                title: "Error in sending message",
+                                                text: error.responseJSON.message,
+                                                type: "error",
+                                                timer: 2000,
+                                                showConfirmButton: false,
+                                            })
+                                        }
+                                    }
+                                    if (error.status === 429) {
+                                        if (!error.success) {
+                                            swal({
+                                                title: "Message Limit Exceed of 1000",
+                                                text: error.responseJSON.message,
+                                                type: "error",
+                                                timer: 2000,
+                                                showConfirmButton: false,
+                                            })
+                                        }
+                                    }
+                                    $("#sendmsg")
+                                        .prop('disabled', false)
+                                        .removeClass("btn-warning btn-success")
+                                        .addClass("btn-primary")
+                                        .html(`<i class="mdi mdi-send me-lg-2 me-md-2"></i>
+                                                <span class="d-none d-lg-inline-block d-md-inline-block">
+                                                    Send
+                                                </span>`);
+                                },
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Message Limit",
+                                text: "You don't have enough message balance",
+                                type: "error",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            })
+                        }
                     }
                     else {
                         swal({

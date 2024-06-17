@@ -92,28 +92,19 @@ const landingRoutes = require("./routes/landingRoute");
 const onlyapiRoutes = require("./routes/onlyAPI");
 
 // Middleware
-function checkApi(req, res, next) {
-    apikey = req.cookies.apikey;
 
-    conn.query(
-        `SELECT * FROM users WHERE apikey = '${apikey}'`,
-        (error, results) => {
-            if (error) return res.status(500).send(status.internalservererror());
-            if (results.length <= 0) res.status(401).send(status.unauthorized());
-            next();
-        }
-    );
-}
+
+const { checkMsgLimit, checkApi } = require("./middleware/middleware");
 
 // Use routes
-app.use("/api/message", checkApi, sampleRoutes);
+app.use("/api/message", checkApi, checkMsgLimit, sampleRoutes);
 app.use("/api/template", checkApi, templateRoutes);
 app.use("/api/media", checkApi, mediaRoutes);
 app.use("/api/dashboard", checkApi, userDashboardRoutes);
-app.use("/api/auth", signIn2);
 app.use("/api/broadcast", checkApi, broadcastRoutes);
 app.use("/api/instance", checkApi, instanceRoutes);
 app.use("/api/landing", landingRoutes);
+app.use("/api/auth", signIn2);
 app.use("/api/v1.0/", onlyapiRoutes);
 
 async function checkAPIKey(apikey) {
