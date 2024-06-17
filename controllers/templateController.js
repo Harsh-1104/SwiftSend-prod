@@ -26,6 +26,14 @@ const getAllTemplate = async (req, res) => {
     const iid = req.params.iid;
     const wabaCred = await setWabaCred(apiKey, iid);
 
+    if (wabaCred.length <= 0) {
+      return res.status(404).json({
+        success: false,
+        message: "An error occurred while fetching templates",
+        detail: "Instance not found"
+      });
+    }
+
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;
     const phoneID = wabaCred[0].phoneID;
@@ -70,6 +78,14 @@ const getAllTemplateStatus = async (req, res) => {
     const apiKey = req.cookies.apikey;
 
     const wabaCred = await setWabaCred(apiKey, email);
+
+    if (wabaCred.length <= 0) {
+      return res.status(404).json({
+        success: false,
+        message: "An error occurred while fetching templates",
+        detail: "Instance not found"
+      });
+    }
 
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;
@@ -134,6 +150,14 @@ const getAllTemplateID = async (req, res) => {
   const apiKey = req.cookies.apikey;
 
   const wabaCred = await setWabaCred(apiKey, email);
+
+  if (wabaCred.length <= 0) {
+    return res.status(404).json({
+      success: false,
+      message: "An error occurred while fetching templates",
+      detail: "Instance not found"
+    });
+  }
 
   const token = wabaCred[0].permanentToken;
   const wabaId = wabaCred[0].wabaID;
@@ -207,6 +231,14 @@ const createTemplate = async (req, res) => {
     const { name, language, category, components, iid } = req.body;
 
     const wabaCred = await setWabaCred(apiKey, iid);
+
+    if (wabaCred.length <= 0) {
+      return res.status(404).json({
+        success: false,
+        message: "An error occurred while fetching templates",
+        detail: "Instance not found"
+      });
+    }
 
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;
@@ -305,6 +337,14 @@ const deleteTemplateByID = async (req, res) => {
 
     const wabaCred = await setWabaCred(apiKey, iid);
 
+    if (wabaCred.length <= 0) {
+      return res.status(404).json({
+        success: false,
+        message: "An error occurred while fetching templates",
+        detail: "Instance not found"
+      });
+    }
+
     const token = wabaCred[0].permanentToken;
     const wabaId = wabaCred[0].wabaID;
     const phoneID = wabaCred[0].phoneID;
@@ -357,6 +397,14 @@ const mediaForTemplate = async (req, res) => {
   const iid = req.body.iid;
 
   const wabaCred = await setWabaCred(apiKey, iid);
+
+  if (wabaCred.length <= 0) {
+    return res.status(404).json({
+      success: false,
+      message: "An error occurred while fetching templates",
+      detail: "Instance not found"
+    });
+  }
 
   const token = wabaCred[0].permanentToken;
   const wabaId = wabaCred[0].wabaID;

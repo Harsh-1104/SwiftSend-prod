@@ -22,8 +22,6 @@ const tableData = (data, callback) => {
     try {
         const sql = `SELECT * FROM ${data.table} WHERE ${data.paramstr} AND apikey = '${data.apikey}`;
         conn.query(sql, (err, result) => {
-            console.log("sql : ", sql)
-            console.log("result : ", result)
             if (err) return callback(Object.assign(status.internalservererror(), { error: err }));
             if (result.length == 0) return callback(status.nodatafound());
             return callback(result);

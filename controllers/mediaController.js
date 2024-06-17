@@ -67,11 +67,18 @@ function deleteFolder(folderPath) {
 
 const uploadMedia = async (req, res) => {
     try {
-        const email = req.cookies.email;
         const apiKey = req.cookies.apikey;
         const iid = req.body.iid;
 
         const wabaCred = await setWabaCred(apiKey, iid);
+
+        if (wabaCred.length <= 0) {
+            return res.status(404).json({
+                success: false,
+                message: "An error occurred while fetching templates",
+                detail: "Instance not found"
+            });
+        }
 
         const token = wabaCred[0].permanentToken;
         const wabaId = wabaCred[0].wabaID;
