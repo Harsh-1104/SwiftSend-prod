@@ -9,7 +9,7 @@ const checkApi = (req, res, next) => {
         `SELECT * FROM users WHERE apikey = '${apikey}'`,
         (error, results) => {
             if (error) return res.status(500).send(status.internalservererror());
-            if (results.length <= 0) res.status(401).send(status.unauthorized());
+            if (results.length <= 0) return res.status(401).send(status.unauthorized());
             next();
         }
     );
