@@ -4,11 +4,6 @@ const conn = require('../DB/connection');
 const logAPI = require("../function/log");
 const { setWabaCred } = require("./userController");
 
-const wabaPhoneID = process.env.WABA_PHONEID;
-const version = process.env.WABA_VERSION;
-const token = process.env.WABA_TOKEN;
-const wabaId = process.env.WABA_ID;
-
 const insertIntoMessageInfo = async (data) => {
     const query = `INSERT INTO message_info (waba_message_id, boardCast_id , reciver_number, message_type, status) VALUES ?`;
 
@@ -47,6 +42,7 @@ const insertIntoBoardCaste = async (apikey, templateName, boardcast_id, iid) => 
 };
 
 const sendBulkMessagesIn = async (req, res) => {
+    const version = "v19.0";
 
     try {
         const apiKey = req.cookies.apikey;
@@ -71,14 +67,9 @@ const sendBulkMessagesIn = async (req, res) => {
         const boardCastId = crypto.randomBytes(16).toString("hex");
         let success = true;
 
-        const filteredComponents = components
-            ? components.filter((component) => component !== null)
-            : [];
-        const bearerToken = token;
+        const filteredComponents = components ? components.filter((component) => component !== null) : [];
+        const messageInfoData = [];
 
-        const messageInfoData = []; // Array to store message info data
-
-        // Use Promise.all to await all requests
         await Promise.all(
             numberList.map(async (item) => {
                 const payload = {
@@ -95,10 +86,9 @@ const sendBulkMessagesIn = async (req, res) => {
                 };
 
                 try {
-                    const response = await axios.post(
-                        `https://graph.facebook.com/${version}/${phoneID}/messages`, payload, {
+                    const response = await axios.post(`https://graph.facebook.com/${version}/${phoneID}/messages`, payload, {
                         headers: {
-                            Authorization: `Bearer ${bearerToken}`,
+                            Authorization: `Bearer ${token}`,
                             "Content-Type": "application/json",
                         },
                     });
@@ -108,20 +98,19 @@ const sendBulkMessagesIn = async (req, res) => {
                     } else {
                         success = true;
 
-                        // Accumulate message info data
                         const myData = response.data;
                         const messageId = myData.messages[0].id;
                         messageInfoData.push({
-                            // Push data into the array
                             waba_message_id: messageId,
                             boardcast_id: boardCastId,
                             user_id: 1,
                             reciver_number: item,
-                            message_type: "template", // Adjust as needed
+                            message_type: "template",
                             status: "sent",
                         });
                     }
-                } catch (error) {
+                }
+                catch (error) {
                     console.log("error ", error.response);
                     success = false;
                 }
@@ -129,19 +118,16 @@ const sendBulkMessagesIn = async (req, res) => {
         );
 
         if (success) {
-            // Insert into boardcast table only if all messages are sent successfully
             await insertIntoBoardCaste(apikey, templateName, boardCastId, iid);
 
             // Bulk insertion into message_info table
             await insertIntoMessageInfo(messageInfoData);
 
             logAPI(req.url, apikey, iid, "S");
-            res
-                .status(200)
-                .json({ success: true, message: "Messages sent successfully" });
+            res.status(200).json({ success: true, message: "Messages sent successfully" });
         } else {
             logAPI(req.url, apikey, iid, "E");
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message: "Failed to send one or more messages",
             });
@@ -149,13 +135,11 @@ const sendBulkMessagesIn = async (req, res) => {
     } catch (error) {
         console.log("error", error);
         logAPI(req.url, apikey, iid, "E");
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "An error occurred while sending the messages",
         });
     }
 };
 
-module.exports = {
-    sendBulkMessagesIn,
-};
+module.exports = { sendBulkMessagesIn };

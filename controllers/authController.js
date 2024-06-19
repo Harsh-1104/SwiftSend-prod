@@ -1,10 +1,9 @@
-const axios = require("axios");
 const conn = require("../DB/connection");
-const { setWabaCred } = require("./userController");
 const status = require("../assets/js/status");
 const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
-const cookieParser = require("cookie-parser");
+const crypto = require("crypto");
+
 
 let obj = [],
     apikey,
@@ -221,4 +220,100 @@ const AdminSignIn = async (req, res) => {
     }
 };
 
-module.exports = { SignIn, updatePassword, AdminSignIn };
+const AddUser = async (req, res) => {
+    const id = crypto.randomBytes(16).toString("hex");
+
+    const name = req.body.name;
+    const phone = req.body.phone;
+    const email = req.body.email;
+    const password = req.body.password;
+    const country = req.body.country;
+    const state = req.body.state;
+    const city = req.body.city;
+
+    if (name && phone && email && password && country && state && name != undefined && phone != undefined && email != undefined &&
+        password != undefined && country != undefined && state != undefined) {
+
+        conn.query(`SELECT * FROM instance i WHERE i.username = '${email}' OR phone = '${phone}'`,
+            function (err, result) {
+                if (err) {
+                    return res.status(500).send(Object.assign(status.internalservererror(), {
+                        error: {
+                            detail: `Internal Server Error | Try again after some time`,
+                        },
+                    }));
+                }
+
+                if (result.length > 0) {
+                    return res.status(409).send(Object.assign(status.duplicateRecord(),
+                        {
+                            error: {
+                                detail: `User with this Data Already exists, Check the email or phone number`
+                            },
+                        }
+                    ));
+                }
+
+                bcrypt.hash(password, 10, (err, hash) => {
+                    if (err) {
+                        return res.send(Object.assign(status.badRequest(), {
+                            error: {
+                                detail: `Something went wrong`
+                            },
+                        }));
+                    }
+
+                    conn.query(`INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?)`,
+                        [id, name, email, hash, phone, true, country, state, city, new Date(), null],
+                        function (err, result) {
+                            if (err || result.affectedRows == 0) {
+                                return res.status(500).send(
+                                    Object.assign(status.internalservererror(), {
+                                        error: {
+                                            detail: `Internal Server Error | Try again after some time`,
+                                        },
+                                    })
+                                );
+                            }
+                            const token = crypto.randomBytes(10).toString("hex");
+                            const instanceid = crypto.randomBytes(8).toString("hex");
+
+                            conn.query(`INSERT INTO instance values(?,?,?,?,?,?,?,?,?,?)`,
+                                [instanceid, "Main", id, token, new Date(), 1, 0, email, hash, phone],
+                                function (error, result) {
+                                    if (error) {
+                                        return res.status(500).send(Object.assign(status.internalservererror(), {
+                                            error: {
+                                                detail: `Internal Server Error | Try again after some time`,
+                                                message: error
+                                            },
+                                        }));
+                                    }
+                                    return res.status(200).send(Object.assign(status.created(), {
+                                        data: {
+                                            detail: `Instance & User Created.`,
+                                            "Instance ID": id,
+                                            "Email": email,
+                                            apikey: id,
+                                        },
+                                        success: true
+                                    }));
+                                }
+                            );
+                        }
+                    );
+                });
+            });
+    }
+    else {
+        return res.status(500).send(
+            Object.assign(status.badRequest(), {
+                error: {
+                    detail: `Something went wrong OR Invalid / Missing Parameter`,
+                },
+            })
+        );
+    }
+};
+
+module.exports = { SignIn, updatePassword, AdminSignIn, AddUser };

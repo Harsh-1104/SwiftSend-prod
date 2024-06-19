@@ -90,6 +90,7 @@ const broadcastRoutes = require("./routes/broadcastRoute");
 const instanceRoutes = require("./routes/instanceRoute");
 const landingRoutes = require("./routes/landingRoute");
 const onlyapiRoutes = require("./routes/onlyAPI");
+const adminRoutes = require("./routes/adminRoute");
 
 // Middleware
 
@@ -105,7 +106,8 @@ app.use("/api/broadcast", checkApi, broadcastRoutes);
 app.use("/api/instance", checkApi, instanceRoutes);
 app.use("/api/landing", landingRoutes);
 app.use("/api/auth", signIn2);
-app.use("/api/v1.0/", onlyapiRoutes);
+app.use("/api/v1.0/", checkApi, checkMsgLimit, onlyapiRoutes);
+app.use("/api/admin/", adminRoutes);
 
 async function checkAPIKey(apikey) {
     try {
@@ -1566,13 +1568,7 @@ app.post("/signin", (req, res) => {
                 bcrypt.compare(password, result[0].password, (err, match) => {
                     if (match) {
                         setCookie(res, "apikey", result[0].apikey, 1);
-                        // const wabaCred = setWabaCred(result[0].apikey, email);
-                        // const wabaCredString = JSON.stringify(wabaCred);
-                        // res.cookie("wabaCred", wabaCredString, {
-                        //   httpOnly: true,
-                        //   secure: process.env.NODE_ENV === "production", // Set the secure flag in production
-                        //   maxAge: 24 * 60 * 60 * 1000, // Cookie expiry time in milliseconds (1 day)
-                        // });
+
                         if (rememberme == "true") {
                             res.cookie("email", email, { maxAge: 1000 * 60 * 60 * 24 * 15 });
                         }

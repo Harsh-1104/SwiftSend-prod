@@ -147,73 +147,44 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title mb-0 text-center fs-3">
-                                        Manage Instances
+                            <div class="card" style="height: calc(100vh - 180px);">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h3 class="mb-0">
+                                        Instances
                                     </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div role="complementary" class="gridjs gridjs-container" style="width: 100%">
-                                        <div class="gridjs-head">
-                                            <div class="d-flex">
-                                                <div class="gridjs-search flex-grow-1">
-                                                    <input type="search" id="searchText" placeholder="Type a keyword..."
-                                                        aria-label="Type a keyword..."
-                                                        class="gridjs-input gridjs-search-input" />
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <select id="chklimit" class="form-select mb-3">
-                                                        <option value="All">All</option>
-                                                        <option value="5">5 records</option>
-                                                        <option value="10">10 records</option>
-                                                        <option value="15">15 records</option>
-                                                        <option value="30">30 records</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <div class="search-box">
+                                            <input type="text" class="form-control" id="searchInstance"
+                                                placeholder="Search Instance Data ..." />
+                                            <i class="bx bx-search-alt-2 align-middle fs-4 search-icon"></i>
                                         </div>
-                                        <div id="mycomplementry">
-                                            <div class="gridjs-wrapper" id="table-fixed-header" data-simplebar
-                                                data-simplebar-auto-hide="false" style="height: auto">
-                                                <table role="grid" class="gridjs-table" style="height: auto"
-                                                    id="customerTable">
-                                                    <thead class="gridjs-thead">
-                                                        <tr class="gridjs-tr">
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                ID
-                                                            </th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                Name
-                                                            </th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                APIKEY
-                                                            </th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                Create date
-                                                            </th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                Is Root
-                                                            </th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                Status
-                                                            </th>
-                                                            <th class="gridjs-th" style="min-width: 77px; width: 77px">
-                                                                Operation
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="gridjs-tbody d-none" id="instance-list"></tbody>
-                                                </table>
-                                                <div class="noresult d-none py-5">
-                                                    <div class="text-center">
-                                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json"
-                                                            trigger="loop" colors="primary:#212529,secondary:#405189"
-                                                            style="width: 75px; height: 75px">
-                                                        </lord-icon>
-                                                        <h5 class="mt-2">No instances Found</h5>
-                                                    </div>
-                                                </div>
+                                    </div>
+                                </div>
+                                <div class="card-body h-100">
+                                    <div class="table-responsive table-card mb-1 scrollbar-custom"
+                                        id="table-fixed-header" data-simplebar data-simplebar-auto-hide="false"
+                                        style="max-height: calc(100vh - 260px)">
+                                        <table class="table align-middle table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Phone</th>
+                                                    <th>Create date</th>
+                                                    <th>Root User</th>
+                                                    <th>Status</th>
+                                                    <th>Assigned user</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list form-check-all" id="InstanceTable"></tbody>
+                                        </table>
+                                        <div class="noresult d-none py-5">
+                                            <div class="text-center">
+                                                <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                                    colors="primary:#212529,secondary:#405189"
+                                                    style="width: 75px; height: 75px">
+                                                </lord-icon>
+                                                <h5 class="mt-2">No Instance Found</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -221,56 +192,12 @@
                             </div>
                         </div>
                     </div>
-                    <!--end row-->
                 </div>
-                <!-- container-fluid -->
             </div>
-            <!-- End Page-content -->
 
             <footer class="footer"></footer>
         </div>
-        <!-- end main content-->
     </div>
-    </div>
-    </div>
-
-    <!-- removeNotificationModal -->
-    <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        id="NotificationModalbtn-close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style="width: 100px; height: 100px"></lord-icon>
-                        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you sure ?</h4>
-                            <p class="text-muted mx-4 mb-0">
-                                Are you sure you want to remove this Notification ?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">
-                            Close
-                        </button>
-                        <button type="button" class="btn w-sm btn-danger" id="delete-notification">
-                            Yes, Delete It!
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
-    </div>
-    <!-- END layout-wrapper -->
 
     <!--start back-to-top-->
     <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
@@ -322,12 +249,234 @@
     <script src="/assets/sweetalert2/sweetalert2.all.js"></script>
 
     <script>
+
+        $(document).ready(function () {
+            let InstanceDataList = [];
+
+            function InstanceDataDisplay(val) {
+                if (val.length > 0) {
+
+                    let data = ``;
+                    $('#InstanceTable, .noresult').addClass('d-none');
+                    $('#InstanceTable').removeClass('d-none');
+                    for (var i in val) {
+                        const date = new Date(val[i].create_date);
+
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const year = date.getFullYear();
+                        const formattedDate = `${day}/${month}/${year}`;
+                        data += `<tr>
+                                    <td class="w-15 text-truncate fw-semibold text-primary" style="max-width: 20px;">${val[i].i_name}</td>
+                                    <td class="w-15 fw-semibold" style="font-family: monospace;">
+                                        ${val[i].phone ? `<img src="/assets/images/w_icon.svg" height="20" width="20" />
+                                        ${val[i].phone}` : `-`}
+                                        
+                                    </td>
+                                    <td class="w-15" style="font-family: monospace;">${formattedDate}</td>
+                                    <td class="w-15 text-truncate" style="max-width: 30px;">
+                                        ${val[i].isRoot ? `<span class="badge border border-warning text-warning align-middle fs-12">
+                                            <i class="ri-star-fill align-middle text-warning me-1"></i>
+                                                            MAIN
+                                                        </span>` : `NO`}    
+                                    </td>
+                                    <td class="w-15 text-truncate" style="max-width: 20px;">
+                                        <div class="form-check form-switch" data-id="${val[i].instance_id}">
+                                            <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
+                                                    ${val[i].disabled == 0 ? `<label class="form-check-label ms-2 text-success" for="${val[i].instance_id}">Active</label>` : (val[i].disabled == 1) ? `<label class="form-check-label ms-2 text-muted" for="${val[i].instance_id}">Disable</label>` : `<label class="form-check-label ms-2 text-warning" for="${val[i].instance_id}">Pending</label>`}
+                                        </div>
+                                    </td>
+                                    <td class="w-20 text-truncate" style="max-width: 30px;">${val[i].username ? val[i].username : `-`}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-soft-danger fs-12 deleteInstance" data-id="${val[i].instance_id}">
+                                            <i class="mdi mdi-delete align-middle"></i>
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>`;
+                    }
+                    $("#InstanceTable").html(data);
+                }
+                else {
+                    $('#InstanceTable, .noresult').addClass('d-none');
+                    $('.noresult').removeClass('d-none');
+                }
+            }
+
+            function GETInstanceAdminAPI() {
+                $.ajax({
+                    url: `/api/admin/getallinstance`,
+                    method: "GET",
+                    beforeSend: () => {
+                        $("#UserTable").html(`<tr class="">
+                                            <td class="text-center py-5" colspan="5">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>`);
+                    },
+                    success: function (val) {
+                        if (val.success) {
+                            InstanceDataDisplay(val.data);
+                            InstanceDataList = val.data;
+                        }
+                    }, error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 401) InvalidUser();
+                    }
+                });
+            };
+            GETInstanceAdminAPI();
+
+            $(document).on('click', ".switch-active", function () {
+                const iid = $(this).attr('id');
+                let disabled = ($(`#${iid}:checked`).length === 0) ? 1 : 0;
+
+                function updateStatus(iid, disabled) {
+                    $.ajax({
+                        url: "/updateData",
+                        method: "PUT",
+                        data: {
+                            "table": "instance",
+                            "paramstr": `disabled = '${disabled}'`,
+                            "condition": `instance_id = '${iid}'`
+                        },
+                        success: function (val) {
+                            switch (val.status_code) {
+                                case '400':
+                                case '401': {
+                                    InvalidUser();
+                                    break;
+                                }
+
+                                case '404':
+                                case '500': {
+                                    InternalServerError();
+                                    break;
+                                }
+
+                                case '200': {
+                                    GETInstanceAdminAPI();
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (!disabled) {
+                    updateStatus(iid, disabled);
+                }
+                else {
+                    swal({
+                        title: 'Are you sure?',
+                        text: "You want to disabled this instance..!!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, disable it',
+                        cancelButtonText: 'No, cancel',
+                        confirmButtonClass: 'btn btn-success mx-2',
+                        cancelButtonClass: 'btn btn-outline-danger mx-2',
+                        buttonsStyling: false
+                    }).then(function (result) {
+                        if (result.value) {
+                            updateStatus(iid, disabled)
+                        }
+                        else {
+                            if ($(`#${iid}`).length == 1) {
+                                $(`#${iid}`).prop('checked', true);
+                            } else {
+                                $(`#${iid}`).prop('checked', false);
+                            }
+                        }
+                    })
+                }
+            })
+
+            $(document).on('click', '.deleteInstance', function () {
+                const iid = $(this).attr('data-id');
+                console.log(iid)
+
+                swal({
+                    title: 'Are you sure?',
+                    text: "You won't be able to access this anymore..!!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'No, cancel',
+                    confirmButtonClass: 'btn btn-success mx-2',
+                    cancelButtonClass: 'btn btn-outline-danger mx-2',
+                    buttonsStyling: false
+                }).then(function (result) {
+                    if (result.value) {
+                        $.ajax({
+                            url: `/api/admin/deleteinstance/${iid}`,
+                            method: "DELETE",
+                            success: function (val) {
+                                if (val.success) {
+                                    swal({
+                                        title: "Instance Removed.",
+                                        type: "success",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    }).then(function () {
+                                        GETInstanceAdminAPI();
+                                    });
+                                }
+                            }, error: (error) => {
+                                if (error.status === 500) InternalServerError();
+                                if (error.status === 404) {
+                                    swal({
+                                        title: "Invalid Data",
+                                        text: "User Not Found, check Apikey",
+                                        type: "error",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                })
+            })
+
+            $(document).on("input", "#searchInstance", function () {
+
+                let val = $('#searchInstance').val().trim();
+
+                function search(query) {
+                    query = query.toLowerCase();
+                    return InstanceDataList.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+
+                let Searchresult = search(val);
+
+                if (val == null || val == "") {
+                    InstanceDataDisplay(InstanceDataList)
+                }
+                else {
+                    InstanceDataDisplay(Searchresult)
+                }
+            })
+        })
+
         function filterResult(val) {
             if (val.length > 0) {
                 let data = ``;
-                $('#instance-list').addClass('d-none');
+                $('#InstanceTable').addClass('d-none');
                 $('.noresult').addClass('d-none');
-                $('#instance-list').removeClass('d-none');
+                $('#InstanceTable').removeClass('d-none');
                 for (var i in val) {
                     const date = new Date(val[i].create_date);
 
@@ -357,17 +506,17 @@
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
                                     <div class="form-check form-switch" data-id="${val[i].instance_id}">
                                         <input class="form-check-input switch-active" type="checkbox" role="switch" id="${val[i].instance_id}" ${val[i].disabled == 0 ? `checked=""` : ''}  />
-                                                ${val[i].disabled == 0 ? `<label class="form-check-label" for="${val[i].instance_id}">Active</label>` : (val[i].disabled == 1) ? `<label class="form-check-label" for="${val[i].instance_id}">Disable</label>` : `<label class="form-check-label" for="${val[i].instance_id}">Pending</label>`}
+                                                ${val[i].disabled == 0 ? `<label class="form-check-label ms-5" for="${val[i].instance_id}">Active</label>` : (val[i].disabled == 1) ? `<label class="form-check-label ms-5" for="${val[i].instance_id}">Disable</label>` : `<label class="form-check-label ms-5" for="${val[i].instance_id}">Pending</label>`}
                                     </div>
                                 </td>
                                 <td class="gridjs-td" style="min-width: 77px; width: 77px">
                                     <input type="button" id="${val[i].instance_id}" class="btn btn-sm btn-danger" value="Delete" onclick="deleteRecord(this.id)"></td>
                             </tr>`;
                 }
-                $("#instance-list").html(data);
+                $("#InstanceTable").html(data);
             }
             else {
-                $('#instance-list').addClass('d-none');
+                $('#InstanceTable').addClass('d-none');
                 $('.noresult').addClass('d-none');
                 $('.noresult').removeClass('d-none');
             }
@@ -394,7 +543,7 @@
                         }
 
                         case '404': {
-                            $('#instance-list').addClass('d-none');
+                            $('#InstanceTable').addClass('d-none');
                             $('.noresult').addClass('d-none');
                             $('.noresult').removeClass('d-none');
                             // $('#select_all').addClass('d-none');
@@ -404,16 +553,16 @@
                         default: {
                             let data = "";
                             datasource = val;
-                            $('#instance-list').addClass('d-none');
+                            $('#InstanceTable').addClass('d-none');
                             $('.noresult').addClass('d-none');
-                            $('#instance-list').removeClass('d-none');
+                            $('#InstanceTable').removeClass('d-none');
                             filterResult(val);
                         }
                     }
                 }
             });
         }
-        display_instances();
+        // display_instances();
 
         $(document).on("input", "#searchText", function () {
 
@@ -449,71 +598,7 @@
             }
         })
 
-        $(document).on('click', ".switch-active", function () {
-            const iid = $(this).attr('id');
-            let disabled = ($(`#${iid}:checked`).length === 0) ? 1 : 0;
-            console.log(disabled);
 
-            function updateStatus(iid, disabled) {
-                $.ajax({
-                    url: "/updateData",
-                    method: "PUT",
-                    data: {
-                        "table": "instance",
-                        "paramstr": `disabled = '${disabled}'`,
-                        "condition": `instance_id = '${iid}'`
-                    },
-                    success: function (val) {
-                        switch (val.status_code) {
-                            case '400':
-                            case '401': {
-                                InvalidUser();
-                                break;
-                            }
-
-                            case '404':
-                            case '500': {
-                                InternalServerError();
-                                break;
-                            }
-
-                            case '200': {
-                                display_instances();
-                                break;
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (!disabled) {
-                updateStatus(iid, disabled);
-            }
-            else {
-                swal({
-                    title: 'Are you sure?',
-                    text: "You want to disabled this instance..!!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, disable it',
-                    cancelButtonText: 'No, cancel',
-                    confirmButtonClass: 'btn btn-success mx-2',
-                    cancelButtonClass: 'btn btn-outline-danger mx-2',
-                    buttonsStyling: false
-                }).then(function (result) {
-                    if (result.value) {
-                        updateStatus(iid, disabled)
-                    }
-                    else {
-                        if ($(`#${iid}`).length == 1) {
-                            $(`#${iid}`).prop('checked', true);
-                        } else {
-                            $(`#${iid}`).prop('checked', false);
-                        }
-                    }
-                })
-            }
-        })
 
         function deleteRecord(id) {
             $.ajax({

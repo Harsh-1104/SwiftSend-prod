@@ -1,6 +1,48 @@
 const axios = require("axios");
+const crypto = require("crypto");
+const conn = require('../../DB/connection');
+const logAPI = require("../../function/log");
+
 const { getTemplateById } = require("./templateController");
 const { setWabaCred } = require("../../controllers/userController");
+
+// Function to insert data into single_message table
+const insertIntoSingleMessage = async (apikey, templateName, Single_id, iid) => {
+    const query = `INSERT INTO single_message (single_id, apikey, template_name, time, instance_id) VALUES (?, ?, ?, CURRENT_TIMESTAMP,?)`;
+    const values = [Single_id, apikey, templateName, iid];
+
+    return new Promise((resolve, reject) => {
+        conn.query(query, values, (error, results, fields) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(results.insertId);
+        });
+    });
+};
+
+// Function to insert data into message_info table
+const insertIntoMessageInfo = async (data) => {
+    const query = `INSERT INTO message_info (waba_message_id, single_id, reciver_number, message_type, status) VALUES (?, ?, ?, ?, ?)`;
+    const values = [
+        data.waba_message_id,
+        data.single_id,
+        data.reciver_number,
+        data.message_type,
+        data.status,
+    ];
+
+    return new Promise((resolve, reject) => {
+        conn.query(query, values, (error, results, fields) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
+};
 
 // Tansfrom Data
 const transformResponseData = (data) => {
@@ -66,7 +108,6 @@ const transformResponseData = (data) => {
 };
 
 //component section
-
 const createComponentPart = (data, paylodReq) => {
     const reqBody = data.body;
     const { to, templateId, header, body, image } = paylodReq;
@@ -163,15 +204,16 @@ const createComponentPart = (data, paylodReq) => {
 
 // Send Message
 const sendMessage = async (req, res) => {
+    const apiKey = req.cookies.apikey;
     try {
         const { to, templateId, header, body, image } = req.body;
         const payloadReq = req.body;
 
-        const apiKey = req.cookies.apikey;
         const iid = req.body.iid;
         const wabaCred = await setWabaCred(apiKey, iid);
 
         if (wabaCred.length <= 0) {
+            logAPI(req.url, apiKey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -193,7 +235,6 @@ const sendMessage = async (req, res) => {
         const result2 = transformResponseData(result);
 
         const { templateName, language } = result2;
-        // console.log("result from : ", result2);
         const filteredComponents = createComponentPart(result2, payloadReq);
 
         const payload = {
@@ -208,38 +249,61 @@ const sendMessage = async (req, res) => {
                 components: filteredComponents,
             },
         };
-        const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        };
 
         try {
             const response = await axios.post(`https://graph.facebook.com/v18.0/${phoneID}/messages`,
                 payload,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Fix the token format
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 }
             );
             if (response.status === 200) {
-                res.status(200).json({
-                    success: true,
-                    message: "Message sent successfully",
-                });
+                // Insert into single_message table
+                const Single_id = crypto.randomBytes(16).toString("hex");
+                const singleMessageId = await insertIntoSingleMessage(
+                    apiKey,
+                    templateName,
+                    Single_id,
+                    iid
+                );
+
+                const myData = response.data;
+                // Insert into message_info table
+                const messageId = myData.messages[0].id;
+                const messageTypeInfo = {
+                    waba_message_id: messageId,
+                    single_id: Single_id,
+                    apikey: apiKey,
+                    reciver_number: to,
+                    message_type: "single",
+                    status: "sent",
+                };
+
+
+                await insertIntoMessageInfo(messageTypeInfo);
+
+                logAPI(req.url, apiKey, iid, "S");
+                return res.status(200).json({ success: true, message: "Message sent successfully" });
+            } else {
+                logAPI(req.url, apiKey, iid, "E");
+                return res.status(417).json({ success: false, message: "Failed to send message" });
             }
         } catch (error) {
+            logAPI(req.url, apiKey, iid, "E");
             console.log("error ", error.response);
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message: "An error occurred while sending the message",
                 payload: payload,
             });
         }
     } catch (error) {
+        logAPI(req.url, apiKey, iid, "E");
         console.log("my error", error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "An error occurred while sending the message",
         });
@@ -247,5 +311,3 @@ const sendMessage = async (req, res) => {
 };
 
 module.exports = { sendMessage };
-//818563576807921 - Gate in Utility
-//1596204707845784 - image

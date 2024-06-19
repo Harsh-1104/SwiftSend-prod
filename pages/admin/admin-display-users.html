@@ -146,42 +146,145 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title mb-0 text-center fs-3">
-                                        Manage Users
+                            <div class="card" style="height: calc(100vh - 180px);">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h3 class="mb-0">
+                                        Users
                                     </h3>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <div class="search-box">
+                                            <input type="text" class="form-control" id="searchUser"
+                                                placeholder="Search User Data ..." />
+                                            <i class="bx bx-search-alt-2 align-middle fs-4 search-icon"></i>
+                                        </div>
+                                        <button class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#addModal">
+                                            <span class="">
+                                                <i class="ri-user-add-line align-bottom me-1"></i>
+                                                Add user
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <div role="complementary" class="gridjs gridjs-container" style="width: 100%">
-                                        <div class="gridjs-head">
-                                            <div class="d-flex">
-                                                <div class="gridjs-search flex-grow-1">
-                                                    <input type="search" id="searchText" placeholder="Type a keyword..."
-                                                        aria-label="Type a keyword..."
-                                                        class="gridjs-input gridjs-search-input" />
-                                                </div>
-                                                <div class="flex-shrink-0">
-                                                    <select id="chklimit" class="form-select mb-3">
-                                                        <option value="5">5 records</option>
-                                                        <option value="10">10 records</option>
-                                                        <option value="15">15 records</option>
-                                                        <option value="20">20 records</option>
-                                                    </select>
-                                                </div>
+                                <div class="card-body h-100">
+                                    <div class="table-responsive table-card mb-1 scrollbar-custom"
+                                        id="table-fixed-header" data-simplebar data-simplebar-auto-hide="false"
+                                        style="max-height: calc(100vh - 260px)">
+                                        <table class="table align-middle table-nowrap mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                    <th>Registration Date</th>
+                                                    <th>Address</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list form-check-all" id="UserTable"></tbody>
+                                        </table>
+                                        <div class="noresult d-none py-5">
+                                            <div class="text-center">
+                                                <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                                    colors="primary:#212529,secondary:#405189"
+                                                    style="width: 75px; height: 75px">
+                                                </lord-icon>
+                                                <h5 class="mt-2">No User Found</h5>
                                             </div>
                                         </div>
-                                        <div id="mycomplementry"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!--end row-->
                 </div>
-                <!-- container-fluid -->
             </div>
-            <!-- End Page-content -->
+            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light p-3">
+                            <h5 class="modal-title" id="modallbl">Add User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                id="close-adduser-modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="mb-3 col-6">
+                                    <label for="uname" class="form-label">
+                                        Full Name
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_uname"></span>
+                                    </label>
+                                    <input type="text" class="form-control required" id="uname" data-type="name" />
+                                </div>
+                                <div class="mb-3 col-6">
+                                    <label for="phone" class="form-label">
+                                        Phone Nuumebr
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_phone"></span>
+                                    </label>
+                                    <input type="text" class="form-control required" id="phone" data-type="number" />
+                                </div>
+                                <div class="mb-3 col-6">
+                                    <label for="email" class="form-label">
+                                        Email
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_email"></span>
+                                    </label>
+                                    <input type="text" class="form-control required" id="email" data-type="email" />
+                                </div>
+                                <div class="mb-3 col-6">
+                                    <label for="password" class="form-label">
+                                        Password
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_password"></span>
+                                    </label>
+                                    <div class="position-relative auth-pass-inputgroup">
+                                        <input type="password"
+                                            class="form-control pe-5 required password-input-hide-show" name="password"
+                                            placeholder="Enter password" id="password" data-type="password" />
+                                        <button
+                                            class="btn btn-link position-absolute end-0 top-0
+                                                                                         text-decoration-none text-muted password-addon"
+                                            type="button" id="password-addon">
+                                            <i class="ri-eye-fill align-middle"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <label for="city" class="form-label">
+                                        City
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_city"></span>
+                                    </label>
+                                    <input type="text" class="form-control required" id="city" data-type="name" />
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <label for="state" class="form-label">
+                                        State
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_state"></span>
+                                    </label>
+                                    <input type="text" class="form-control required" id="state" data-type="name" />
+                                </div>
+                                <div class="mb-3 col-4">
+                                    <label for="country" class="form-label">
+                                        Country
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger" id="err_country"></span>
+                                    </label>
+                                    <input type="text" class="form-control required" id="country" data-type="name" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button class="btn btn-primary" id="addUserbtn">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <footer class="footer">
                 <div class="container-fluid">
@@ -234,1155 +337,209 @@
     <!-- aos js -->
     <script src="/assets/libs/aos/aos.js"></script>
 
-    <!--datatable js-->
-    <script src="/assets/js/pages/jquery.dataTables.min.js"></script>
-    <script src="/assets/js/pages/dataTables.bootstrap5.min.js"></script>
-    <script src="/assets/js/pages/dataTables.responsive.min.js"></script>
-    <script src="/assets/js/pages/dataTables.buttons.min.js"></script>
-    <script src="/assets/js/pages/buttons.print.min.js"></script>
-    <script src="/assets/js/pages/buttons.html5.min.js"></script>
-    <script src="/assets/js/pages/vfs_fonts.js"></script>
-    <script src="/assets/js/pages/pdfmake.min.js"></script>
-    <script src="/assets/js/pages/jszip.min.js"></script>
-    <script src="/assets/js/pages/datatables.init.js"></script>
-
-    <script src="/assets/libs/gridjs/gridjs.umd.js"></script>
-    <script src="/assets/js/pages/datatables.init.js"></script>
+    <!-- password create init -->
+    <script src="/assets/js/pages/passowrd-create.init.js"></script>
     <!-- App js -->
     <script src="/assets/js/app.js"></script>
+
+    <script src="/assets/sweetalert2/sweet-alert.init.js"></script>
+    <script src="/assets/sweetalert2/sweetalert2.all.js"></script>
+
     <script>
-        function displayAtBeginning(content, prevclass, myclass, nextclass, paramstr) {
-            let out = `<div class="gridjs-wrapper" style="height: auto">
-                            <table role="grid" class="gridjs-table" style="height: auto">
-                                <thead class="gridjs-thead">
-                                    <tr class="gridjs-tr">`;
-            for (let i = 0; i < Object.keys(content[0]).length; i++) {
-                out += `<th data-column-id="${Object.keys(content[0])[i]}" class="gridjs-th">
-                            <div class="gridjs-th-content">${Object.keys(content[0])[i]}</div>
-                        </th>`;
-            }
-            out += `</tr></thead><tbody class="gridjs-tbody">`;
-            for (let j = 0; j < content.length; j++) {
-                out += `<tr class="gridjs-tr">`;
-                for (let k = 0; k < Object.keys(content[j]).length; k++) {
-                    if (k == 4) {
-                        if (Object.values(content[j])[k] == 1) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Verified</td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Unverified</td>`;
-                        }
-                    } else if (k == 9) {
-                        if (Object.values(content[j])[k] == null) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">
-                                        <img height="70" width="70" src="/assets/images/users/user-dummy-img.jpg" class="rounded-circle">
-                                    </td>`;
-                        }
-                        else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]}" class="gridjs-td">
-                                        <img height="70" width="70" src="${Object.values(content[j])[k]}" class="rounded-circle">
-                                    </td>`;
-                        }
-                    } else if (k == 8) {
-                        var date = new Date(Object.values(content[j])[k]);
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${date.getDate()}/${date.getMonth() + 1
-                            }/${date.getFullYear()}</td>`;
-                    } else {
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-                    }
-                }
-
-                out += `</tr>`;
-            }
-            out += `</tbody>
-                    </table>
-                  </div>
-                  <div class="gridjs-footer">
-                    <div class="gridjs-pagination">
-                      <div class="gridjs-pages">`;
-            $.ajax({
-                url: "/getBtn",
-                method: "post",
-                data: {
-                    table: "users",
-                    pgno: 1,
-                    limit: localStorage.getItem("limit"),
-                    paramstr: paramstr,
-                },
-                success: (data) => {
-                    // console.log(data);
-                    let btns = `<button
-                          tabindex="0"
-                          role="button"
-                          disabled=""
-                          title="Previous"
-                          aria-label="Previous"
-                          class=""
-                        >
-                          Previous</button
-                        >`;
-                    totalBtn = data.totalBtn;
-                    for (let i = 0; i < totalBtn; i++) {
-                        if (i == 0) {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="gridjs-currentPage ${myclass}"
-                          title="Page ${i + 1}"
-                          data-id="${i + 1}"
-                          aria-label="Page ${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        } else {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="${myclass} ${nextclass}"
-                          title="Page ${i + 1}"
-                          aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        }
-                    }
-                    if (totalBtn == 1) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                          disabled=""
-                        >
-                          Next
-                        </button>`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-
-                        >
-                          Next
-                        </button>`;
-                    }
-                    btns += `</div>
-                    </div>
-                  </div>
-                  <div id="gridjs-temp" class="gridjs-temp"></div>`;
-                    $("#mycomplementry").html(out + btns);
-                    $("#chklimit").val(localStorage.getItem("limit"));
-                },
-            });
-        }
-
-        function nextBtnDisplay(
-            content,
-            prevclass,
-            myclass,
-            nextclass,
-            pn,
-            paramstr
-        ) {
-            let out = `
-                  <div class="gridjs-wrapper" style="height: auto">
-                    <table
-                      role="grid"
-                      class="gridjs-table"
-                      style="height: auto"
-                    >
-                      <thead class="gridjs-thead">
-                        <tr class="gridjs-tr">`;
-            // console.log(Object.keys(content[0]));
-            for (let i = 0; i < Object.keys(content[0]).length; i++) {
-                out += `<th
-                            data-column-id="${Object.keys(content[0])[i]}"
-                            class="gridjs-th"
-                            style="min-width: 77px; width: 77px"
-                          >
-                            <div class="gridjs-th-content">${Object.keys(content[0])[i]
-                    }</div>
-                          </th>`;
-            }
-            `</tr>
-                      </thead>
-                      <tbody class="gridjs-tbody">`;
-            for (let j = 0; j < content.length; j++) {
-                out += `<tr class="gridjs-tr">`;
-                for (let k = 0; k < Object.keys(content[j]).length; k++) {
-                    if (k == 4) {
-                        if (Object.values(content[j])[k] == 1) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Verified</td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Unverified</td>`;
-                        }
-                    } else if (k == 9) {
-                        if (Object.values(content[j])[k] == null) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td"><img height="70" width="70" src="/assets/images/users/user-dummy-img.jpg"></td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td"><img height="70" width="70" src="/assets/upload/profile/${Object.values(content[j])[0]
-                                }/${Object.values(content[j])[k]}"></td>`;
-                        }
-                    } else if (k == 8) {
-                        var date = new Date(Object.values(content[j])[k]);
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${date.getDate()}/${date.getMonth() + 1
-                            }/${date.getFullYear()}</td>`;
-                    } else {
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-                    }
-                }
-
-                out += `</tr>`;
-            }
-            out += `</tbody>
-                    </table>
-                  </div>
-                  <div class="gridjs-footer">
-                    <div class="gridjs-pagination">
-                      <div class="gridjs-pages">`;
-            $.ajax({
-                url: "/getBtn",
-                method: "post",
-                data: {
-                    table: "users",
-                    pgno: pn + 1,
-                    limit: localStorage.getItem("limit"),
-                    paramstr: paramstr,
-                },
-                success: (data) => {
-                    // console.log(data);
-                    let btns = "";
-                    if (pn + 1 == 1) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          disabled=""
-                          title="Previous"
-                          aria-label="Previous"
-                          class="${prevclass}"
-                        >
-                          Previous</button
-                        >`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Previous"
-                          aria-label="Previous"
-                          class="${prevclass}"
-                        >
-                          Previous</button
-                        >`;
-                    }
-                    totalBtn = data.totalBtn;
-                    for (let i = 0; i < totalBtn; i++) {
-                        if (i == pn) {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="gridjs-currentPage ${myclass}"
-                          title="Page ${i + 1}"
-                          data-id="${i + 1}"
-                          aria-label="Page ${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        } else {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="${myclass} ${nextclass}"
-                          title="Page ${i + 1}"
-                          aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        }
-                    }
-                    if (pn + 1 == Math.ceil(totalBtn)) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                          disabled=""
-                        >
-                          Next
-                        </button>`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                        >
-                          Next
-                        </button>`;
-                    }
-                    btns += `</div>
-                    </div>
-                  </div>
-                  <div id="gridjs-temp" class="gridjs-temp"></div>`;
-                    $("#mycomplementry").html(out + btns);
-                    $("#chklimit").val(localStorage.getItem("limit"));
-                },
-            });
-        }
-
-        function previousBtnDisplay(
-            content,
-            prevclass,
-            myclass,
-            nextclass,
-            pn,
-            paramstr
-        ) {
-            let out = `
-                  <div class="gridjs-wrapper" style="height: auto">
-                    <table
-                      role="grid"
-                      class="gridjs-table"
-                      style="height: auto"
-                    >
-                      <thead class="gridjs-thead">
-                        <tr class="gridjs-tr">`;
-            // console.log(Object.keys(content[0]));
-            for (let i = 0; i < Object.keys(content[0]).length; i++) {
-                out += `<th
-                            data-column-id="${Object.keys(content[0])[i]}"
-                            class="gridjs-th"
-                            style="min-width: 77px; width: 77px"
-                          >
-                            <div class="gridjs-th-content">${Object.keys(content[0])[i]
-                    }</div>
-                          </th>`;
-            }
-            `</tr>
-                      </thead>
-                      <tbody class="gridjs-tbody">`;
-            for (let j = 0; j < content.length; j++) {
-                out += `<tr class="gridjs-tr">`;
-                for (let k = 0; k < Object.keys(content[j]).length; k++) {
-                    if (k == 4) {
-                        if (Object.values(content[j])[k] == 1) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Verified</td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Unverified</td>`;
-                        }
-                    } else if (k == 9) {
-                        if (Object.values(content[j])[k] == null) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td"><img height="70" width="70" src="/assets/images/users/user-dummy-img.jpg"></td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td"><img height="70" width="70" src="/assets/upload/profile/${Object.values(content[j])[0]
-                                }/${Object.values(content[j])[k]}"></td>`;
-                        }
-                    } else if (k == 8) {
-                        var date = new Date(Object.values(content[j])[k]);
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${date.getDate()}/${date.getMonth() + 1
-                            }/${date.getFullYear()}</td>`;
-                    } else {
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-                    }
-                }
-
-                out += `</tr>`;
-            }
-            out += `</tbody>
-                    </table>
-                  </div>
-                  <div class="gridjs-footer">
-                    <div class="gridjs-pagination">
-                      <div class="gridjs-pages">`;
-            $.ajax({
-                url: "/getBtn",
-                method: "post",
-                data: {
-                    table: "users",
-                    pgno: pn - 1,
-                    limit: localStorage.getItem("limit"),
-                    paramstr: paramstr,
-                },
-                success: (data) => {
-                    // console.log(data);
-                    let btns = "";
-                    if (pn - 1 == 1) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          disabled=""
-                          title="Previous"
-                          aria-label="Previous"
-                          class="${prevclass}"
-                        >
-                          Previous</button
-                        >`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Previous"
-                          aria-label="Previous"
-                          class="${prevclass}"
-                        >
-                          Previous</button
-                        >`;
-                    }
-                    totalBtn = data.totalBtn;
-                    for (let i = 0; i < totalBtn; i++) {
-                        if (i + 1 == pn - 1) {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="gridjs-currentPage ${myclass}"
-                          title="Page ${i + 1}"
-                          data-id="${i + 1}"
-                          aria-label="Page ${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        } else {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="${myclass} ${nextclass}"
-                          title="Page ${i + 1}"
-                          aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        }
-                    }
-                    if (pn - 1 == Math.ceil(totalBtn)) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                          disabled=""
-                        >
-                          Next
-                        </button>`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                        >
-                          Next
-                        </button>`;
-                    }
-                    btns += `</div>
-                    </div>
-                  </div>
-                  <div id="gridjs-temp" class="gridjs-temp"></div>`;
-                    $("#mycomplementry").html(out + btns);
-                    $("#chklimit").val(localStorage.getItem("limit"));
-                },
-            });
-        }
-
-        function myBtnDisplay(
-            content,
-            prevclass,
-            myclass,
-            nextclass,
-            index,
-            btnno,
-            pgno,
-            paramstr
-        ) {
-            let out = `
-                  <div class="gridjs-wrapper" style="height: auto">
-                    <table
-                      role="grid"
-                      class="gridjs-table"
-                      style="height: auto"
-                    >
-                      <thead class="gridjs-thead">
-                        <tr class="gridjs-tr">`;
-            // console.log(Object.keys(content[0]));
-            for (let i = 0; i < Object.keys(content[0]).length; i++) {
-                out += `<th
-                            data-column-id="${Object.keys(content[0])[i]}"
-                            class="gridjs-th"
-                            style="min-width: 77px; width: 77px"
-                          >
-                            <div class="gridjs-th-content">${Object.keys(content[0])[i]
-                    }</div>
-                          </th>`;
-            }
-            `</tr>
-                      </thead>
-                      <tbody class="gridjs-tbody">`;
-            for (let j = 0; j < content.length; j++) {
-                out += `<tr class="gridjs-tr">`;
-                for (let k = 0; k < Object.keys(content[j]).length; k++) {
-                    if (k == 4) {
-                        if (Object.values(content[j])[k] == 1) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Verified</td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td">Unverified</td>`;
-                        }
-                    } else if (k == 9) {
-                        if (Object.values(content[j])[k] == null) {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td"><img height="70" width="70" src="/assets/images/users/user-dummy-img.jpg"></td>`;
-                        } else {
-                            out += `<td data-column-id="${Object.values(content[j])[k]
-                                }" class="gridjs-td"><img height="70" width="70" src="/assets/upload/profile/${Object.values(content[j])[0]
-                                }/${Object.values(content[j])[k]}"></td>`;
-                        }
-                    } else if (k == 8) {
-                        var date = new Date(Object.values(content[j])[k]);
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${date.getDate()}/${date.getMonth() + 1
-                            }/${date.getFullYear()}</td>`;
-                    } else {
-                        out += `<td data-column-id="${Object.values(content[j])[k]
-                            }" class="gridjs-td">${Object.values(content[j])[k]}</td>`;
-                    }
-                }
-
-                out += `</tr>`;
-            }
-            out += `</tbody>
-                    </table>
-                  </div>
-                  <div class="gridjs-footer">
-                    <div class="gridjs-pagination">
-                      <div class="gridjs-pages">`;
-            $.ajax({
-                url: "/getBtn",
-                method: "post",
-                data: {
-                    table: "users",
-                    pgno: pgno,
-                    limit: localStorage.getItem("limit"),
-                    paramstr: paramstr,
-                },
-                success: (data) => {
-                    // console.log(data);
-                    let btns = "";
-                    if (btnno == 1) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          disabled=""
-                          title="Previous"
-                          aria-label="Previous"
-                          class="${prevclass}"
-                        >
-                          Previous</button
-                        >`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Previous"
-                          aria-label="Previous"
-                          class="${prevclass}"
-                        >
-                          Previous</button
-                        >`;
-                    }
-
-                    totalBtn = data.totalBtn;
-                    for (let i = 0; i < totalBtn; i++) {
-                        if (i == index) {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="gridjs-currentPage ${myclass}"
-                          title="Page ${i + 1}"
-                          data-id="${i + 1}"
-                          aria-label="Page ${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        } else {
-                            btns += `<button
-                          tabindex="0"
-                          role="button"
-                          class="${myclass} ${nextclass}"
-                          title="Page ${i + 1}"
-                          aria-label="Page ${i + 1}"
-                          data-id="${i + 1}"
-                        >
-                          ${i + 1}</button
-                        >`;
-                        }
-                    }
-                    if (btnno == Math.ceil(totalBtn)) {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                          disabled=""
-                        >
-                          Next
-                        </button>`;
-                    } else {
-                        btns += `<button
-                          tabindex="0"
-                          role="button"
-                          title="Next"
-                          aria-label="Next"
-                          class="${nextclass}"
-                        >
-                          Next
-                        </button>`;
-                    }
-
-                    btns += `</div>
-                    </div>
-                  </div>
-                  <div id="gridjs-temp" class="gridjs-temp"></div>`;
-                    $("#mycomplementry").html(out + btns);
-                    $("#chklimit").val(localStorage.getItem("limit"));
-                },
-            });
-        }
-
         $(document).ready(function () {
-            var totalBtn = 0;
 
+            let userDataList = [];
 
-            $(document).on("change", "#chklimit", function () {
-                var num = $("#chklimit").val();
-                localStorage.setItem("limit", num);
-                location.reload();
-            });
+            function UserDataDisplay(val) {
+                if (val.length > 0) {
 
-            $(document).on("input", "#searchText", () => {
-                let str = $("#searchText").val();
-                if (str == "") {
+                    let data = ``;
+                    $('#UserTable, .noresult').addClass('d-none');
+                    $('#UserTable').removeClass('d-none');
+                    for (var i in val) {
+                        const date = new Date(val[i].registrationDate);
+
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const year = date.getFullYear();
+                        const formattedDate = `${day}/${month}/${year}`;
+                        data += `<tr>
+                                    <td class="w-15 text-truncate" style="max-width: 30px;">${val[i].uname}</td>
+                                    <td class="w-25 text-truncate" style="max-width: 30px;">${val[i].email}</td>
+                                    <td class="w-15 fw-semibold" style="font-family: monospace;">
+                                        <img src="/assets/images/w_icon.svg" height="20" width="20" />
+                                        ${val[i].phone}
+                                    </td>
+                                    <td class="w-15" style="font-family: monospace;">${formattedDate}</td>
+                                    <td class="w-25 text-truncate" style="max-width: 100px;">${val[i].city}, ${val[i].state}, ${val[i].country}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-soft-danger show-template-btn fs-12 deleteUser" data-id="${val[i].apikey}">
+                                            <i class="mdi mdi-delete align-middle"></i>
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>`;
+                    }
+                    $("#UserTable").html(data);
+                }
+                else {
+                    $('#UserTable, .noresult').addClass('d-none');
+                    $('.noresult').removeClass('d-none');
+                }
+            }
+
+            function GETUserAdminAPI() {
+                $.ajax({
+                    url: `/api/admin/getalluser`,
+                    method: "GET",
+                    beforeSend: () => {
+                        $("#UserTable").html(`<tr class="">
+                                            <td class="text-center py-5" colspan="5">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>`);
+                    },
+                    success: function (val) {
+                        if (val.success) {
+                            UserDataDisplay(val.data);
+                            userDataList = val.data;
+                        }
+                    }, error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 401) InvalidUser();
+                    }
+                });
+            };
+            GETUserAdminAPI();
+
+            $(document).on('click', '#addUserbtn', function () {
+                nullfield_validation('uname');
+                nullfield_validation('phone');
+                nullfield_validation('email');
+                nullfield_validation('password');
+                nullfield_validation('city');
+                nullfield_validation('state');
+                nullfield_validation('country');
+                if (objFlag.flag_uname == 0 && objFlag.flag_phone == 0 && objFlag.flag_email == 0 && objFlag.flag_password == 0 && objFlag.flag_city == 0 && objFlag.flag_state == 0 && objFlag.flag_country == 0) {
                     $.ajax({
-                        url: "/getDataByPage",
-                        method: "post",
-                        data: {
-                            table: "users",
-                            pgno: 1,
-                            limit: localStorage.getItem("limit"),
-                        },
-                        success: function (content) {
-                            // console.log(content);
-                            if (content.status_code == "404") {
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (content.status_code == "500") {
-                                swal({
-                                    title: "Internal Server Error",
-                                    text: "Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (!content.status_code) {
-
-                                displayAtBeginning(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    true
-                                );
-                            }
-                        },
-                    });
-                } else {
-                    let paramstr = `apikey like '%${str}%' or uname like '%${str}%' or email like '%${str}%' or cast(phone as char) like '%${str}%' or country like '%${str}%' or state like '%${str}%' or city like '%${str}%' or cast(registrationDate as char) like '%${str}%'`;
-                    $.ajax({
-                        url: "/adminSearchRecord",
+                        url: "/api/auth/adduser",
                         method: "POST",
                         data: {
-                            table: "users",
-                            pgno: 1,
-                            limit: localStorage.getItem("limit"),
-                            paramstr: paramstr,
+                            "name": $("#uname").val().trim(),
+                            "phone": $("#phone").val().trim(),
+                            "email": $("#email").val().trim(),
+                            "password": $("#password").val().trim(),
+                            "city": $("#city").val().trim(),
+                            "state": $("#state").val().trim(),
+                            "country": $("#country").val().trim(),
                         },
-                        success: function (result) {
-                            // console.log(result);
-                            if (result.status_code == "404") {
-                                $("#mycomplementry").html(`<div class="noresult py-5">
-                                    <div class="text-center">
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                            colors="primary:#212529,secondary:#405189"
-                                            style="width: 75px; height: 75px">
-                                        </lord-icon>
-                                        <h5 class="mt-2">No Rocoed Found</h5>
-                                    </div>
-                                </div>`);
-                            }
-
-                            else if (result.status_code == "500") {
+                        success: function (val) {
+                            if (val.success) {
                                 swal({
-                                    title: "Internal Server Error",
-                                    text: "Try again after some time",
+                                    title: "User Created.",
+                                    text: "Main Instance also created with 30 days trial.",
+                                    type: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                }).then(function () {
+                                    $('#close-adduser-modal').click();
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            if (error.status === 500 || error.status === 400) InternalServerError();
+                            if (error.status === 409) {
+                                swal({
+                                    title: "User already Exist.",
+                                    text: "Check Email and phone, They must be unique.",
                                     type: "error",
                                     timer: 2000,
                                     showConfirmButton: false,
+                                }).then(function () {
+                                    $('#email, #phone').removeClass('form-control-danger form-control-success').addClass('form-control-danger')
                                 });
                             }
-                            else if (!result.status_code) {
-
-                                displayAtBeginning(
-                                    result,
-                                    "previousSearchBtn",
-                                    "mysearchbtn",
-                                    "nextSearchBtn",
-                                    paramstr
-                                );
-                            }
-                        },
-                    });
+                        }
+                    })
                 }
-            });
+            })
 
-            $.ajax({
-                url: "/getDataByPage",
-                method: "post",
-                data: {
-                    table: "users",
-                    pgno: 1,
-                    limit: localStorage.getItem("limit"),
-                },
-                success: function (content) {
-                    // console.log(content);
-                    displayAtBeginning(
-                        content,
-                        "previousBtn",
-                        "mybtn",
-                        "nextBtn",
-                        true
-                    );
-                },
-            });
+            $(document).on('click', '.deleteUser', function () {
+                const apikey = $(this).attr('data-id');
 
-            $(document).on("click", ".nextBtn", function () {
-                // console.log(document.getElementsByClassName("mybtn"));
-                var arr = document.getElementsByClassName("mybtn").length;
-                count = 0;
-                for (let pn = 1; pn <= arr; pn++) {
-                    if (
-                        document
-                            .getElementsByClassName("mybtn")
-                        [pn - 1].classList.contains("gridjs-currentPage")
-                    ) {
+                swal({
+                    title: 'Are you sure?',
+                    text: "You won't be able to access this anymore..!!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'No, cancel',
+                    confirmButtonClass: 'btn btn-success mx-2',
+                    cancelButtonClass: 'btn btn-outline-danger mx-2',
+                    buttonsStyling: false
+                }).then(function (result) {
+                    if (result.value) {
                         $.ajax({
-                            url: "/getDataByPage",
-                            method: "post",
-                            data: {
-                                table: "users",
-                                pgno: pn + 1,
-                                limit: localStorage.getItem("limit"),
-                            },
-                            success: function (content) {
-                                // console.log(content);
-                                nextBtnDisplay(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    pn,
-                                    true
-                                );
-                            },
+                            url: `/api/admin/deleteuser/${apikey}`,
+                            method: "DELETE",
+                            success: function (val) {
+                                if (val.success) {
+                                    swal({
+                                        title: "User Removed.",
+                                        type: "success",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    }).then(function () {
+                                        GETUserAdminAPI();
+                                    });
+                                }
+                            }, error: (error) => {
+                                if (error.status === 500) InternalServerError();
+                                if (error.status === 404) {
+                                    swal({
+                                        title: "Invalid Data",
+                                        text: "User Not Found, check Apikey",
+                                        type: "error",
+                                        timer: 2000,
+                                        showConfirmButton: false,
+                                    });
+                                }
+                            }
                         });
                     }
-                }
-            });
+                })
+            })
 
-            $(document).on("click", ".nextSearchBtn", function () {
-                alert("search next btn");
-                let str = $("#searchText").val();
-                if (str == "") {
-                    $.ajax({
-                        url: "/getDataByPage",
-                        method: "post",
-                        data: {
-                            table: "users",
-                            pgno: 1,
-                            limit: localStorage.getItem("limit"),
-                        },
-                        success: function (content) {
-                            // console.log(content);
-                            if (content.status_code == "404") {
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (content.status_code == "500") {
-                                swal({
-                                    title: "Internal Server Error",
-                                    text: "Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (!content.status_code) {
+            $(document).on("input", "#searchUser", function () {
 
-                                displayAtBeginning(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    true
-                                );
-                            }
-                        },
-                    });
-                } else {
-                    // console.log(document.getElementsByClassName("mysearchbtn"));
-                    var arr = document.getElementsByClassName("mysearchbtn").length;
-                    count = 0;
-                    let paramstr = `apikey like '%${str}%' or uname like '%${str}%' or email like '%${str}%' or cast(phone as char) like '%${str}%' or country like '%${str}%' or state like '%${str}%' or city like '%${str}%' or cast(registrationDate as char) like '%${str}%'`;
-                    for (let pn = 1; pn <= arr; pn++) {
-                        if (
-                            document
-                                .getElementsByClassName("mysearchbtn")
-                            [pn - 1].classList.contains("gridjs-currentPage")
-                        ) {
-                            $.ajax({
-                                url: "/adminSearchRecord",
-                                method: "post",
-                                data: {
-                                    table: "users",
-                                    pgno: pn + 1,
-                                    limit: localStorage.getItem("limit"),
-                                    paramstr: paramstr,
-                                },
-                                success: function (content) {
-                                    // console.log(content);
-                                    if (content.status_code == "404") {
-                                        swal({
-                                            title: "No such record found",
-                                            type: "error",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        });
-                                    }
-                                    else if (content.status_code == "500") {
-                                        swal({
-                                            title: "Internal Server Error",
-                                            text: "Try again after some time",
-                                            type: "error",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        });
-                                    }
-                                    else if (!content.status_code) {
+                let val = $('#searchUser').val().trim();
 
-                                        nextBtnDisplay(
-                                            content,
-                                            "previousSearchBtn",
-                                            "mysearchbtn",
-                                            "nextSearchBtn",
-                                            pn,
-                                            paramstr
-                                        );
-                                    }
-                                },
-                            });
+                function search(query) {
+                    query = query.toLowerCase();
+                    return userDataList.filter(function (obj) {
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key) && typeof obj[key] === 'string' && obj[key].toLowerCase().includes(query)) {
+                                return true;
+                            }
+                            else if (obj.hasOwnProperty(key) && typeof obj[key] === 'number' && obj[key].toString().includes(query)) {
+                                return true;
+                            }
                         }
-                    }
-                }
-            });
-
-            $(document).on("click", ".previousBtn", function () {
-                // console.log(document.getElementsByClassName("mybtn"));
-                var arr = document.getElementsByClassName("mybtn").length;
-                count = 0;
-                for (let pn = 1; pn <= arr; pn++) {
-                    if (
-                        document
-                            .getElementsByClassName("mybtn")
-                        [pn - 1].classList.contains("gridjs-currentPage")
-                    ) {
-                        $.ajax({
-                            url: "/getDataByPage",
-                            method: "post",
-                            data: {
-                                table: "users",
-                                pgno: pn - 1,
-                                limit: localStorage.getItem("limit"),
-                            },
-                            success: function (content) {
-                                // console.log(content);
-                                previousBtnDisplay(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    pn,
-                                    true
-                                );
-                            },
-                        });
-                    }
-                }
-            });
-
-            $(document).on("click", ".previousSearchBtn", function () {
-                alert("previous serach btn");
-                let str = $("#searchText").val();
-                if (str == "") {
-                    $.ajax({
-                        url: "/getDataByPage",
-                        method: "post",
-                        data: {
-                            table: "users",
-                            pgno: 1,
-                            limit: localStorage.getItem("limit"),
-                        },
-                        success: function (content) {
-                            // console.log(content);
-                            if (content.status_code == "404") {
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (content.status_code == "500") {
-                                swal({
-                                    title: "Internal Server Error",
-                                    text: "Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (!content.status_code) {
-
-                                displayAtBeginning(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    true
-                                );
-                            }
-                        },
-                    });
-                } else {
-                    // console.log(document.getElementsByClassName("mysearchbtn"));
-                    var arr = document.getElementsByClassName("mysearchbtn").length;
-                    count = 0;
-                    let paramstr = `apikey like '%${str}%' or uname like '%${str}%' or email like '%${str}%' or cast(phone as char) like '%${str}%' or country like '%${str}%' or state like '%${str}%' or city like '%${str}%' or cast(registrationDate as char) like '%${str}%'`;
-                    for (let pn = 1; pn <= arr; pn++) {
-                        if (
-                            document
-                                .getElementsByClassName("mysearchbtn")
-                            [pn - 1].classList.contains("gridjs-currentPage")
-                        ) {
-                            $.ajax({
-                                url: "/adminSearchRecord",
-                                method: "post",
-                                data: {
-                                    table: "users",
-                                    pgno: pn - 1,
-                                    limit: localStorage.getItem("limit"),
-                                    paramstr: paramstr,
-                                },
-                                success: function (content) {
-                                    // console.log(content);
-                                    if (content.status_code == "404") {
-                                        swal({
-                                            title: "No such record found",
-                                            type: "error",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        });
-                                    }
-                                    else if (content.status_code == "500") {
-                                        swal({
-                                            title: "Internal Server Error",
-                                            text: "Try again after some time",
-                                            type: "error",
-                                            timer: 2000,
-                                            showConfirmButton: false,
-                                        });
-                                    }
-                                    else if (!content.status_code) {
-
-                                        previousBtnDisplay(
-                                            content,
-                                            "previousSearchBtn",
-                                            "mysearchbtn",
-                                            "nextSearchBtn",
-                                            pn,
-                                            paramstr
-                                        );
-                                    }
-                                },
-                            });
-                        }
-                    }
-                }
-            });
-
-            $(document).on("click", ".mybtn", function () {
-                let index = $(this).attr("data-id") - 1;
-                let btnno = $(this).attr("data-id");
-                let pgno = $(this).attr("data-id");
-                $.ajax({
-                    url: "/getDataByPage",
-                    method: "post",
-                    data: {
-                        table: "users",
-                        pgno: pgno,
-                        limit: localStorage.getItem("limit"),
-                    },
-                    success: function (content) {
-                        // console.log(content);
-                        myBtnDisplay(
-                            content,
-                            "previousBtn",
-                            "mybtn",
-                            "nextBtn",
-                            index,
-                            btnno,
-                            pgno,
-                            true
-                        );
-                    },
-                });
-            });
-
-            $(document).on("click", ".mysearchbtn", function () {
-                alert("my search btn");
-                let str = $("#searchText").val();
-                if (str == "") {
-                    $.ajax({
-                        url: "/getDataByPage",
-                        method: "post",
-                        data: {
-                            table: "users",
-                            pgno: 1,
-                            limit: localStorage.getItem("limit"),
-                        },
-                        success: function (content) {
-                            // console.log(content);
-                            if (content.status_code == "404") {
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (content.status_code == "500") {
-                                swal({
-                                    title: "Internal Server Error",
-                                    text: "Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (!content.status_code) {
-
-                                displayAtBeginning(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    true
-                                );
-                            }
-                        },
-                    });
-                } else {
-                    let index = $(this).attr("data-id") - 1;
-                    let btnno = $(this).attr("data-id");
-                    let pgno = $(this).attr("data-id");
-                    let paramstr = `apikey like '%${str}%' or uname like '%${str}%' or email like '%${str}%' or cast(phone as char) like '%${str}%' or country like '%${str}%' or state like '%${str}%' or city like '%${str}%' or cast(registrationDate as char) like '%${str}%'`;
-                    $.ajax({
-                        url: "/adminSearchRecord",
-                        method: "post",
-                        data: {
-                            table: "users",
-                            pgno: pgno,
-                            limit: localStorage.getItem("limit"),
-                            paramstr: paramstr,
-                        },
-                        success: function (content) {
-                            // console.log(content);
-                            if (content.status_code == "404") {
-                                swal({
-                                    title: "No such record found",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (content.status_code == "500") {
-                                swal({
-                                    title: "Internal Server Error",
-                                    text: "Try again after some time",
-                                    type: "error",
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
-                            else if (!content.status_code) {
-
-                                myBtnDisplay(
-                                    content,
-                                    "previousBtn",
-                                    "mybtn",
-                                    "nextBtn",
-                                    index,
-                                    btnno,
-                                    pgno,
-                                    paramstr
-                                );
-                            }
-                        },
+                        return false;
                     });
                 }
-            });
+
+                let Searchresult = search(val);
+
+                if (val == null || val == "") {
+                    UserDataDisplay(userDataList)
+                }
+                else {
+                    UserDataDisplay(Searchresult)
+                }
+            })
         });
     </script>
 </body>

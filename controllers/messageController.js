@@ -5,9 +5,6 @@ const logAPI = require("../function/log");
 const { setWabaCred } = require("./userController");
 //Credentials
 
-const wabaPhoneID = process.env.WABA_PHONEID;
-const version = process.env.WABA_VERSION;
-const token = process.env.WABA_TOKEN;
 
 // Function to insert data into single_message table
 const insertIntoSingleMessage = async (apikey, templateName, Single_id, iid) => {
@@ -140,15 +137,15 @@ const sendSimpleTextTemplate = async (req, res) => {
                 await insertIntoMessageInfo(messageTypeInfo);
 
                 logAPI(req.url, apikey, iid, "S");
-                res.status(200).json({ success: true, message: "Message sent successfully" });
+                return res.status(200).json({ success: true, message: "Message sent successfully" });
             } else {
                 logAPI(req.url, apikey, iid, "E");
-                res.status(417).json({ success: false, message: "Failed to send message" });
+                return res.status(417).json({ success: false, message: "Failed to send message" });
             }
         } catch (error) {
             console.log("error ", error);
             logAPI(req.url, apikey, iid, "E");
-            res.status(417).json({
+            return res.status(417).json({
                 success: false,
                 message: error,
             });
@@ -156,13 +153,11 @@ const sendSimpleTextTemplate = async (req, res) => {
     } catch (error) {
         console.log("error", error);
         logAPI(req.url, apikey, iid, "E");
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "An error occurred while sending the message",
         });
     }
 };
 
-module.exports = {
-    sendSimpleTextTemplate,
-};
+module.exports = { sendSimpleTextTemplate };

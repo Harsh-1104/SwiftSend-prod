@@ -2,7 +2,7 @@ const axios = require("axios");
 const fs = require("fs");
 const FormData = require("form-data");
 const { setWabaCred } = require("../../controllers/userController");
-
+const logAPI = require("../../function/log");
 
 const genDocId = async (req, res) => {
     const version = "v19.0";
@@ -13,6 +13,7 @@ const genDocId = async (req, res) => {
         const wabaCred = await setWabaCred(apiKey, iid);
 
         if (wabaCred.length <= 0) {
+            logAPI(req.url, apiKey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -21,11 +22,10 @@ const genDocId = async (req, res) => {
         }
 
         const token = wabaCred[0].permanentToken;
-        const wabaId = wabaCred[0].wabaID;
         const phoneID = wabaCred[0].phoneID;
-        const appID = wabaCred[0].appID;
 
         if (!req.files || Object.keys(req.files).length === 0) {
+            logAPI(req.url, apiKey, iid, "E");
             return res.status(400).send("No files were uploaded.");
         }
 
@@ -44,7 +44,8 @@ const genDocId = async (req, res) => {
         });
 
         if (response.data.id) {
-            res.status(200).json({
+            logAPI(req.url, apiKey, iid, "S");
+            return res.status(200).json({
                 message: "Media uploaded successfully",
                 data: response.data,
             });
@@ -54,7 +55,8 @@ const genDocId = async (req, res) => {
             "Error uploading media:",
             error.response ? error.response.data : error.message
         );
-        res.status(500).json({ error: "Internal server error" });
+        logAPI(req.url, apiKey, iid, "E");
+        return res.status(500).json({ error: "Internal server error" });
     }
 };
 

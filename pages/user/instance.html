@@ -521,7 +521,7 @@
                                                 swal({
                                                     type: 'info',
                                                     html: `<span class="text-success fs-2">
-                                                        Free trial of <span class="text-danger"> 7 </span> 
+                                                        Free trial of <span class="text-danger"> 30 </span> 
                                                     days will start <br> after you create 
                                                     <span class="text-primary">1<sup>st</sup> instance.</span> 
                                                     <span>`,
@@ -539,7 +539,7 @@
                                                 let current_date = new Date();
                                                 let create_date = new Date(val[0].create_date);
                                                 let expiry_date = new Date(create_date);
-                                                expiry_date.setDate(create_date.getDate() + 7);
+                                                expiry_date.setDate(create_date.getDate() + 30);
                                                 let remaining_days = Math.ceil(Math.abs(expiry_date - current_date) / (1000 * 60 * 60 * 24));
 
                                                 if (val.length == 1 && expiry_date > current_date) {
@@ -631,7 +631,7 @@
                                                     $('#remaining_days').html(`${remaining_days} Days left`);
                                                     $('#pay_status').html(`<span>Active</span>`);
                                                     $('#pay_status').addClass('ribbon-success');
-                                                    if (remaining_days <= 7) {
+                                                    if (remaining_days <= 30) {
                                                         $('#remaining_days').addClass('text-danger');
                                                         swal({
                                                             title: `Only <span class="text-danger">${remaining_days}</span> Day left`,

@@ -1,9 +1,9 @@
-const axios = require("axios");
 const fs = require("fs");
 const FormData = require("form-data");
-
+const axios = require("axios");
 const path = require('path');
 const status = require("../assets/js/status");
+const logAPI = require("../function/log");
 const { setWabaCred } = require("./userController");
 
 //Credentials
@@ -67,12 +67,13 @@ function deleteFolder(folderPath) {
 
 const uploadMedia = async (req, res) => {
     try {
-        const apiKey = req.cookies.apikey;
+        const apiKey = req.cookies.apiKey;
         const iid = req.body.iid;
 
         const wabaCred = await setWabaCred(apiKey, iid);
 
         if (wabaCred.length <= 0) {
+            logAPI(req.url, apiKey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -85,15 +86,18 @@ const uploadMedia = async (req, res) => {
         const phoneID = wabaCred[0].phoneID;
         const appID = wabaCred[0].appID;
 
-        if (!req.files) return res.status(400).json({ error: "No file uploaded" });
-        const apikey = req.cookies.apikey;
-        let x = createfolder(`wba/${apikey}`);
+        if (!req.files) {
+            logAPI(req.url, apiKey, iid, "E");
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        let x = createfolder(`wba/${apiKey}`);
         const uploadedFile = req.files.image;
-        const uploadPath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
+        const uploadPath = `${toPath}/assets/upload/wba/${apiKey}/${uploadedFile.name}`;
         uploadedFile.mv(uploadPath, async function (err) {
             if (err) return res.status(500).json({ error: "Internal server error", message: err });
 
-            let filepath = `${toPath}/assets/upload/wba/${apikey}/${uploadedFile.name}`;
+            let filepath = `${toPath}/assets/upload/wba/${apiKey}/${uploadedFile.name}`;
 
             const formData = new FormData();
             formData.append("messaging_product", "whatsapp");
@@ -109,20 +113,21 @@ const uploadMedia = async (req, res) => {
                 });
 
                 if (response.data.id) {
-                    deleteFolder(`wba/${apikey}`);
+                    deleteFolder(`wba/${apiKey}`);
+                    logAPI(req.url, apiKey, iid, "S");
                     return res.status(200).json({ success: true, message: "Media uploaded successfully", data: response.data });
                 }
             } catch (err) {
+                logAPI(req.url, apiKey, iid, "E");
                 console.log(" err : ", err.response.data);
                 return res.status(400).json({ success: false, message: "Invalid File Type. supported type : [image | PDF | XML]" });
             }
         });
     } catch (error) {
+        logAPI(req.url, apiKey, iid, "E");
         console.error("Error uploading media:", error.response.data);
         return res.status(500).json({ error: "Internal server error" });
     }
 };
 
-module.exports = {
-    uploadMedia,
-};
+module.exports = { uploadMedia };
