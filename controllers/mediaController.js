@@ -67,7 +67,7 @@ function deleteFolder(folderPath) {
 
 const uploadMedia = async (req, res) => {
     try {
-        const apiKey = req.cookies.apiKey;
+        const apiKey = req.cookies.apikey;
         const iid = req.body.iid;
 
         const wabaCred = await setWabaCred(apiKey, iid);
