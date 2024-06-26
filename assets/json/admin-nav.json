@@ -5,14 +5,29 @@
         "icon": "ri-dashboard-2-line"
     },
     {
-        "page": "Company",
-        "link": "CompanyDetails",
-        "icon": "mdi mdi-briefcase"
+        "page": "Users",
+        "link": "usersData",
+        "icon": "ri-shield-user-fill"
+    },
+    {
+        "page": "Users Credential",
+        "link": "user-cred",
+        "icon": "bx bxs-key"
     },
     {
         "page": "Instances",
         "link": "instanceData",
         "icon": "ri-apps-2-line"
+    },
+    {
+        "page": "Messages",
+        "link": "messageData",
+        "icon": "bx bxs-message-alt-detail"
+    },
+    {
+        "page": "Company",
+        "link": "CompanyDetails",
+        "icon": "ri-building-2-fill"
     },
     {
         "page": "Contacts",
@@ -23,11 +38,6 @@
         "page": "Channels",
         "link": "channelData",
         "icon": "mdi mdi-account-group"
-    },
-    {
-        "page": "Messages",
-        "link": "messageData",
-        "icon": "bx bxs-message-alt-detail"
     },
     {
         "page": "Plans",
@@ -48,10 +58,5 @@
         "page": "Support Agents",
         "link": "agentsData",
         "icon": "bx bx-support"
-    },
-    {
-        "page": "Users",
-        "link": "usersData",
-        "icon": "ri-shield-user-fill"
     }
 ]

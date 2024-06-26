@@ -4,10 +4,7 @@ const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
-
-let obj = [],
-    apikey,
-    userProfile;
+let apikey;
 
 // ----- Cloudinary Config ------
 cloudinary.config({
@@ -36,7 +33,7 @@ function setCookie(res, name, value, days) {
     res.cookie(name, value, { maxAge: 1000 * 60 * 60 * 24 * days });
 }
 
-// ----- SignIn Contoller ------
+// ----- SignIn ------
 const SignIn = async (req, res) => {
 
     const { email, password, rememberme, type } = req.body;
@@ -56,7 +53,6 @@ const SignIn = async (req, res) => {
             }
 
             if (result.status_code == 404) {
-                console.log("this is my result : ", result);
                 return res.send(
                     Object.assign(status.unauthorized(), {
                         error: {
@@ -123,7 +119,6 @@ const SignIn = async (req, res) => {
 };
 
 // ----- Update Password ------
-
 const updatePassword = async (req, res) => {
     const api_key = req.cookies.apikey;
     const newpwd = req.body.newpwd;
@@ -146,7 +141,7 @@ const updatePassword = async (req, res) => {
     }
 }
 
-// ----- SignIn Contoller ------
+// ----- SignIn ------
 const AdminSignIn = async (req, res) => {
 
     const { email, password } = req.body;
@@ -166,7 +161,6 @@ const AdminSignIn = async (req, res) => {
             }
 
             if (result.status_code == 404) {
-                console.log("this is my result : ", result);
                 return res.send(
                     Object.assign(status.unauthorized(), {
                         error: {
@@ -186,7 +180,9 @@ const AdminSignIn = async (req, res) => {
             }
             bcrypt.compare(password, result[0].password, (err, match) => {
                 if (match) {
-                    setCookie(res, "apikey", result[0].apikey, 1);
+                    let key = Buffer.from(result[0].apikey, "ascii").toString("base64")
+
+                    setCookie(res, "apikey", key, 1);
                     return res.send(
                         Object.assign(status.ok(), {
                             data: {
@@ -220,6 +216,7 @@ const AdminSignIn = async (req, res) => {
     }
 };
 
+// ----- Add User ------
 const AddUser = async (req, res) => {
     const id = crypto.randomBytes(16).toString("hex");
 
@@ -279,7 +276,7 @@ const AddUser = async (req, res) => {
                             const instanceid = crypto.randomBytes(8).toString("hex");
 
                             conn.query(`INSERT INTO instance values(?,?,?,?,?,?,?,?,?,?)`,
-                                [instanceid, "Main", id, token, new Date(), 1, 0, email, hash, phone],
+                                [instanceid, "Main", id, token, new Date(), true, 0, email, hash, phone],
                                 function (error, result) {
                                     if (error) {
                                         return res.status(500).send(Object.assign(status.internalservererror(), {
@@ -316,4 +313,6 @@ const AddUser = async (req, res) => {
     }
 };
 
-module.exports = { SignIn, updatePassword, AdminSignIn, AddUser };
+module.exports = {
+    SignIn, updatePassword, AdminSignIn, AddUser
+};

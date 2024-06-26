@@ -30,7 +30,7 @@ const insertIntoMessageInfo = async (data) => {
         data.single_id,
         data.reciver_number,
         data.message_type,
-        data.status,
+        data.status
     ];
 
     return new Promise((resolve, reject) => {
@@ -46,11 +46,9 @@ const insertIntoMessageInfo = async (data) => {
 
 const sendSimpleTextTemplate = async (req, res) => {
     try {
-
-        const apiKey = req.cookies.apikey;
+        const apikey = req.cookies.apikey;
         const { to, templateName, components, languageCode, iid } = req.body;
-
-        const wabaCred = await setWabaCred(apiKey, iid);
+        const wabaCred = await setWabaCred(apikey, iid);
 
         if (wabaCred.length <= 0) {
             return res.status(404).json({
@@ -67,14 +65,9 @@ const sendSimpleTextTemplate = async (req, res) => {
 
 
         const Single_id = crypto.randomBytes(16).toString("hex");
-        const apikey = req.cookies.apikey;
-        // Extract data from the request body
 
-        const filteredComponents = components
-            ? components.filter((component) => component !== null)
-            : [];
+        const filteredComponents = components ? components.filter((component) => component !== null) : [];
 
-        // Construct the message payload
         const payload = {
             messaging_product: "whatsapp",
             to: to,
@@ -88,41 +81,18 @@ const sendSimpleTextTemplate = async (req, res) => {
             },
         };
 
-        // console.log("This is my Payload : ", payload);
-        const bearerToken = token;
-
-        // Construct headers with the bearer token
-        const headers = {
-            Authorization: `Bearer ${bearerToken}`,
-            "Content-Type": "application/json",
-        };
-
         try {
-            const response = await axios.post(
-                `https://graph.facebook.com/v18.0/${phoneID}/messages`,
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${bearerToken}`, // Fix the token format
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            console.log("response : ", response.status === 200);
-            // const response = {
-            //     status: 200
-            // }
+            const response = await axios.post(`https://graph.facebook.com/v18.0/${phoneID}/messages`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
             if (response.status === 200) {
-                // Insert into single_message table
-                const singleMessageId = await insertIntoSingleMessage(
-                    apikey,
-                    templateName,
-                    Single_id,
-                    iid
-                );
+                const singleMessageId = await insertIntoSingleMessage(apikey, templateName, Single_id, iid);
 
                 const myData = response.data;
-                // Insert into message_info table
                 const messageId = myData.messages[0].id;
                 const messageTypeInfo = {
                     waba_message_id: messageId,
@@ -132,7 +102,6 @@ const sendSimpleTextTemplate = async (req, res) => {
                     message_type: "single",
                     status: "sent",
                 };
-
 
                 await insertIntoMessageInfo(messageTypeInfo);
 

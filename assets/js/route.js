@@ -20,9 +20,6 @@ router.get("/signin", (req, res) => {
   res.sendFile(`${path}/signin.html`);
 });
 
-router.get("/signup", (req, res) => {
-  res.sendFile(`${path}/signup.html`);
-});
 
 /*-------------------------------------------------*/
 
@@ -108,6 +105,10 @@ router.get("/usersData", (req, res) => {
   res.sendFile(`${path}/admin/admin-display-users.html`);
 });
 
+router.get("/user-cred", (req, res) => {
+  res.sendFile(`${path}/admin/admin-user-cred.html`);
+});
+
 router.get("/planData", (req, res) => {
   res.sendFile(`${path}/admin/admin-display-plans.html`);
 });
@@ -152,6 +153,7 @@ router.get("/agentsData", (req, res) => {
 router.get("/swiftsend/admin/login", (req, res) => {
   res.sendFile(`${path}/admin/admin_login.html`);
 });
+
 /*---------------------------------------------------*/
 
 /*--------------------[ Support ]--------------------*/
