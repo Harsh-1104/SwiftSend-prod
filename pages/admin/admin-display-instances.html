@@ -491,7 +491,7 @@
                     html: `You want to <span class="fw-semibold">${disabled ? 'disabled' : 'enable'}</span> this instance`,
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, disable it',
+                    confirmButtonText: `Yes, ${disabled ? 'disabled' : 'enable'} it`,
                     cancelButtonText: 'No, cancel',
                     confirmButtonClass: 'btn btn-success mx-2',
                     cancelButtonClass: 'btn btn-outline-danger mx-2',

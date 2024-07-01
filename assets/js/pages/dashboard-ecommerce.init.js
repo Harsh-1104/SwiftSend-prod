@@ -71,32 +71,32 @@ var options,
             }),
                 (chart = new ApexCharts(document.querySelector("#store-visits-source"), options)).render()),
             getChartColorsArray("sales-by-locations")),
-    swiper =
-        (vectorMapWorldMarkersColors &&
-            (worldemapmarkers = new jsVectorMap({
-                map: "world_merc",
-                selector: "#sales-by-locations",
-                zoomOnScroll: !1,
-                zoomButtons: !1,
-                selectedMarkers: [0, 5],
-                regionStyle: { initial: { stroke: "#9599ad", strokeWidth: 0.25, fill: vectorMapWorldMarkersColors[0], fillOpacity: 1 } },
-                markersSelectable: !0,
-                markers: [
-                    { name: "Palestine", coords: [31.9474, 35.2272] },
-                    { name: "Russia", coords: [61.524, 105.3188] },
-                    { name: "Canada", coords: [56.1304, -106.3468] },
-                    { name: "Greenland", coords: [71.7069, -42.6043] },
-                ],
-                markerStyle: { initial: { fill: vectorMapWorldMarkersColors[1] }, selected: { fill: vectorMapWorldMarkersColors[2] } },
-                labels: {
-                    markers: {
-                        render: function (e) {
-                            return e.name;
-                        },
-                    },
-                },
-            })),
-            new Swiper(".vertical-swiper", { slidesPerView: 2, spaceBetween: 10, mousewheel: !0, loop: !0, direction: "vertical", autoplay: { delay: 2500, disableOnInteraction: !1 } })),
+    // swiper =
+    //     (vectorMapWorldMarkersColors &&
+    //         (worldemapmarkers = new jsVectorMap({
+    //             map: "world_merc",
+    //             selector: "#sales-by-locations",
+    //             zoomOnScroll: !1,
+    //             zoomButtons: !1,
+    //             selectedMarkers: [0, 5],
+    //             regionStyle: { initial: { stroke: "#9599ad", strokeWidth: 0.25, fill: vectorMapWorldMarkersColors[0], fillOpacity: 1 } },
+    //             markersSelectable: !0,
+    //             markers: [
+    //                 { name: "Palestine", coords: [31.9474, 35.2272] },
+    //                 { name: "Russia", coords: [61.524, 105.3188] },
+    //                 { name: "Canada", coords: [56.1304, -106.3468] },
+    //                 { name: "Greenland", coords: [71.7069, -42.6043] },
+    //             ],
+    //             markerStyle: { initial: { fill: vectorMapWorldMarkersColors[1] }, selected: { fill: vectorMapWorldMarkersColors[2] } },
+    //             labels: {
+    //                 markers: {
+    //                     render: function (e) {
+    //                         return e.name;
+    //                     },
+    //                 },
+    //             },
+    //         })),
+    //         new Swiper(".vertical-swiper", { slidesPerView: 2, spaceBetween: 10, mousewheel: !0, loop: !0, direction: "vertical", autoplay: { delay: 2500, disableOnInteraction: !1 } })),
     layoutRightSideBtn = document.querySelector(".layout-rightside-btn");
 layoutRightSideBtn &&
     (Array.from(document.querySelectorAll(".layout-rightside-btn")).forEach(function (e) {

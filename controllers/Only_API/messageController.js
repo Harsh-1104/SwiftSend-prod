@@ -61,16 +61,16 @@ const transformResponseData = (data) => {
     };
 
     data.components.forEach((item) => {
-        // console.log("Item = > ", item);
 
         switch (item.type) {
             case "HEADER":
                 // console.log("This is HEADER");
                 switch (item.format) {
                     case "TEXT":
-                        // console.log("This is an TEXT. ", item);
-                        objTemp.header.push(item.example.header_text[0]);
-
+                        if (item.example) {
+                            objTemp.header.push(item.example.header_text[0]);
+                            break;
+                        }
                         break;
                     case "IMAGE":
                         // console.log("This is an TEXT. ", item);
@@ -87,7 +87,6 @@ const transformResponseData = (data) => {
                 break;
             case "BODY":
                 if (item.example) {
-                    // console.log("This is a BODY. => ", item.example.body_text[0].length);
                     var bodyLength = item.example.body_text[0].length;
 
                     for (var i = 0; i < bodyLength; i++) {
@@ -124,7 +123,6 @@ const createComponentPart = (data, paylodReq) => {
                 },
             ],
         },
-        ,
         {
             type: "body",
             parameters: [
@@ -160,13 +158,15 @@ const createComponentPart = (data, paylodReq) => {
                     };
                     // console.log("Header ", obj);
                     headercompo.parameters.push(obj);
-                } else {
-                    var obj = {
-                        type: "text",
-                        text: paylodReq.header[0],
-                    };
-                    // console.log("Header ", obj);
-                    headercompo.parameters.push(obj);
+                }
+                else {
+                    if (paylodReq.header) {
+                        var obj = {
+                            type: "text",
+                            text: paylodReq.header ? paylodReq.header[0] : null,
+                        };
+                        headercompo.parameters.push(obj);
+                    }
                 }
 
                 components.push(headercompo);
@@ -196,24 +196,23 @@ const createComponentPart = (data, paylodReq) => {
                 console.log("Unknown fruit.");
         }
     });
-
-    console.log("Component : ", components);
-
+    console.log("A : ", components)
     return components;
 };
 
 // Send Message
 const sendMessage = async (req, res) => {
-    const apiKey = req.cookies.apikey;
+    const apikey = req.body.apikey || req.cookies.apikey;
+    const iid = req.body.iid;
+
     try {
         const { to, templateId, header, body, image } = req.body;
         const payloadReq = req.body;
 
-        const iid = req.body.iid;
-        const wabaCred = await setWabaCred(apiKey, iid);
+        const wabaCred = await setWabaCred(apikey, iid);
 
         if (wabaCred.length <= 0) {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -226,6 +225,7 @@ const sendMessage = async (req, res) => {
 
         const result = await getTemplateById(templateId, token);
         const headertype = result.components[0].format;
+        // console.log("result.components : ", result.components)
 
         if (headertype === "IMAGE" || headertype === "DOCUMENT");
         {
@@ -264,7 +264,7 @@ const sendMessage = async (req, res) => {
                 // Insert into single_message table
                 const Single_id = crypto.randomBytes(16).toString("hex");
                 const singleMessageId = await insertIntoSingleMessage(
-                    apiKey,
+                    apikey,
                     templateName,
                     Single_id,
                     iid
@@ -276,23 +276,24 @@ const sendMessage = async (req, res) => {
                 const messageTypeInfo = {
                     waba_message_id: messageId,
                     single_id: Single_id,
-                    apikey: apiKey,
+                    apikey: apikey,
                     reciver_number: to,
                     message_type: "single",
                     status: "sent",
                 };
 
-
                 await insertIntoMessageInfo(messageTypeInfo);
 
-                logAPI(req.url, apiKey, iid, "S");
+                logAPI(req.url, apikey, iid, "S");
                 return res.status(200).json({ success: true, message: "Message sent successfully" });
-            } else {
-                logAPI(req.url, apiKey, iid, "E");
+            }
+            else {
+                logAPI(req.url, apikey, iid, "E");
                 return res.status(417).json({ success: false, message: "Failed to send message" });
             }
-        } catch (error) {
-            logAPI(req.url, apiKey, iid, "E");
+        }
+        catch (error) {
+            logAPI(req.url, apikey, iid, "E");
             console.log("error ", error.response);
             return res.status(500).json({
                 success: false,
@@ -300,8 +301,9 @@ const sendMessage = async (req, res) => {
                 payload: payload,
             });
         }
-    } catch (error) {
-        logAPI(req.url, apiKey, iid, "E");
+    }
+    catch (error) {
+        logAPI(req.url, apikey, iid, "E");
         console.log("my error", error);
         return res.status(500).json({
             success: false,

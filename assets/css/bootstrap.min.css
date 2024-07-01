@@ -7575,10 +7575,20 @@ fieldset:disabled .btn {
 }
 
 @media (max-width:575.98px) {
+    .offcanvas.offcanvas-end {
+        top: 0;
+        right: 0;
+        width: 100% !important;
+        border-left: var(--vz-offcanvas-border-width) solid var(--vz-offcanvas-border-color);
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%)
+    }
+}
+
+@media (max-width:575.98px) {
     .offcanvas-sm.offcanvas-end {
         top: 0;
         right: 0;
-        /* width: 100%; */
         border-left: var(--vz-offcanvas-border-width) solid var(--vz-offcanvas-border-color);
         -webkit-transform: translateX(100%);
         transform: translateX(100%)

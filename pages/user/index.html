@@ -15,9 +15,6 @@
 	<!-- jsvectormap css -->
 	<link href="/assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
 
-	<!--Swiper slider css-->
-	<link href="/assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
-
 	<!-- Layout config Js -->
 	<script src="/assets/js/layout.js"></script>
 	<!-- Bootstrap Css -->
@@ -198,7 +195,6 @@
 							<h4 class="text-center mb-0">Application stats</h4>
 						</div>
 					</div>
-
 					<div class="row">
 						<div class="col-lg-4 col-md-4 col-sm-12">
 							<div class="card">
@@ -587,8 +583,8 @@
 			getDailyReportData();
 
 			function insByLimitGraph(instanceData) {
-				$('#dailysinglemsg').html(instanceData.single_message_count);
-				$('#dailybroadcast').html(instanceData.boardcast_count);
+				$('#dailysinglemsg').html(instanceData != null ? instanceData.single_message_count : "0");
+				$('#dailybroadcast').html(instanceData != null ? instanceData.boardcast_count : "0");
 
 				const percentage = (instanceData.total_count * 100) / 1000;
 				let x = null;
@@ -758,35 +754,6 @@
 							const usageCounts = val.data.map(item => item.total_usage);
 
 							chartBarColors = getChartColorsArray("bar_chart")
-
-							// let options = {
-							// 	series: usageCounts,
-							// 	chart: {
-							// 		height: 250,
-							// 		width: 250,
-							// 		type: "pie",
-							// 	},
-							// 	legend: {
-							// 		show: false
-							// 	},
-							// 	dataLabels: {
-							// 		dropShadow: {
-							// 			enabled: 2
-							// 		}
-							// 	},
-							// 	labels: templates,
-							// 	// colors: [
-							// 	// 	'#405189',
-							// 	// 	'#f7b84b'
-							// 	// ],
-							// 	plotOptions: {
-							// 		pie: {
-							// 			donut: {
-							// 				size: '10%'
-							// 			}
-							// 		}
-							// 	}
-							// }
 
 							let baroptions = {
 								chart: { height: 310, type: "bar", toolbar: { show: !1 } },

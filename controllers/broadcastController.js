@@ -5,9 +5,10 @@ const getallBroadcastData = async (req, res) => {
     try {
         const apikey = req.cookies.apikey;
         const iid = req.params.iid;
-        const q1 = `SELECT mi.reciver_number,mi.boardCast_id,mi.status, b.template_id, b.time FROM message_info mi INNER JOIN boardcast b ON mi.boardCast_id = b.boardCast_id  WHERE b.apikey = '${apikey}' AND b.instance_id = '${iid}' ORDER BY b.time DESC`;
+        const q1 = `SELECT mi.reciver_number, mi.boardCast_id, mi.status, b.template_id, b.time FROM message_info mi INNER JOIN boardcast b ON mi.boardCast_id = b.boardCast_id  WHERE b.apikey = '${apikey}' AND b.instance_id = '${iid}' ORDER BY b.time DESC`;
 
         conn.query(q1, function (err, result) {
+            console.log(result)
             if (err) return res.status(500).send(status.internalservererror());
             if (result.length <= 0) return res.status(404).send(status.nodatafound());
             const filteredresult = result.reduce((acc, curr) => {
@@ -19,13 +20,23 @@ const getallBroadcastData = async (req, res) => {
                         boardCast_id: curr.boardCast_id,
                         template_id: curr.template_id,
                         time: curr.time,
-                        broadcast: []
+                        broadcast: [],
+                        success_count: 0,
+                        failed_count: 0
                     };
                     acc.push(broadcastEntry);
                 }
 
                 // Add the phone and status to the broadcast array of the corresponding broadcast_id
                 broadcastEntry.broadcast.push({ phone: curr.reciver_number, status: curr.status });
+
+                // Update success_count and failed_count based on the status
+                if (curr.status === 'failed') {
+                    broadcastEntry.failed_count++;
+                }
+                else {
+                    broadcastEntry.success_count++;
+                }
 
                 return acc;
             }, []);

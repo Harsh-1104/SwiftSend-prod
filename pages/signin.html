@@ -136,8 +136,10 @@
                                         </div> -->
                                     </div>
                                     <div class="mt-4">
-                                        <input type="button" class="btn btn-primary w-100" id="signin"
-                                            value="Sign In" />
+                                        <button id="signin" class="btn btn-primary w-100 btn-load">
+                                            Sign In
+                                        </button>
+                                        <!-- <input type="button" class="" id="" value="" /> -->
                                     </div>
                                 </div>
                             </div>
@@ -304,7 +306,6 @@
 
         $(document).on('click', '#signin', function () {
             const type = $('input[name="usertype"]:checked').val();
-            console.log(type)
             nullfield_validation('email');
             nullfield_validation('password');
             if (objFlag.flag_email == 0 && objFlag.flag_password == 0) {
@@ -316,7 +317,7 @@
                 }
 
                 $.ajax({
-                    url: "api/auth/signin",
+                    url: "/api/auth/signin",
                     method: "POST",
                     data: {
                         "type": type,
@@ -325,61 +326,75 @@
                         "rememberme": remeberme
                     },
                     beforeSend: () => {
-                        $('#media-preview').html(`<div class="spinner-border text-primary" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>`);
-                        $('#doc-preview').html(`<div class="spinner-border text-primary" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>`);
+                        $("#signin")
+                            .prop('disabled', true)
+                            .removeClass("btn-primary btn-success")
+                            .addClass("btn-warning")
+                            .html(`<span class="d-flex align-items-center justify-content-center">
+                                        <span class="me-2">
+                                            Authenticating
+                                        </span>
+                                        <span class="spinner-border flex-shrink-0" role="status">
+                                            <span class="visually-hidden"></span>
+                                        </span>
+                                    </span>`);
                     },
                     success: function (val) {
-                        switch (val.status_code) {
-                            case "500": {
-                                InternalServerError();
-                                break;
-                            }
+                        if (val.success) {
+                            switch (type) {
+                                case 'root': {
+                                    if (val.data.isRoot == 1) {
+                                        document.cookie = `iid=${val.data.iid};`;
+                                        location.href = "/dashboard";
+                                    }
+                                    break;
+                                }
 
-                            case "409": {
-                                swal({
-                                    html: `There must be some error regarding your email <span>${email.value}</span>`,
-                                    type: 'error',
-                                    timer: 3500
-                                })
-                                break;
+                                case 'instance': {
+                                    if (val.data.isRoot == 0) {
+                                        document.cookie = `iid=${val.data.iid};`;
+                                        location.href = `/iuser/${val.data.iid}/template`;
+                                    }
+                                    break;
+                                }
                             }
-
-                            case "401": {
+                            $("#signin")
+                                .prop('disabled', false)
+                                .removeClass("btn-primary btn-warning btn-success")
+                                .addClass("btn-primary")
+                                .html(`Sign In`);
+                        }
+                    },
+                    error: (error) => {
+                        if (error.status === 500) InternalServerError();
+                        if (error.status === 400) {
+                            if (!error.success) {
                                 swal({
-                                    title: 'Invalid email or password',
-                                    html: `in-case you forgot, click on forgot password`,
-                                    type: 'error',
-                                    timer: 3500,
+                                    title: "Error in signin",
+                                    text: error.responseJSON.error.detail,
+                                    type: "error",
+                                    timer: 2000,
                                     showConfirmButton: false,
                                 })
-                                break;
-                            }
-
-                            case "200": {
-                                switch (type) {
-                                    case 'root': {
-                                        if (val.data.isRoot == 1) {
-                                            document.cookie = `iid=${val.data.iid}; path=/;`;
-                                            location.href = "/dashboard";
-                                        }
-                                        break;
-                                    }
-
-                                    case 'instance': {
-                                        if (val.data.isRoot == 0) {
-                                            document.cookie = `iid=${val.data.iid}; path=/;`;
-                                            location.href = `/iuser/${val.data.iid}/template`;
-                                        }
-                                        break;
-                                    }
-                                }
-                                break;
                             }
                         }
+                        if (error.status === 401) {
+                            if (!error.success) {
+                                console.log()
+                                swal({
+                                    title: "Error in signin",
+                                    text: `Check your credential for signin`,
+                                    type: "error",
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                })
+                            }
+                        }
+                        $("#signin")
+                            .prop('disabled', false)
+                            .removeClass("btn-primary btn-warning btn-success")
+                            .addClass("btn-primary")
+                            .html(`Sign In`);
                     }
                 })
             }

@@ -1,8 +1,12 @@
 const conn = require("../DB/connection");
 const status = require("../assets/js/status");
-const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
+const geoip = require('geoip-lite');
+
+const cloudinary = require("cloudinary").v2;
 const crypto = require("crypto");
+
+const logAPI = require("../function/log");
 
 let apikey;
 
@@ -45,76 +49,137 @@ const SignIn = async (req, res) => {
             apikey: apikey,
         }, (result) => {
             if (result.status_code == 500) {
-                return res.send(Object.assign(status.internalservererror(), {
+                logAPI(req.url, "", "", "E", JSON.stringify({
+                    email: email,
+                    password: password,
+                    reason: "Internal Server Error | Try again after some time",
+                    code: 500
+                }));
+                return res.status(500).send(Object.assign(status.internalservererror(), {
                     error: {
                         detail: `Internal Server Error | Try again after some time`,
                     },
+                    success: false
                 }));
             }
 
             if (result.status_code == 404) {
-                return res.send(
-                    Object.assign(status.unauthorized(), {
-                        error: {
-                            detail: `Invalid Email`,
-                        },
-                    })
-                );
+                logAPI(req.url, "", "", "E", JSON.stringify({
+                    email: email,
+                    password: password,
+                    reason: `Invalid Email`,
+                    code: 401
+                }));
+                return res.status(401).send(Object.assign(status.unauthorized(), {
+                    error: {
+                        detail: `Invalid Email`,
+                    },
+                    success: false
+                }));
             }
             if (result.length > 1) {
-                return res.send(
-                    Object.assign(status.duplicateRecord(), {
-                        error: {
-                            detail: `Multiple Email found`,
-                        },
-                    })
-                );
+                logAPI(req.url, "", "", "E", JSON.stringify({
+                    email: email,
+                    password: password,
+                    reason: `Multiple Email found`,
+                    code: 409,
+                    clientDetail: {
+                        ip: req.ip,
+                        userAgent: req.get('User-Agent')
+                    }
+                }));
+                return res.status(409).send(Object.assign(status.duplicateRecord(), {
+                    error: {
+                        detail: `Multiple Email found`,
+                    },
+                    success: false
+                }));
             }
             bcrypt.compare(password, result[0].password, (err, match) => {
                 if (match) {
                     let usertype = (type === "root") ? 1 : 0;
                     if (usertype !== result[0].isRoot) {
-                        return res.send(
-                            Object.assign(status.unauthorized(), {
-                                error: {
-                                    detail: `Invalid User Type`,
-                                },
-                            })
-                        );
+                        logAPI(req.url, "", "", "E", JSON.stringify({
+                            email: email,
+                            password: password,
+                            reason: `Invalid User Type`,
+                            code: 401,
+                            clientDetail: {
+                                ip: req.ip,
+                                userAgent: req.get('User-Agent')
+                            }
+                        }));
+                        return res.status(401).send(Object.assign(status.unauthorized(), {
+                            error: {
+                                detail: `Invalid User Type`,
+                            },
+                        }));
                     }
                     setCookie(res, "apikey", result[0].apikey, 1);
                     if (rememberme == "true") {
                         res.cookie("email", email, { maxAge: 1000 * 60 * 60 * 24 * 15 });
                     }
-                    return res.send(
-                        Object.assign(status.ok(), {
-                            data: {
-                                detail: `Login Successful`,
-                                apikey: result[0].apikey,
-                                iid: result[0].instance_id,
-                                isRoot: result[0].isRoot,
-                            },
-                        })
-                    );
-                } else {
-                    return res.send(
-                        Object.assign(status.unauthorized(), {
-                            error: {
-                                detail: `Invalid Password`,
-                            },
-                        })
-                    );
+                    const geo = geoip.lookup(req.ip);
+                    console.log(`req.ip: ${req.ip}`, req.get('User-Agent'));
+                    console.log(`Geo-location: ${JSON.stringify(geo)}`);
+                    logAPI(req.url, "", "", "S", JSON.stringify({
+                        email: email,
+                        password: password,
+                        reason: `Login Successful`,
+                        code: 200,
+                        clientDetail: {
+                            ip: req.ip,
+                            userAgent: req.get('User-Agent')
+                        }
+                    }));
+                    return res.status(200).send(Object.assign(status.ok(), {
+                        data: {
+                            detail: `Login Successful`,
+                            apikey: result[0].apikey,
+                            iid: result[0].instance_id,
+                            isRoot: result[0].isRoot,
+                        },
+                        success: true
+                    }));
+                }
+                else {
+                    logAPI(req.url, "", "", "E", JSON.stringify({
+                        email: email,
+                        password: password,
+                        reason: `Invalid Password`,
+                        code: 401,
+                        clientDetail: {
+                            ip: req.ip,
+                            userAgent: req.get('User-Agent')
+                        }
+                    }));
+                    return res.status(401).send(Object.assign(status.unauthorized(), {
+                        error: {
+                            detail: `Invalid Password`,
+                        },
+                        success: false
+                    }));
                 }
             });
         });
-    } else {
-        return res.send(
-            Object.assign(status.badRequest(), {
-                error: {
-                    detail: `Invalid / Missing Parameter`,
-                },
-            })
-        );
+    }
+    else {
+        logAPI(req.url, "", "", "E", JSON.stringify({
+            email: email,
+            password: password,
+            reason: `Invalid / Missing Parameter`,
+            code: 400,
+            clientDetail: {
+                ip: req.ip,
+                userAgent: req.get('User-Agent')
+            }
+        }));
+        return res.status(400).send(Object.assign(status.badRequest(), {
+            error: {
+                detail: `Invalid / Missing Parameter`,
+            },
+            success: false
+        }));
     }
 };
 

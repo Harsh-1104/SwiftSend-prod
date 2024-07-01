@@ -213,6 +213,7 @@
                                             <th>Time</th>
                                             <th>Template Name</th>
                                             <th>Total Recipient</th>
+                                            <th>Ratio</th>
                                             <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -298,23 +299,10 @@
         </div>
     </div>
 
-    <div id="voice_input" class="modal zoomIn">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header"></div>
-                <div class="modal-body">
-                    <div class="fs-1 text-center" id="msg" style="resize: none;"></div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <!-- JAVASCRIPT -->
     <script src="/assets/js/jquery.js"></script>
     <script src="/assets/js/main.js"></script>
     <script src="/assets/js/validate.js"></script>
-    <script src="/assets/js/chatbot.js"></script>
 
     <script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/libs/simplebar/simplebar.min.js"></script>
@@ -424,16 +412,16 @@
                                     <td class="customer_name text-truncate" style="max-width: 10px;">
                                         <div class="avatar-xxs">
                                             <span class="avatar-title rounded-circle border border-2 border-primary bg-white text-primary">
-                                                ${parseInt(i) + parseInt(1)}        
+                                                ${parseInt(i) + parseInt(1)} 
                                             </span>
                                         </div>
                                     </td>
-                                    <td class="customer_email w-25 text-success">
-                                        <div class="fw-semibold fs-14">${timeformat.formattedDate} - ${timeformat.formattedTime}</div>
+                                    <td class="customer_email w-25 text-dark" style="font-family: monospace;">
+                                        <div class="fw-semibold fs-14">${timeformat.formattedDate}-${timeformat.formattedTime}</div>
                                         <div class="text-muted fs-12">(${timeformat.relativeTime})</div>
                                     </td>
-                                    <td class="customer_email w-25">${val[i].template_id}</td>
-                                    <td class="customer_email">
+                                    <td class="w-25">${val[i].template_id}</td>
+                                    <td class="w-25">
                                         <div class="d-flex align-items-center justify-content-start gap-2">
                                             <div class="avatar-xxs">
                                                 <span class="avatar-title rounded-circle bg-primary text-white">
@@ -443,7 +431,19 @@
                                             <span class="text-muted fw-semibold">Contacts</span>
                                         </div>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="w-25">
+                                        <span class="d-flex align-items-center justify-content-start gap-3 fs-16">
+                                            <div>
+                                                <i class="ri-checkbox-circle-fill text-success fs-15 align-middle"></i>
+                                                <span class="fw-semibold">${val[i].success_count}</span>
+                                            </div>
+                                            <div>
+                                                <i class="ri-close-circle-fill text-danger fs-15 align-middle"></i>
+                                                <span class="fw-semibold">${val[i].failed_count}</span>
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <td class="w-20 text-center">
                                         <button class="btn btn-sm btn-soft-primary show-template-btn fs-12 showstatus"
                                             data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightstatus" aria-controls="offcanvasRight" 
                                             data-name="${val[i].template_id}" data-id="${val[i].boardCast_id}" data-time="${timeformat.formattedDate} - ${timeformat.formattedTime} (${timeformat.relativeTime})">
@@ -475,7 +475,6 @@
                             let index = broadcast_list.findIndex(x => x.boardCast_id == "9f043a8c752625d3593e7bd8a7c8a55a")
                             broadcast_list[index] = broadcast;
 
-
                             if (broadcast) {
                                 let output = `
                                         <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 130px)">
@@ -492,7 +491,7 @@
                                     output += `<tr>
                                                 <td>
                                                     <img src="/assets/images/w_icon.svg" height="20" width="20" />
-                                                    <span class="text-muted">${broadcast.broadcast[i].phone.substring(2)}</span>
+                                                    <span class="fw-semibold" style="font-family: monospace;">${broadcast.broadcast[i].phone.substring(2)}</span>
                                                 </td>
                                                 <td class="text-${(broadcast.broadcast[i].status == "read")
                                             ? `info` :
@@ -536,6 +535,7 @@
                     success: function (val) {
                         if (val.success) {
                             BroadcastDataDisplay(val.data);
+                            console.log(val.data)
                             broadcast_list = val.data;
                         }
                     }, error: (error) => {
@@ -549,6 +549,7 @@
             function showstatusAPI(name, id, time) {
                 if (name && id && time) {
                     const broadcast = broadcast_list.filter(x => x.boardCast_id == id)[0];
+                    console.log(broadcast)
 
                     let output = `
                     <div class="offcanvas-header bg-primary">
@@ -564,8 +565,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="offcanvas-body" id="body_${id}">
-                            <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 130px)">
+                        <div class="offcanvas-body px-1 py-1" id="body_${id}">
+                            <span class="d-flex align-items-center justify-content-evenly gap-3 fs-16 p-2 mb-2 bg-soft-info border border-2 rounded-3 border-info">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="ri-checkbox-circle-fill text-success fs-22 align-middle"></i>
+                                    <div class="text-muted">
+                                        <span class="fw-semibold text-success">${broadcast.success_count}</span>
+                                        <div class="fs-15 fw-normal">Success</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="ri-close-circle-fill text-danger fs-22 align-middle"></i>
+                                    <div class="text-muted">
+                                        <span class="fw-semibold text-danger">${broadcast.failed_count}</span>
+                                        <div class="fs-15 fw-normal">Failed</div>
+                                    </div>
+                                </div>
+                            </span>
+                            <div class="table-responsive scrollbar-custom" style="max-height: calc(100vh - 250px)">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
@@ -580,7 +597,7 @@
                         output += `<tr>
                                     <td>
                                         <img src="https://11za.com/wp-content/themes/one-1za/assets/images/hero/wapp_iocn.svg" height="20" width="20" />
-                                        <span class="text-muted">${broadcast.broadcast[i].phone.substring(2)}</span>
+                                        <span class="fw-semibold" style="font-family: monospace;">${broadcast.broadcast[i].phone.substring(2)}</span>
                                     </td>
                                     <td class="text-${(broadcast.broadcast[i].status == "read")
                                 ? `info` :

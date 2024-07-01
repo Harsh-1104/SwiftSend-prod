@@ -1,33 +1,74 @@
 const axios = require("axios");
 const { setWabaCred } = require("../controllers/userController");
 const logAPI = require("../function/log");
+const conn = require("../DB/connection");
 
 const version = process.env.WABA_VERSION;
 
-
 // Removing example from the Template Data
-const cleanTemplatesData = (data) => {
-    return data.map((template) => {
-        const cleanedComponents = template.components.map((component) => {
-            const { example, ...cleanedComponent } = component;
-            return cleanedComponent;
+// const cleanTemplatesData = async (data, apikey, iid) => {
+//     conn.query(`SELECT * from template where apikey = '${apikey}' AND instance_id = '${iid}'`, function (err, result) {
+//         return data.map(async (template) => {
+//             const cleanedComponents = await template.components.map((component) => {
+//                 const { example, ...cleanedComponent } = component;
+//                 return cleanedComponent;
+//             });
+
+//             const matchingRecord = result.find(record => record.temp_id === template.id);
+
+//             // Add disabled property if matching record found
+//             const disabledValue = matchingRecord.disabled;
+
+//             // Add disabled property to the template object
+//             // return { ...template, components: cleanedComponents, admindisabled: disabledValue };
+
+//             return { ...template, components: cleanedComponents };
+//         });
+//     });
+// };
+
+const cleanTemplatesData = async (data, apikey, iid) => {
+    return new Promise((resolve, reject) => {
+        conn.query(`SELECT * from template where apikey = '${apikey}' AND instance_id = '${iid}'`, async (err, result) => {
+            if (err) {
+                reject(err); // Reject promise on error
+                return;
+            }
+
+            try {
+                const cleanedData = await Promise.all(data.map(async (template) => {
+                    const cleanedComponents = await Promise.all(template.components.map((component) => {
+                        const { example, ...cleanedComponent } = component;
+                        return cleanedComponent;
+                    }));
+
+                    const matchingRecord = result.find(record => record.temp_id === template.id);
+
+                    // Add disabled property if matching record found
+                    const disabledValue = matchingRecord ? matchingRecord.disabled : 0;
+
+                    // Add disabled property to the template object
+                    return { ...template, components: cleanedComponents, admindisabled: disabledValue };
+                }));
+
+                resolve(cleanedData); // Resolve promise with cleaned data
+            } catch (error) {
+                reject(error); // Reject promise if any async operation fails
+            }
         });
-        return { ...template, components: cleanedComponents };
     });
 };
 
-// Getting Status Data .
 
 //------------------------------------------- Get all template -----------------------------------------------
 const getAllTemplate = async (req, res) => {
+    const apikey = req.cookies.apikey;
+    const iid = req.params.iid;
     try {
-        const email = req.cookies.email;
-        const apiKey = req.cookies.apikey;
-        const iid = req.params.iid;
-        const wabaCred = await setWabaCred(apiKey, iid);
+        const wabaCred = await setWabaCred(apikey, iid);
 
         if (wabaCred.length <= 0) {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -41,33 +82,41 @@ const getAllTemplate = async (req, res) => {
         const appID = wabaCred[0].appID;
 
 
-        const response = await axios.get(
-            `https://graph.facebook.com/${version}/${wabaId}/message_templates`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
+        const response = await axios.get(`https://graph.facebook.com/${version}/${wabaId}/message_templates`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             }
-        );
+        });
 
         if (response.status === 200) {
-            const newData = cleanTemplatesData(response.data.data);
-            logAPI(req.url, apiKey, iid, "S");
-            return res.status(200).json({
-                success: true,
-                data: newData,
-            });
+            cleanTemplatesData(response.data.data, apikey, iid)
+                .then((newData) => {
+                    logAPI(req.url, apikey, iid, "S");
+                    return res.status(200).json({
+                        success: true,
+                        data: newData,
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error cleaning templates data:', error);
+                    logAPI(req.url, apikey, iid, "E");
+                    return res.status(500).json({
+                        success: false,
+                        error: 'Error cleaning templates data',
+                    });
+                });
         }
         else {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(500).json({
                 success: false,
                 message: "An error occurred while fetching templates",
             });
         }
-    } catch (error) {
-        logAPI(req.url, apiKey, iid, "E");
+    }
+    catch (error) {
+        logAPI(req.url, apikey, iid, "E");
         console.log("error : ", error);
         return res.status(500).json({
             success: false,
@@ -80,12 +129,12 @@ const getAllTemplate = async (req, res) => {
 const getAllTemplateStatus = async (req, res) => {
     try {
         const email = req.cookies.email;
-        const apiKey = req.cookies.apikey;
+        const apikey = req.cookies.apikey;
 
-        const wabaCred = await setWabaCred(apiKey, email);
+        const wabaCred = await setWabaCred(apikey, email);
 
         if (wabaCred.length <= 0) {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -116,7 +165,7 @@ const getAllTemplateStatus = async (req, res) => {
                 return { name, language, status, category, id };
             });
 
-            logAPI(req.url, apiKey, iid, "S");
+            logAPI(req.url, apikey, iid, "S");
             return res.status(200).json({
                 success: true,
                 data: filteredData,
@@ -128,7 +177,7 @@ const getAllTemplateStatus = async (req, res) => {
                 return { name, language, status, category, id };
             });
 
-            logAPI(req.url, apiKey, iid, "S");
+            logAPI(req.url, apikey, iid, "S");
             return res.status(200).json({
                 success: true,
                 data: filteredData,
@@ -136,7 +185,7 @@ const getAllTemplateStatus = async (req, res) => {
         }
         else {
             console.error("Unexpected response structure:", responseData);
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(500).json({
                 success: false,
                 message: "Unexpected response structure",
@@ -144,7 +193,7 @@ const getAllTemplateStatus = async (req, res) => {
             });
         }
     } catch (error) {
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         return res.status(500).json({
             success: false,
             message: "An error occurred while fetching templates",
@@ -156,12 +205,12 @@ const getAllTemplateStatus = async (req, res) => {
 //------------------------------------------- Get Template By ID ---------------------------------------------
 const getAllTemplateID = async (req, res) => {
     const email = req.cookies.email;
-    const apiKey = req.cookies.apikey;
+    const apikey = req.cookies.apikey;
 
-    const wabaCred = await setWabaCred(apiKey, email);
+    const wabaCred = await setWabaCred(apikey, email);
 
     if (wabaCred.length <= 0) {
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         return res.status(404).json({
             success: false,
             message: "An error occurred while fetching templates",
@@ -237,13 +286,13 @@ const getAllTemplateID = async (req, res) => {
 
 const createTemplate = async (req, res) => {
     try {
-        const apiKey = req.cookies.apikey;
+        const apikey = req.cookies.apikey;
         const { name, language, category, components, iid } = req.body;
 
-        const wabaCred = await setWabaCred(apiKey, iid);
+        const wabaCred = await setWabaCred(apikey, iid);
 
         if (wabaCred.length <= 0) {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -269,27 +318,24 @@ const createTemplate = async (req, res) => {
         };
 
         try {
-            const response = await axios.post(
-                `https://graph.facebook.com/${version}/${wabaId}/message_templates`,
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Fix the token format
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await axios.post(`https://graph.facebook.com/${version}/${wabaId}/message_templates`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Fix the token format
+                    "Content-Type": "application/json",
+                },
+            });
 
             if (response.status === 200) {
-                logAPI(req.url, apiKey, iid, "S");
+                logAPI(req.url, apikey, iid, "S");
                 return res.status(200).json({ success: true, message: "Template created successfully" });
-            } else {
-                logAPI(req.url, apiKey, iid, "E");
+            }
+            else {
+                logAPI(req.url, apikey, iid, "E");
                 return res.status(406).json({ success: false, message: "Failed to create a Template" });
             }
         } catch (error) {
             console.log("error ", error.response.data);
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(406).json({
                 success: false,
                 message: "An error occurred while creating the template",
@@ -297,7 +343,7 @@ const createTemplate = async (req, res) => {
         }
     } catch (error) {
         console.log("this is my error", error.data);
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         return res.status(500).json({
             success: false,
             message: "An error occurred while creating the templatee",
@@ -312,7 +358,7 @@ const deleteTemplateByID = async (req, res) => {
     const iid = req.params.iid;
 
     if (!templateID) {
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         return res.status(400).json({ success: false, message: "Template ID is required" });
     }
 
@@ -321,16 +367,16 @@ const deleteTemplateByID = async (req, res) => {
         decodedId = Buffer.from(templateID, "base64").toString("ascii");
     }
     catch (error) {
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         return res.status(400).json({ success: false, message: "Invalid template ID" });
     }
 
     try {
-        const apiKey = req.cookies.apikey;
-        const wabaCred = await setWabaCred(apiKey, iid);
+        const apikey = req.cookies.apikey;
+        const wabaCred = await setWabaCred(apikey, iid);
 
         if (wabaCred.length <= 0) {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(404).json({
                 success: false,
                 message: "An error occurred while fetching templates",
@@ -354,18 +400,18 @@ const deleteTemplateByID = async (req, res) => {
         );
         const responseData = response.data;
         if (response.status === 200) {
-            logAPI(req.url, apiKey, iid, "S");
+            logAPI(req.url, apikey, iid, "S");
             return res.status(200).json({
                 success: true,
                 message: "Template Deleted Successfully",
                 data: responseData,
             });
         } else {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(500).json({ success: false, message: "Failed to delete template" });
         }
     } catch (error) {
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         if (error.response) {
             const statusCode = error.response.status;
             if (statusCode === 400 || statusCode === 404 || statusCode === 500) {
@@ -386,13 +432,13 @@ const deleteTemplateByID = async (req, res) => {
 };
 //-------------------------------------------- For media Template -------------------------------------------------
 const mediaForTemplate = async (req, res) => {
-    const apiKey = req.cookies.apikey;
+    const apikey = req.cookies.apikey;
     const iid = req.body.iid;
 
-    const wabaCred = await setWabaCred(apiKey, iid);
+    const wabaCred = await setWabaCred(apikey, iid);
 
     if (wabaCred.length <= 0) {
-        logAPI(req.url, apiKey, iid, "E");
+        logAPI(req.url, apikey, iid, "E");
         return res.status(404).json({
             success: false,
             message: "An error occurred while fetching templates",
@@ -407,7 +453,7 @@ const mediaForTemplate = async (req, res) => {
 
     try {
         if (!req.files || Object.keys(req.files).length === 0) {
-            logAPI(req.url, apiKey, iid, "E");
+            logAPI(req.url, apikey, iid, "E");
             return res.status(400).send("No files were uploaded.");
         }
 
@@ -436,14 +482,14 @@ const mediaForTemplate = async (req, res) => {
             },
         });
 
-        logAPI(req.url, apiKey, iid, "S");
+        logAPI(req.url, apikey, iid, "S");
         return res.status(200).json({
             success: true,
             message: "Media uploaded successfully ",
             data: response2.data,
         });
     } catch (error) {
-        logAPI(req.url, apiKey, iid, "S");
+        logAPI(req.url, apikey, iid, "S");
         console.error("Error:", error);
         return res.status(500).send("Internal Server Error");
     }

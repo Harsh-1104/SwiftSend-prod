@@ -240,7 +240,6 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Name</th>
-                                            <th>Category</th>
                                             <th>Status</th>
                                             <th>Language</th>
                                             <th class="text-center">Action</th>
@@ -378,45 +377,48 @@
             let template_list = [];
 
             function TemplateDataDisplay(val) {
+                console.log(val);
                 if (val.length > 0) {
                     let data = ``;
                     $('#template-list').addClass('d-none');
                     $('.noresult').addClass('d-none');
                     $('#template-list').removeClass('d-none');
                     for (var i in val) {
+                        console.log((val[i].status) == "REJECTED", val[i].admindisabled == "1", (val[i].status) == "REJECTED" || val[i].admindisabled == "1")
                         data += `
-                                <tr ${(val[i].status) == "REJECTED" ? `class="opacity-50"` : ''}>
-                                    <td class="customer_name w-25 text-truncate" style="max-width: 120px;">${val[i].name}</td>
-                                    <td class="customer_email w-25">
-                                        ${val[i].category}
+                                <tr ${((val[i].status) == "REJECTED" || val[i].admindisabled == "1") ? `class="opacity-50"` : ''}>
+                                    <td class="text-primary fw-semibold w-20 text-truncate" style="max-width: 120px;">
+                                        <div class="mb-1">${val[i].name}</div>
+                                        ${val[i].category == "MARKETING" ? `<div class="badge bg-soft-warning text-warning">MARKETING</div>` : val[i].category == "UTILITY" ? `<div class="badge bg-soft-info text-info">UTILITY</div>` : ``}
                                     </td>
-                                    <td class="customer_email w-25">
-                                        <h5>
+                                    <td class="customer_email w-20">
+                                        <h5 class="mb-0">
                                             <span class="badge border ${(val[i].status) == "PENDING" ? `border-warning text-warning` : (val[i].status) == "REJECTED" ? `border-danger text-danger` : `border-success text-success`}">
                                                 <i class="${(val[i].status) == "PENDING" ? `ri-time-line` : (val[i].status) == "REJECTED" ? `ri-close-circle-line` : `ri-checkbox-circle-line`} align-middle me-1 fw-normal"></i>
                                                 ${val[i].status}
                                             </span>
                                         </h5>
+                                        ${val[i].admindisabled == "1" ? `<span class="text-danger">Blocked by Admin</span>` : ''}
                                     </td>
-                                    <td class="customer_phone w-10 text-truncate" style="max-width: 20px;">
-                                        <h5><span class="badge border border-primary text-primary">${val[i].language.toUpperCase()}</span></h5>
-                                    </td>
-                                    <td>
+                                    <td class="customer_phone w-20 text-truncate" style="max-width: 20px;">
+                                        <h5><span class="badge border border-dark text-dark">${val[i].language.toUpperCase()}</span></h5>
+                                    </td>                                
+                                    <td class="w-20">
                                         <div class="d-flex justify-content-end gap-2">
                                             <div class="show">
-                                                <button class="btn btn-sm btn-primary show-template-btn fs-12"
+                                                <button class="btn btn-sm btn-soft-info show-template-btn fs-12"
                                                     data-bs-toggle="modal" data-bs-target="#showModal" 
-                                                    data-id="${val[i].id}" ${(val[i].status) == "REJECTED" ? `disabled="true"` : ''}>
-                                                    <i class="mdi mdi-eye align-bottom me-lg-1"></i>
-                                                    <span class="d-none d-lg-inline-block">View</span>
+                                                    data-id="${val[i].id}">
+                                                        <i class="mdi mdi-eye align-bottom me-1"></i>
+                                                        View
                                                 </button>
                                             </div>
                                             <div class="remove">
                                                 <button class="btn btn-sm btn-soft-danger remove-item-btn fs-12" 
                                                     data-id="${val[i].id}" data-name="${val[i].name}" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="Delete">
-                                                        <i class="mdi mdi-trash-can align-bottom me-lg-1"></i>
-                                                        <span class="d-none d-lg-inline-block">Remove</span>
+                                                        <i class="mdi mdi-trash-can align-bottom me-1"></i>
+                                                        Remove
                                                 </button>
                                             </div>
                                         </div>

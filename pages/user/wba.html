@@ -393,7 +393,7 @@
                     success: function (val) {
                         if (val.success) {
                             var output = ``;
-                            template_list = val.data.filter(x => x.status == "APPROVED");
+                            template_list = val.data.filter(x => x.status == "APPROVED" && x.admindisabled != "1");
 
                             for (let i in template_list) {
                                 output += `<option value="${template_list[i].id}">${template_list[i].name}</option>`;
